@@ -54,7 +54,7 @@ export default function Photography() {
               <img 
                 src={photo.image} 
                 alt={photo.title}
-                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                className="w-full h-full object-cover"
               />
             </motion.div>
           ))}

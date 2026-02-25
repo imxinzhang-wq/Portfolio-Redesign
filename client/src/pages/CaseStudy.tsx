@@ -169,7 +169,7 @@ export default function CaseStudy() {
                 ) : (
                   <div className="space-y-4">
                     <div className="aspect-video overflow-hidden rounded-[4px] bg-white/20 border border-white/10 shadow-sm">
-                      <img src={section.url} alt={section.caption} className="w-full h-full object-cover transition-transform duration-1000 hover:scale-105" />
+                      <img src={section.url} alt={section.caption} className="w-full h-full object-cover" />
                     </div>
                     <p className="text-center text-xs text-muted-foreground font-light uppercase tracking-widest italic">
                       — {section.caption}
