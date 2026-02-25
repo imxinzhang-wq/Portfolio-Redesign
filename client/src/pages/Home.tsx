@@ -170,23 +170,20 @@ function About() {
               <p>
                 Today, I’m based in Zürich.
               </p>
-              <p>
-                Outside of work, I’m often traveling — 40+ countries and counting — or shooting film and painting.
-              </p>
             </div>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-12 border-t border-black/5">
             <div className="space-y-4">
-              <h4 className="text-[10px] uppercase tracking-widest font-bold">Process</h4>
+              <h4 className="text-[10px] uppercase tracking-widest font-bold">Outside of work</h4>
               <p className="text-muted-foreground leading-relaxed font-light">
-                I believe in iterative design backed by rigorous testing. From user journey mapping to high-fidelity prototyping, my goal is always clarity.
+                I’m often traveling — 40+ countries and counting — or shooting film and painting.
               </p>
             </div>
             <div className="space-y-4">
-              <h4 className="text-[10px] uppercase tracking-widest font-bold">Approach</h4>
+              <h4 className="text-[10px] uppercase tracking-widest font-bold">Fun Fact</h4>
               <p className="text-muted-foreground leading-relaxed font-light">
-                Inclusive, accessible, and scalable. I build for the real world, ensuring every interaction serves a meaningful purpose.
+                I hold a Bachelor’s degree in Applied Mathematics.
               </p>
             </div>
           </div>
