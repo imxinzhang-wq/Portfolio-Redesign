@@ -167,9 +167,6 @@ function About() {
               <p>
                 I moved to the U.S. in 2014 to study Human-Computer Interaction at the University of Michigan. Since then, my work has taken me from California to Switzerland.
               </p>
-              <p>
-                Today, I’m based in Zürich.
-              </p>
             </div>
           </div>
           
