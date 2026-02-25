@@ -55,37 +55,33 @@ function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setIsScrolled(window.scrollY > 20);
     };
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 flex justify-center p-6 pointer-events-none">
-      <motion.nav 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ 
-          opacity: isScrolled ? 1 : 0, 
-          y: isScrolled ? 0 : -20,
-        }}
-        transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-        className={`pointer-events-auto px-8 py-4 rounded-full border w-full max-w-5xl bg-white/60 backdrop-blur-xl border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.04)] ${
-          isScrolled ? "translate-y-0" : "-translate-y-full pointer-events-none"
-        }`}
-      >
-        <div className="flex items-center justify-between">
-          <a href="/" className="text-base font-display font-bold tracking-tight uppercase" data-testid="link-home">
-            Xin Zhang
-          </a>
-          <div className="flex items-center gap-8 text-xs font-bold uppercase tracking-widest text-muted-foreground">
-            <a href="#work" className="hover:text-foreground transition-colors" data-testid="link-work">Work</a>
-            <a href="#about" className="hover:text-foreground transition-colors" data-testid="link-about">About</a>
-            <a href="#contact" className="hover:text-foreground transition-colors" data-testid="link-contact">Contact</a>
-          </div>
+    <motion.nav 
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className={`fixed top-0 left-0 right-0 z-50 px-6 py-4 transition-all duration-300 ${
+        isScrolled 
+          ? "bg-white/40 backdrop-blur-md border-b border-white/20 py-4 shadow-sm" 
+          : "bg-transparent py-8"
+      }`}
+    >
+      <div className="max-w-7xl mx-auto flex justify-between items-center">
+        <a href="/" className="text-lg font-display font-semibold tracking-tight uppercase" data-testid="link-home">
+          Xin Zhang
+        </a>
+        <div className="flex gap-10 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+          <a href="#work" className="hover:text-foreground transition-colors" data-testid="link-work">Work</a>
+          <a href="#about" className="hover:text-foreground transition-colors" data-testid="link-about">About</a>
+          <a href="#contact" className="hover:text-foreground transition-colors" data-testid="link-contact">Contact</a>
         </div>
-      </motion.nav>
-    </div>
+      </div>
+    </motion.nav>
   );
 }
 
