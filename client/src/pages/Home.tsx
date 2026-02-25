@@ -74,22 +74,16 @@ function Navbar() {
 function Hero() {
   return (
     <section className="min-h-screen flex items-center justify-center px-6 pt-20">
-      <div className="max-w-5xl w-full">
+      <div className="max-w-6xl w-full">
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1] }}
           className="text-center"
         >
-          <span className="inline-block px-4 py-1.5 rounded-full bg-white/50 backdrop-blur-sm border border-white/20 text-[10px] uppercase tracking-widest font-bold mb-8">
-            Product Designer @ YouTube
-          </span>
-          <h1 className="text-6xl md:text-[8rem] font-display font-medium tracking-tighter leading-[0.9] mb-12">
-            Solving Problems<br />through Design.
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-medium tracking-tight leading-[1.15] text-balance">
+            Xin is a Product Designer at <span className="text-primary/60 transition-colors hover:text-primary cursor-default">YouTube</span>. Previously at <span className="text-primary/60 transition-colors hover:text-primary cursor-default">Airbnb</span>, <span className="text-primary/60 transition-colors hover:text-primary cursor-default">Adobe Research</span> and <span className="text-primary/60 transition-colors hover:text-primary cursor-default">Amazon</span>.
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-light leading-relaxed">
-            Xin is a Product Designer at YouTube. Previously at Airbnb, Adobe Research and Amazon.
-          </p>
         </motion.div>
       </div>
     </section>
@@ -165,13 +159,28 @@ function About() {
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          className="space-y-12"
+          className="space-y-16"
         >
-          <h2 className="text-xs uppercase tracking-[0.3em] font-bold text-muted-foreground">About Me</h2>
-          <p className="text-3xl md:text-5xl font-display leading-[1.2] font-medium tracking-tight text-balance">
-            Xin is a Product Designer at YouTube. Previously at Airbnb, Adobe Research and Amazon.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-12">
+          <div className="space-y-12">
+            <h2 className="text-xs uppercase tracking-[0.3em] font-bold text-muted-foreground">About Me</h2>
+            <div className="text-3xl md:text-5xl font-display leading-[1.3] font-medium tracking-tight space-y-10">
+              <p>Hi, this is Xin.</p>
+              <p>
+                I moved to the United States in 2014 to pursue a degree in Human-Computer Interaction at the University of Michigan. After interning in Amazon and Adobe Research, I went on to design at Airbnb.
+              </p>
+              <p>
+                A few years later, I transitioned from California to Switzerland, where I’m now a designer at Google Zürich, working on YouTube Shopping.
+              </p>
+              <p>
+                Beyond the screen, I love exploring the world—I’ve traveled to over 40 countries. I also enjoy film photography and painting.
+              </p>
+              <p className="text-xl md:text-2xl text-muted-foreground font-light italic">
+                Fun Fact: I hold a Bachelor’s degree in Applied Mathematics.
+              </p>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-12 border-t border-black/5">
             <div className="space-y-4">
               <h4 className="text-[10px] uppercase tracking-widest font-bold">Process</h4>
               <p className="text-muted-foreground leading-relaxed font-light">
