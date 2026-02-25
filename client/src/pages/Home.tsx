@@ -5,21 +5,24 @@ import { useRef, useEffect, useState } from "react";
 const MOCK_PROJECTS = [
   {
     id: 1,
-    title: "Aura Finance",
-    category: "AI Integration",
-    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop"
+    title: "EcoSphere Dashboard",
+    category: "Enterprise UX • SaaS",
+    description: "Streamlining complex environmental data into actionable insights for global logistics.",
+    image: "https://images.unsplash.com/photo-1551288049-bbbda536639a?q=80&w=2670&auto=format&fit=crop"
   },
   {
     id: 2,
-    title: "Nova OS",
-    category: "Interface Concept",
-    image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=2670&auto=format&fit=crop"
+    title: "NexPay Mobile",
+    category: "Fintech • iOS/Android",
+    description: "Redesigning the checkout experience for the next generation of digital-native users.",
+    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=2670&auto=format&fit=crop"
   },
   {
     id: 3,
-    title: "Lumina",
-    category: "Organic Brand",
-    image: "https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=2787&auto=format&fit=crop"
+    title: "Vault Design System",
+    category: "Internal Tooling • Systems",
+    description: "Building a scalable component library for a team of 50+ designers and engineers.",
+    image: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=2670&auto=format&fit=crop"
   }
 ];
 
@@ -59,8 +62,8 @@ function Navbar() {
           Xin Zhang
         </a>
         <div className="flex gap-10 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-          <a href="#work" className="hover:text-foreground transition-colors" data-testid="link-work">Works</a>
-          <a href="#about" className="hover:text-foreground transition-colors" data-testid="link-about">Profile</a>
+          <a href="#work" className="hover:text-foreground transition-colors" data-testid="link-work">Work</a>
+          <a href="#about" className="hover:text-foreground transition-colors" data-testid="link-about">About</a>
           <a href="#contact" className="hover:text-foreground transition-colors" data-testid="link-contact">Contact</a>
         </div>
       </div>
@@ -78,11 +81,14 @@ function Hero() {
           transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1] }}
           className="text-center"
         >
-          <h1 className="text-7xl md:text-[10rem] font-display font-medium tracking-tighter leading-[0.85] mb-12">
-            Synthetic<br />Poetics.
+          <span className="inline-block px-4 py-1.5 rounded-full bg-white/50 backdrop-blur-sm border border-white/20 text-[10px] uppercase tracking-widest font-bold mb-8">
+            Product Designer @ Tech
+          </span>
+          <h1 className="text-6xl md:text-[8rem] font-display font-medium tracking-tighter leading-[0.9] mb-12">
+            Solving Problems<br />through Design.
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto font-light leading-relaxed">
-            Exploring the delicate intersection of human intuition and algorithmic precision through organic digital interfaces.
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-light leading-relaxed">
+            I'm a UX designer dedicated to simplifying complex systems and building intuitive products that empower users at scale.
           </p>
         </motion.div>
       </div>
@@ -94,9 +100,13 @@ function ProjectGrid() {
   return (
     <section id="work" className="py-32 px-6">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="mb-20">
+          <h2 className="text-xs uppercase tracking-[0.3em] font-bold text-muted-foreground mb-4">Case Studies</h2>
+          <div className="h-px w-full bg-black/5" />
+        </div>
+        <div className="space-y-32">
           {MOCK_PROJECTS.map((project, i) => (
-            <ProjectItem key={project.id} project={project} index={i} />
+            <ProjectRow key={project.id} project={project} index={i} />
           ))}
         </div>
       </div>
@@ -104,31 +114,44 @@ function ProjectGrid() {
   );
 }
 
-function ProjectItem({ project, index }: { project: any, index: number }) {
+function ProjectRow({ project, index }: { project: any, index: number }) {
+  const isEven = index % 2 === 0;
+  
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.1 }}
-      className="group relative aspect-[3/4] overflow-hidden rounded-[2rem] bg-white/40 backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all duration-500"
-      data-testid={`card-project-${project.id}`}
+      viewport={{ once: true, margin: "-100px" }}
+      className={`flex flex-col ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'} gap-12 md:gap-24 items-center`}
+      data-testid={`row-project-${project.id}`}
     >
-      <img 
-        src={project.image} 
-        alt={project.title}
-        className="absolute inset-0 w-full h-full object-cover mix-blend-soft-light opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000 ease-out"
-      />
-      <div className="absolute inset-0 p-10 flex flex-col justify-between">
-        <div className="flex justify-between items-start">
-          <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground/80">0{index + 1}</span>
-          <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            <ArrowUpRight className="w-5 h-5" />
+      <div className="w-full md:w-3/5">
+        <div className="group relative aspect-video overflow-hidden rounded-[2.5rem] bg-white/40 backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all duration-700">
+          <img 
+            src={project.image} 
+            alt={project.title}
+            className="absolute inset-0 w-full h-full object-cover mix-blend-soft-light opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000 ease-out"
+          />
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <div className="bg-white/90 backdrop-blur-md px-6 py-3 rounded-full flex items-center gap-2 text-xs font-bold uppercase tracking-widest shadow-xl">
+              View Case Study <ArrowUpRight className="w-4 h-4" />
+            </div>
           </div>
         </div>
-        <div>
-          <h3 className="text-3xl font-display font-medium mb-1">{project.title}</h3>
-          <p className="text-xs uppercase tracking-widest text-muted-foreground">{project.category}</p>
+      </div>
+      
+      <div className="w-full md:w-2/5">
+        <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground/60 mb-4 block">0{index + 1} / {project.category}</span>
+        <h3 className="text-4xl md:text-5xl font-display font-medium mb-6">{project.title}</h3>
+        <p className="text-muted-foreground leading-relaxed mb-8 text-lg font-light">
+          {project.description}
+        </p>
+        <div className="flex gap-4">
+          {["UX Research", "UI Design", "Prototyping"].map(tag => (
+            <span key={tag} className="text-[9px] uppercase tracking-widest px-3 py-1 border border-black/5 rounded-full text-muted-foreground">
+              {tag}
+            </span>
+          ))}
         </div>
       </div>
     </motion.div>
@@ -138,19 +161,31 @@ function ProjectItem({ project, index }: { project: any, index: number }) {
 function About() {
   return (
     <section id="about" className="py-40 px-6">
-      <div className="max-w-4xl mx-auto text-center">
-        <motion.h2 
+      <div className="max-w-4xl mx-auto">
+        <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          className="text-4xl md:text-6xl font-display leading-tight mb-16 text-balance font-medium"
+          className="space-y-12"
         >
-          Crafting digital artifacts that feel like they've grown, not just been assembled.
-        </motion.h2>
-        <div className="flex flex-wrap justify-center gap-12 text-sm uppercase tracking-[0.2em] font-bold text-muted-foreground">
-          <span>Visionary Design</span>
-          <span>Adaptive Systems</span>
-          <span>Emotional UI</span>
-        </div>
+          <h2 className="text-xs uppercase tracking-[0.3em] font-bold text-muted-foreground">About Me</h2>
+          <p className="text-3xl md:text-5xl font-display leading-[1.2] font-medium tracking-tight text-balance">
+            Currently designing at a leading tech company, I specialize in bridging the gap between business goals and user needs through data-informed design systems.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-12">
+            <div className="space-y-4">
+              <h4 className="text-[10px] uppercase tracking-widest font-bold">Process</h4>
+              <p className="text-muted-foreground leading-relaxed font-light">
+                I believe in iterative design backed by rigorous testing. From user journey mapping to high-fidelity prototyping, my goal is always clarity.
+              </p>
+            </div>
+            <div className="space-y-4">
+              <h4 className="text-[10px] uppercase tracking-widest font-bold">Approach</h4>
+              <p className="text-muted-foreground leading-relaxed font-light">
+                Inclusive, accessible, and scalable. I build for the real world, ensuring every interaction serves a meaningful purpose.
+              </p>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -161,15 +196,15 @@ function Footer() {
     <footer id="contact" className="py-20 px-6 border-t border-black/5 relative z-10">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
         <div className="text-center md:text-left">
-          <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-muted-foreground mb-2">Available for collaboration</p>
+          <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-muted-foreground mb-2">Let's build the future together</p>
           <a href="mailto:hello@imxinzhang.com" className="text-2xl font-display hover:opacity-50 transition-opacity" data-testid="link-email">
             hello@imxinzhang.com
           </a>
         </div>
         <div className="flex gap-8 text-[10px] uppercase tracking-widest font-bold text-muted-foreground">
-          <a href="#" className="hover:text-foreground">Twitter</a>
+          <a href="#" className="hover:text-foreground">Resume</a>
           <a href="#" className="hover:text-foreground">LinkedIn</a>
-          <a href="#" className="hover:text-foreground">Save as PDF</a>
+          <a href="#" className="hover:text-foreground">Twitter</a>
         </div>
       </div>
     </footer>
