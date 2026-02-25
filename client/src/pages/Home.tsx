@@ -1,7 +1,6 @@
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
-import { Link } from "wouter";
 
 const MOCK_PROJECTS = [
   {
@@ -130,45 +129,43 @@ function ProjectRow({ project, index }: { project: any, index: number }) {
   const isEven = index % 2 === 0;
   
   return (
-    <Link href={`/project/${project.id}`}>
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        className={`flex flex-col ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'} gap-12 md:gap-24 items-center cursor-pointer group`}
-        data-testid={`row-project-${project.id}`}
-      >
-        <div className="w-full md:w-3/5">
-          <div className="group relative aspect-video overflow-hidden rounded-[2.5rem] bg-white/40 backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all duration-700">
-            <img 
-              src={project.image} 
-              alt={project.title}
-              className="absolute inset-0 w-full h-full object-cover mix-blend-soft-light opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000 ease-out"
-            />
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <div className="bg-white/90 backdrop-blur-md px-6 py-3 rounded-full flex items-center gap-2 text-xs font-bold uppercase tracking-widest shadow-xl">
-                View Case Study <ArrowUpRight className="w-4 h-4" />
-              </div>
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      className={`flex flex-col ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'} gap-12 md:gap-24 items-center`}
+      data-testid={`row-project-${project.id}`}
+    >
+      <div className="w-full md:w-3/5">
+        <div className="group relative aspect-video overflow-hidden rounded-[2.5rem] bg-white/40 backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all duration-700">
+          <img 
+            src={project.image} 
+            alt={project.title}
+            className="absolute inset-0 w-full h-full object-cover mix-blend-soft-light opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000 ease-out"
+          />
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <div className="bg-white/90 backdrop-blur-md px-6 py-3 rounded-full flex items-center gap-2 text-xs font-bold uppercase tracking-widest shadow-xl">
+              View Case Study <ArrowUpRight className="w-4 h-4" />
             </div>
           </div>
         </div>
-        
-        <div className="w-full md:w-2/5">
-          <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground/60 mb-4 block">0{index + 1} / {project.category}</span>
-          <h3 className="text-4xl md:text-5xl font-display font-medium mb-6 transition-transform group-hover:translate-x-2">{project.title}</h3>
-          <p className="text-muted-foreground leading-relaxed mb-8 text-lg font-light">
-            {project.description}
-          </p>
-          <div className="flex gap-4">
-            {project.tags?.map((tag: string) => (
-              <span key={tag} className="text-[9px] uppercase tracking-widest px-3 py-1 border border-black/5 rounded-full text-muted-foreground">
-                {tag}
-              </span>
-            ))}
-          </div>
+      </div>
+      
+      <div className="w-full md:w-2/5">
+        <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground/60 mb-4 block">0{index + 1} / {project.category}</span>
+        <h3 className="text-4xl md:text-5xl font-display font-medium mb-6">{project.title}</h3>
+        <p className="text-muted-foreground leading-relaxed mb-8 text-lg font-light">
+          {project.description}
+        </p>
+        <div className="flex gap-4">
+          {project.tags?.map((tag: string) => (
+            <span key={tag} className="text-[9px] uppercase tracking-widest px-3 py-1 border border-black/5 rounded-full text-muted-foreground">
+              {tag}
+            </span>
+          ))}
         </div>
-      </motion.div>
-    </Link>
+      </div>
+    </motion.div>
   );
 }
 
