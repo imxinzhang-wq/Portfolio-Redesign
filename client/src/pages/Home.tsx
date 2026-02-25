@@ -1,3 +1,4 @@
+import { Link } from "wouter";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
@@ -228,18 +229,20 @@ function ProjectRow({ project, index }: { project: any, index: number }) {
       data-testid={`row-project-${project.id}`}
     >
       <div className="w-full md:w-3/5">
-        <div className="group relative aspect-video overflow-hidden rounded-[4px] bg-white/40 backdrop-blur-sm border border-white/20 transition-all duration-700">
-          <img 
-            src={project.image} 
-            alt={project.title}
-            className="absolute inset-0 w-full h-full object-cover mix-blend-soft-light opacity-70 group-hover:opacity-100 transition-all duration-1000 ease-out"
-          />
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            <div className="bg-white/90 backdrop-blur-md px-6 py-3 rounded-full flex items-center gap-2 text-xs font-bold uppercase tracking-widest shadow-xl">
-              View Case Study <ArrowUpRight className="w-4 h-4" />
+        <Link href={`/project/${project.id}`}>
+          <a className="group block relative aspect-video overflow-hidden rounded-[4px] bg-white/40 backdrop-blur-sm border border-white/20 transition-all duration-700">
+            <img 
+              src={project.image} 
+              alt={project.title}
+              className="absolute inset-0 w-full h-full object-cover mix-blend-soft-light opacity-70 group-hover:opacity-100 transition-all duration-1000 ease-out"
+            />
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <div className="bg-white/90 backdrop-blur-md px-6 py-3 rounded-full flex items-center gap-2 text-xs font-bold uppercase tracking-widest shadow-xl">
+                View Case Study <ArrowUpRight className="w-4 h-4" />
+              </div>
             </div>
-          </div>
-        </div>
+          </a>
+        </Link>
       </div>
       
       <div className="w-full md:w-2/5">
