@@ -192,45 +192,54 @@ function ProjectGrid() {
 
 function ProjectCard({ project, index }: { project: any, index: number }) {
   const isOffset = index % 2 !== 0;
-  // Create a varying aspect ratio based on index for a more organic feel
+  // Varying aspect ratios
   const aspectRatios = ['aspect-[4/3]', 'aspect-[3/4]', 'aspect-square', 'aspect-[16/10]'];
   const currentAspect = aspectRatios[index % aspectRatios.length];
+  
+  // Varying widths for a more organic feel (using percentages for md screens)
+  const widths = ['md:w-full', 'md:w-[85%]', 'md:w-[92%]', 'md:w-[78%]'];
+  const currentWidth = widths[index % widths.length];
+  
+  // Alignment: even items left, odd items right (within their grid cell)
+  const alignment = index % 2 === 0 ? 'items-start' : 'items-end';
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
-      className={`flex flex-col group md:col-span-1 ${isOffset ? 'md:mt-32' : ''}`}
+      className={`flex flex-col group md:col-span-1 ${alignment} ${isOffset ? 'md:mt-32' : ''}`}
       data-testid={`card-project-${project.id}`}
     >
-      <Link href={`/project/${project.id}`}>
-        <a className={`block relative overflow-hidden rounded-[4px] bg-white/40 backdrop-blur-sm border border-white/20 transition-all duration-700 mb-8 ${currentAspect}`}>
-          <img 
-            src={project.image} 
-            alt={project.title}
-            className="absolute inset-0 w-full h-full object-cover mix-blend-soft-light opacity-70 group-hover:opacity-100 transition-all duration-1000 ease-out"
-          />
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            <div className="bg-white/90 backdrop-blur-md px-6 py-3 rounded-full flex items-center gap-2 text-xs font-bold uppercase tracking-widest shadow-xl">
-              View Case Study <ArrowUpRight className="w-4 h-4" />
+      <div className={`${currentWidth} w-full`}>
+        <Link href={`/project/${project.id}`}>
+          <a className={`block relative overflow-hidden rounded-[4px] bg-white/40 backdrop-blur-sm border border-white/20 transition-all duration-700 mb-8 ${currentAspect}`}>
+            <img 
+              src={project.image} 
+              alt={project.title}
+              className="absolute inset-0 w-full h-full object-cover mix-blend-soft-light opacity-70 group-hover:opacity-100 transition-all duration-1000 ease-out"
+            />
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <div className="bg-white/90 backdrop-blur-md px-6 py-3 rounded-full flex items-center gap-2 text-xs font-bold uppercase tracking-widest shadow-xl">
+                View Case Study <ArrowUpRight className="w-4 h-4" />
+              </div>
             </div>
+          </a>
+        </Link>
+        
+        <div className="space-y-4">
+          <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground/60">0{index + 1} / {project.category}</span>
+          <h3 className="text-3xl font-display font-medium group-hover:opacity-60 transition-opacity mt-4 mb-4">{project.title}</h3>
+          <p className="text-muted-foreground leading-relaxed font-light line-clamp-2 text-lg">
+            {project.description}
+          </p>
+          <div className="flex gap-3 pt-4">
+            {project.tags?.slice(0, 3).map((tag: string) => (
+              <span key={tag} className="text-[8px] uppercase tracking-widest px-2 py-0.5 border border-black/5 rounded-full text-muted-foreground">
+                {tag}
+              </span>
+            ))}
           </div>
-        </a>
-      </Link>
-      
-      <div className="space-y-4">
-        <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground/60">0{index + 1} / {project.category}</span>
-        <h3 className="text-3xl font-display font-medium group-hover:opacity-60 transition-opacity mt-4 mb-4">{project.title}</h3>
-        <p className="text-muted-foreground leading-relaxed font-light line-clamp-2 text-lg">
-          {project.description}
-        </p>
-        <div className="flex gap-3 pt-4">
-          {project.tags?.slice(0, 3).map((tag: string) => (
-            <span key={tag} className="text-[8px] uppercase tracking-widest px-2 py-0.5 border border-black/5 rounded-full text-muted-foreground">
-              {tag}
-            </span>
-          ))}
         </div>
       </div>
     </motion.div>
