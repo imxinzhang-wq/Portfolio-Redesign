@@ -82,7 +82,7 @@ function Hero() {
           className="text-center"
         >
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-medium tracking-tight leading-[1.15] text-balance">
-            Xin is a Product Designer at <span className="text-black/40">YouTube</span>. Previously at <span className="text-black/40">Airbnb</span>, <span className="text-black/40">Adobe Research</span> and <span className="text-black/40">Amazon</span>.
+            Xin is a Product Designer at <span className="inline-block px-4 py-1 rounded-2xl bg-white/30 backdrop-blur-md border border-white/40 shadow-sm transition-transform hover:scale-105 cursor-default">YouTube</span>. Previously at <span className="inline-block px-4 py-1 rounded-2xl bg-white/30 backdrop-blur-md border border-white/40 shadow-sm transition-transform hover:scale-105 cursor-default">Airbnb</span>, <span className="inline-block px-4 py-1 rounded-2xl bg-white/30 backdrop-blur-md border border-white/40 shadow-sm transition-transform hover:scale-105 cursor-default">Adobe Research</span> and <span className="inline-block px-4 py-1 rounded-2xl bg-white/30 backdrop-blur-md border border-white/40 shadow-sm transition-transform hover:scale-105 cursor-default">Amazon</span>.
           </h1>
         </motion.div>
       </div>
