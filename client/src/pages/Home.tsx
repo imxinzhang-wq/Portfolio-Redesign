@@ -8,21 +8,24 @@ const MOCK_PROJECTS = [
     title: "EcoSphere Dashboard",
     category: "Enterprise UX • SaaS",
     description: "Streamlining complex environmental data into actionable insights for global logistics.",
-    image: "https://images.unsplash.com/photo-1551288049-bbbda536639a?q=80&w=2670&auto=format&fit=crop"
+    image: "https://images.unsplash.com/photo-1551288049-bbbda536639a?q=80&w=2670&auto=format&fit=crop",
+    tags: ["UX Research", "UI Design", "Prototyping"]
   },
   {
     id: 2,
     title: "NexPay Mobile",
     category: "Fintech • iOS/Android",
     description: "Redesigning the checkout experience for the next generation of digital-native users.",
-    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=2670&auto=format&fit=crop"
+    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=2670&auto=format&fit=crop",
+    tags: ["Mobile UX", "Interaction Design", "User Testing"]
   },
   {
     id: 3,
     title: "Vault Design System",
     category: "Internal Tooling • Systems",
     description: "Building a scalable component library for a team of 50+ designers and engineers.",
-    image: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=2670&auto=format&fit=crop"
+    image: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=2670&auto=format&fit=crop",
+    tags: ["Design Systems", "Documentation", "Accessibility"]
   }
 ];
 
@@ -155,7 +158,7 @@ function ProjectRow({ project, index }: { project: any, index: number }) {
           {project.description}
         </p>
         <div className="flex gap-4">
-          {["UX Research", "UI Design", "Prototyping"].map(tag => (
+          {project.tags?.map((tag: string) => (
             <span key={tag} className="text-[9px] uppercase tracking-widest px-3 py-1 border border-black/5 rounded-full text-muted-foreground">
               {tag}
             </span>
