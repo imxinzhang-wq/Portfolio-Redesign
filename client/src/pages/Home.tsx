@@ -180,7 +180,7 @@ function About() {
             <div className="space-y-4">
               <h4 className="text-[10px] uppercase tracking-widest font-bold">Fun Fact</h4>
               <p className="text-muted-foreground leading-relaxed font-light">
-                I hold a Bachelor’s degree in Applied Mathematics.
+                I hold a Bachelor’s degree in Applied Mathematics and was recognized as a Meritorious Winner in the 2013 Mathematical Contest in Modeling.
               </p>
             </div>
           </div>
