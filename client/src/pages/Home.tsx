@@ -31,10 +31,10 @@ export default function Home() {
     <div className="bg-background min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans">
       {/* Background Elements */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-[#f3e9dc] morphing-blob" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#e9ecef] morphing-blob" style={{ animationDelay: '-5s' }} />
-        <div className="absolute top-[20%] right-[10%] w-[40%] h-[40%] bg-[#f8f9fa] morphing-blob" style={{ animationDelay: '-10s' }} />
-        <div className="absolute inset-0 bg-organic-gradient" />
+        <div className="absolute top-[5%] left-[5%] w-[50%] h-[50%] bg-[#fbd1a2] morphing-blob" />
+        <div className="absolute bottom-[5%] right-[5%] w-[45%] h-[45%] bg-[#7ebdc2] morphing-blob" style={{ animationDelay: '-4s' }} />
+        <div className="absolute top-[40%] right-[15%] w-[35%] h-[35%] bg-[#efea5a] morphing-blob" style={{ animationDelay: '-8s' }} />
+        <div className="absolute inset-0 bg-organic-gradient backdrop-blur-[60px]" />
       </div>
 
       <Navbar />
