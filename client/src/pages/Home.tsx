@@ -2,6 +2,13 @@ import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 
+import photo1 from "@assets/1BBF94CC-BA7C-432C-A0C8-C410E45FE149_4_5005_c_1772054814413.jpeg";
+import photo2 from "@assets/6C23377C-15B6-42EA-B1D5-96A84D83C61E_4_5005_c_1772054814414.jpeg";
+import photo3 from "@assets/7CC2EAF5-2C07-42BE-8AAB-1027083FD2CF_4_5005_c_1772054814414.jpeg";
+import photo4 from "@assets/81C93177-9204-4A44-8C60-4E530DEBAB95_4_5005_c_1772054814415.jpeg";
+import photo5 from "@assets/ACA80C8E-CD60-460B-A794-9B92DECF6107_4_5005_c_1772054814415.jpeg";
+import photo6 from "@assets/E7311041-CF0E-48D1-85C5-BA16849E0601_4_5005_c_1772054814415.jpeg";
+
 const MOCK_PROJECTS = [
   {
     id: 1,
@@ -32,27 +39,39 @@ const MOCK_PROJECTS = [
 const MOCK_VISUALS = [
   {
     id: 1,
-    title: "Alpine Silence",
+    title: "Street Life",
     category: "Photography",
-    image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2000&auto=format&fit=crop"
+    image: photo1
   },
   {
     id: 2,
-    title: "Abstract Flow",
-    category: "Painting",
-    image: "https://images.unsplash.com/photo-1541701494587-cb58502866ab?q=80&w=2000&auto=format&fit=crop"
+    title: "Cherry Blossoms",
+    category: "Photography",
+    image: photo2
   },
   {
     id: 3,
-    title: "Urban Geometry",
+    title: "Matterhorn",
     category: "Photography",
-    image: "https://images.unsplash.com/photo-1449034446853-66c86144b0ad?q=80&w=2000&auto=format&fit=crop"
+    image: photo3
   },
   {
     id: 4,
-    title: "Dusk in Zürich",
+    title: "Dubai Creek",
     category: "Photography",
-    image: "https://images.unsplash.com/photo-1515488764276-beab7607c1e6?q=80&w=2000&auto=format&fit=crop"
+    image: photo4
+  },
+  {
+    id: 5,
+    title: "Spice Market",
+    category: "Photography",
+    image: photo5
+  },
+  {
+    id: 6,
+    title: "City Corner",
+    category: "Photography",
+    image: photo6
   }
 ];
 
