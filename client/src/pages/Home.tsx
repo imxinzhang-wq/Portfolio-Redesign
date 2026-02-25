@@ -31,9 +31,9 @@ export default function Home() {
     <div className="bg-background min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans">
       {/* Background Elements */}
       <div className="fixed inset-0 pointer-events-none z-0 bg-[#fdfcfb]">
-        <div className="absolute top-[10%] left-[10%] w-[50%] h-[50%] bg-[#FFD0B1] morphing-blob" />
-        <div className="absolute bottom-[10%] right-[10%] w-[45%] h-[45%] bg-[#C1D9F9] morphing-blob" style={{ animationDelay: '-6s' }} />
-        <div className="absolute top-[35%] right-[20%] w-[40%] h-[40%] bg-[#FFB5B9] morphing-blob" style={{ animationDelay: '-12s' }} />
+        <div className="absolute top-[10%] left-[10%] w-[50%] h-[50%] bg-[#D9E9BA] morphing-blob" />
+        <div className="absolute bottom-[10%] right-[10%] w-[45%] h-[45%] bg-[#C1DDC6] morphing-blob" style={{ animationDelay: '-6s' }} />
+        <div className="absolute top-[35%] right-[20%] w-[40%] h-[40%] bg-[#E8F5C8] morphing-blob" style={{ animationDelay: '-12s' }} />
         <div className="absolute inset-0 bg-white/40 backdrop-blur-[60px]" />
       </div>
 
