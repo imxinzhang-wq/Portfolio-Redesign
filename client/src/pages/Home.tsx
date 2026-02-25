@@ -180,7 +180,7 @@ function ProjectGrid() {
           <h2 className="text-xs uppercase tracking-[0.3em] font-bold text-muted-foreground mb-4">Case Studies</h2>
           <div className="h-px w-full bg-black/5" />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-32">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-24 items-start">
           {MOCK_PROJECTS.map((project, i) => (
             <ProjectCard key={project.id} project={project} index={i} />
           ))}
@@ -191,16 +191,19 @@ function ProjectGrid() {
 }
 
 function ProjectCard({ project, index }: { project: any, index: number }) {
+  const isLarge = index === 0; // First project is larger
+  const isOffset = index % 2 !== 0; // Odd projects are shifted down
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
-      className="flex flex-col group"
+      className={`flex flex-col group ${isLarge ? 'md:col-span-2 mb-12' : 'md:col-span-1'} ${isOffset && !isLarge ? 'md:mt-32' : ''}`}
       data-testid={`card-project-${project.id}`}
     >
       <Link href={`/project/${project.id}`}>
-        <a className="block relative aspect-[4/3] overflow-hidden rounded-[4px] bg-white/40 backdrop-blur-sm border border-white/20 transition-all duration-700 mb-8">
+        <a className={`block relative overflow-hidden rounded-[4px] bg-white/40 backdrop-blur-sm border border-white/20 transition-all duration-700 mb-8 ${isLarge ? 'aspect-[21/9]' : 'aspect-[4/3]'}`}>
           <img 
             src={project.image} 
             alt={project.title}
@@ -214,14 +217,14 @@ function ProjectCard({ project, index }: { project: any, index: number }) {
         </a>
       </Link>
       
-      <div className="space-y-4">
+      <div className={`${isLarge ? 'max-w-2xl' : 'space-y-4'}`}>
         <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground/60">0{index + 1} / {project.category}</span>
-        <h3 className="text-3xl font-display font-medium group-hover:opacity-60 transition-opacity">{project.title}</h3>
-        <p className="text-muted-foreground leading-relaxed font-light line-clamp-2">
+        <h3 className={`${isLarge ? 'text-4xl md:text-5xl' : 'text-3xl'} font-display font-medium group-hover:opacity-60 transition-opacity mt-4 mb-4`}>{project.title}</h3>
+        <p className="text-muted-foreground leading-relaxed font-light line-clamp-2 text-lg">
           {project.description}
         </p>
-        <div className="flex gap-3 pt-2">
-          {project.tags?.slice(0, 2).map((tag: string) => (
+        <div className="flex gap-3 pt-4">
+          {project.tags?.slice(0, 3).map((tag: string) => (
             <span key={tag} className="text-[8px] uppercase tracking-widest px-2 py-0.5 border border-black/5 rounded-full text-muted-foreground">
               {tag}
             </span>
