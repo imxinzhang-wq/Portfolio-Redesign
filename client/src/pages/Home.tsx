@@ -82,13 +82,13 @@ function Hero() {
           className="text-center"
         >
           <span className="inline-block px-4 py-1.5 rounded-full bg-white/50 backdrop-blur-sm border border-white/20 text-[10px] uppercase tracking-widest font-bold mb-8">
-            Product Designer @ Tech
+            Product Designer @ YouTube
           </span>
           <h1 className="text-6xl md:text-[8rem] font-display font-medium tracking-tighter leading-[0.9] mb-12">
             Solving Problems<br />through Design.
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-light leading-relaxed">
-            I'm a UX designer dedicated to simplifying complex systems and building intuitive products that empower users at scale.
+            Xin is a Product Designer at YouTube. Previously at Airbnb, Adobe Research and Amazon.
           </p>
         </motion.div>
       </div>
@@ -169,7 +169,7 @@ function About() {
         >
           <h2 className="text-xs uppercase tracking-[0.3em] font-bold text-muted-foreground">About Me</h2>
           <p className="text-3xl md:text-5xl font-display leading-[1.2] font-medium tracking-tight text-balance">
-            Currently designing at a leading tech company, I specialize in bridging the gap between business goals and user needs through data-informed design systems.
+            Xin is a Product Designer at YouTube. Previously at Airbnb, Adobe Research and Amazon.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-12">
             <div className="space-y-4">
