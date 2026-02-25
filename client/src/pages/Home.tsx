@@ -51,11 +51,25 @@ export default function Home() {
 }
 
 function Navbar() {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <motion.nav 
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="fixed top-0 left-0 right-0 z-50 px-6 py-8"
+      className={`fixed top-0 left-0 right-0 z-50 px-6 py-4 transition-all duration-300 ${
+        isScrolled 
+          ? "bg-white/40 backdrop-blur-md border-b border-white/20 py-4 shadow-sm" 
+          : "bg-transparent py-8"
+      }`}
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <a href="/" className="text-lg font-display font-semibold tracking-tight uppercase" data-testid="link-home">
