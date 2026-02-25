@@ -159,13 +159,28 @@ function About() {
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          className="space-y-12"
+          className="space-y-16"
         >
-          <h2 className="text-xs uppercase tracking-[0.3em] font-bold text-muted-foreground">About Me</h2>
-          <p className="text-3xl md:text-5xl font-display leading-[1.2] font-medium tracking-tight text-balance">
-            Xin is a Product Designer at YouTube. Previously at Airbnb, Adobe Research and Amazon.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-12">
+          <div className="space-y-12">
+            <h2 className="text-xs uppercase tracking-[0.3em] font-bold text-muted-foreground">About Me</h2>
+            <div className="text-3xl md:text-5xl font-display leading-[1.3] font-medium tracking-tight space-y-10">
+              <p>Hi, this is Xin.</p>
+              <p>
+                I moved to the United States in 2014 to pursue a degree in Human-Computer Interaction at the University of Michigan. After interning in Amazon and Adobe Research, I went on to design at Airbnb.
+              </p>
+              <p>
+                A few years later, I transitioned from California to Switzerland, where I’m now a designer at Google Zürich, working on YouTube Shopping.
+              </p>
+              <p>
+                Beyond the screen, I love exploring the world—I’ve traveled to over 40 countries. I also enjoy film photography and painting.
+              </p>
+              <p className="text-xl md:text-2xl text-muted-foreground font-light italic">
+                Fun Fact: I hold a Bachelor’s degree in Applied Mathematics.
+              </p>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-12 border-t border-black/5">
             <div className="space-y-4">
               <h4 className="text-[10px] uppercase tracking-widest font-bold">Process</h4>
               <p className="text-muted-foreground leading-relaxed font-light">
