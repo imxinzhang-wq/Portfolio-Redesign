@@ -81,9 +81,6 @@ function Hero() {
           transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1] }}
           className="text-center"
         >
-          <span className="inline-block px-4 py-1.5 rounded-full bg-white/50 backdrop-blur-sm border border-white/20 text-[10px] uppercase tracking-widest font-bold mb-8">
-            Product Designer @ YouTube
-          </span>
           <h1 className="text-6xl md:text-[8rem] font-display font-medium tracking-tighter leading-[0.9] mb-12">
             Solving Problems<br />through Design.
           </h1>
