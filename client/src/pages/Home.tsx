@@ -82,11 +82,8 @@ function Hero() {
           className="text-center"
         >
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-medium tracking-tighter leading-[1.1] mb-12 text-balance">
-            Xin is a product designer with 10+ years of experience building products in tech.
+            Xin is a Product Designer at YouTube, previously at Airbnb, Adobe Research, and Amazon.
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-light leading-relaxed">
-            Xin is a Product Designer at YouTube. Previously at Airbnb, Adobe Research and Amazon.
-          </p>
         </motion.div>
       </div>
     </section>
