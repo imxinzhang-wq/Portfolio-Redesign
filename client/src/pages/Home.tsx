@@ -9,6 +9,8 @@ import photo3 from "@assets/7CC2EAF5-2C07-42BE-8AAB-1027083FD2CF_4_5005_c_177205
 import photo4 from "@assets/81C93177-9204-4A44-8C60-4E530DEBAB95_4_5005_c_1772054814415.jpeg";
 import photo5 from "@assets/ACA80C8E-CD60-460B-A794-9B92DECF6107_4_5005_c_1772054814415.jpeg";
 import photo6 from "@assets/E7311041-CF0E-48D1-85C5-BA16849E0601_4_5005_c_1772054814415.jpeg";
+import project2Mockup from "@assets/overview_1772056935126.png";
+import project2Bg from "@assets/project-2-bg.png";
 
 const MOCK_PROJECTS = [
   {
@@ -21,11 +23,12 @@ const MOCK_PROJECTS = [
   },
   {
     id: 2,
-    title: "NexPay Mobile",
-    category: "Fintech • iOS/Android",
-    description: "Redesigning the checkout experience for the next generation of digital-native users.",
-    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=2670&auto=format&fit=crop",
-    tags: ["Mobile UX", "Interaction Design", "User Testing"]
+    title: "Health Insights App",
+    category: "Healthcare • Mobile",
+    description: "A comprehensive health tracking and insights application designed for intuitive pain analysis and dietary tracking.",
+    image: project2Mockup,
+    bgImage: project2Bg,
+    tags: ["Mobile UX", "Health Tech", "Data Vis"]
   },
   {
     id: 3,
@@ -203,10 +206,17 @@ function ProjectCard({ project, index }: { project: any, index: number }) {
     >
       <Link href={`/project/${project.id}`}>
         <a className="block relative aspect-[4/3] overflow-hidden rounded-[4px] bg-white/40 backdrop-blur-sm border border-white/20 transition-all duration-700 mb-8">
+          {project.bgImage && (
+            <img 
+              src={project.bgImage} 
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity duration-1000"
+            />
+          )}
           <img 
             src={project.image} 
             alt={project.title}
-            className="absolute inset-0 w-full h-full object-cover mix-blend-soft-light opacity-70 group-hover:opacity-100 transition-all duration-1000 ease-out"
+            className={`absolute inset-0 w-full h-full ${project.bgImage ? 'object-contain p-8' : 'object-cover mix-blend-soft-light opacity-70'} group-hover:opacity-100 transition-all duration-1000 ease-out`}
           />
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
             <div className="bg-white/90 backdrop-blur-md px-6 py-3 rounded-full flex items-center gap-2 text-xs font-bold uppercase tracking-widest shadow-xl">
