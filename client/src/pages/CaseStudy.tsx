@@ -149,35 +149,50 @@ export default function CaseStudy() {
 
         {/* Content Sections */}
         <section className="container mx-auto px-6 pb-40">
-          <div className="max-w-3xl mx-auto space-y-32">
-            {project.content.map((section: any, idx: number) => (
-              <motion.div 
-                key={idx}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8 }}
-                className="space-y-8"
-              >
-                {section.type === "text" ? (
-                  <>
-                    <h3 className="text-2xl font-display font-medium">{section.heading}</h3>
-                    <p className="text-lg text-muted-foreground font-light leading-relaxed">
-                      {section.body}
-                    </p>
-                  </>
-                ) : (
-                  <div className="space-y-4">
-                    <div className="aspect-video overflow-hidden rounded-[4px] bg-white/20 border border-white/10">
-                      <img src={section.url} alt={section.caption} className="w-full h-full object-cover" />
-                    </div>
-                    <p className="text-center text-xs text-muted-foreground font-light uppercase tracking-widest">
-                      {section.caption}
-                    </p>
-                  </div>
-                )}
-              </motion.div>
-            ))}
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-24">
+              {/* Left Column: Sticky Summary/Heading */}
+              <div className="lg:col-span-4">
+                <div className="lg:sticky lg:top-32 space-y-8">
+                  <h3 className="text-3xl font-display font-medium tracking-tight">Project Overview & Insights</h3>
+                  <p className="text-muted-foreground font-light leading-relaxed italic border-l-2 border-black/5 pl-6">
+                    A deep dive into the design process, from initial research to the final high-fidelity prototype.
+                  </p>
+                </div>
+              </div>
+
+              {/* Right Column: Scrolling Content */}
+              <div className="lg:col-span-8 space-y-32">
+                {project.content.map((section: any, idx: number) => (
+                  <motion.div 
+                    key={idx}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.8 }}
+                    className="space-y-8"
+                  >
+                    {section.type === "text" ? (
+                      <div className="max-w-2xl">
+                        <h3 className="text-2xl font-display font-medium mb-6">{section.heading}</h3>
+                        <p className="text-lg text-muted-foreground font-light leading-relaxed">
+                          {section.body}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        <div className="aspect-video overflow-hidden rounded-[4px] bg-white/20 border border-white/10 shadow-sm">
+                          <img src={section.url} alt={section.caption} className="w-full h-full object-cover transition-transform duration-1000 hover:scale-105" />
+                        </div>
+                        <p className="text-xs text-muted-foreground font-light uppercase tracking-widest italic pl-1">
+                          — {section.caption}
+                        </p>
+                      </div>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
 
