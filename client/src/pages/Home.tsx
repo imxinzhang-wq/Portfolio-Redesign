@@ -169,7 +169,7 @@ function VisualsGrid() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.8 }}
-              className="group relative aspect-square overflow-hidden rounded-sm bg-white/20 border border-white/10"
+              className="group relative aspect-square overflow-hidden rounded-none bg-white/20 border border-white/10"
             >
               <img 
                 src={item.image} 
@@ -200,7 +200,7 @@ function ProjectRow({ project, index }: { project: any, index: number }) {
       data-testid={`row-project-${project.id}`}
     >
       <div className="w-full md:w-3/5">
-        <div className="group relative aspect-video overflow-hidden rounded-sm bg-white/40 backdrop-blur-sm border border-white/20 transition-all duration-700">
+        <div className="group relative aspect-video overflow-hidden rounded-none bg-white/40 backdrop-blur-sm border border-white/20 transition-all duration-700">
           <img 
             src={project.image} 
             alt={project.title}
