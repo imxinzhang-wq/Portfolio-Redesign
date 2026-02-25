@@ -173,9 +173,6 @@ function About() {
               <p>
                 Outside of work, I’m often traveling — 40+ countries and counting — or shooting film and painting.
               </p>
-              <p className="text-xl md:text-2xl text-muted-foreground font-light italic">
-                Fun Fact: I hold a Bachelor’s degree in Applied Mathematics.
-              </p>
             </div>
           </div>
           
