@@ -164,7 +164,6 @@ function About() {
           <div className="space-y-12">
             <h2 className="text-xs uppercase tracking-[0.3em] font-bold text-muted-foreground">About Me</h2>
             <div className="text-3xl md:text-5xl font-display leading-[1.3] font-medium tracking-tight space-y-10">
-              <p>Hi, this is Xin.</p>
               <p>
                 I moved to the United States in 2014 to pursue a degree in Human-Computer Interaction at the University of Michigan. After interning in Amazon and Adobe Research, I went on to design at Airbnb.
               </p>
