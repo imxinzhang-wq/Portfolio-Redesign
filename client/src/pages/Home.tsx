@@ -137,7 +137,7 @@ function ProjectRow({ project, index }: { project: any, index: number }) {
       <div className="w-full md:w-2/5">
         <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground/60 mb-4 block">0{index + 1} / {project.category}</span>
         <h3 className="text-4xl md:text-5xl font-display font-medium mb-6">{project.title}</h3>
-        <p className="text-muted-foreground leading-relaxed mb-8 text-lg font-light">
+        <p className="text-muted-foreground leading-relaxed mb-8 text-lg font-normal">
           {project.description}
         </p>
         <div className="flex gap-4">
