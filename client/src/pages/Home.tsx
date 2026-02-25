@@ -84,7 +84,7 @@ export default function Home() {
         <div className="absolute top-[5%] left-[5%] w-[50%] h-[50%] bg-[#fbd1a2] morphing-blob" />
         <div className="absolute bottom-[5%] right-[5%] w-[45%] h-[45%] bg-[#7ebdc2] morphing-blob" style={{ animationDelay: '-4s' }} />
         <div className="absolute top-[40%] right-[15%] w-[35%] h-[35%] bg-[#efea5a] morphing-blob" style={{ animationDelay: '-8s' }} />
-        <div className="absolute inset-0 bg-white/20 backdrop-blur-[80px] border-t border-white/30" />
+        <div id="main-bg-overlay" className="absolute inset-0 bg-white/20 backdrop-blur-[80px] border-t border-white/30 transition-colors duration-700" />
       </div>
 
       <Navbar />
@@ -156,8 +156,25 @@ function Hero() {
 }
 
 function ProjectGrid() {
+  const targetRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: targetRef,
+    offset: ["start end", "start center"]
+  });
+
+  const bgOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.15]);
+
+  useEffect(() => {
+    const bg = document.getElementById('main-bg-overlay');
+    const unsubscribe = bgOpacity.on("change", (latest) => {
+      if (bg) bg.style.backdropBlur = `${80 + (1 - latest) * 40}px`;
+      if (bg) bg.style.backgroundColor = `rgba(255, 255, 255, ${0.2 + (1 - latest) * 0.6})`;
+    });
+    return () => unsubscribe();
+  }, [bgOpacity]);
+
   return (
-    <section id="work" className="py-32 px-6">
+    <section id="work" ref={targetRef} className="py-32 px-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-20">
           <h2 className="text-xs uppercase tracking-[0.3em] font-bold text-muted-foreground mb-4">Case Studies</h2>
@@ -264,8 +281,25 @@ function ProjectRow({ project, index }: { project: any, index: number }) {
 }
 
 function About() {
+  const targetRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: targetRef,
+    offset: ["start end", "start center"]
+  });
+
+  useEffect(() => {
+    const bg = document.getElementById('main-bg-overlay');
+    const unsubscribe = scrollYProgress.on("change", (latest) => {
+      if (bg && latest > 0) {
+        bg.style.backgroundColor = `rgba(255, 255, 255, ${0.8 - latest * 0.6})`;
+        bg.style.backdropBlur = `${120 - latest * 40}px`;
+      }
+    });
+    return () => unsubscribe();
+  }, [scrollYProgress]);
+
   return (
-    <section id="about" className="py-40 px-6">
+    <section id="about" ref={targetRef} className="py-40 px-6">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0 }}
