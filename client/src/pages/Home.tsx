@@ -29,6 +29,33 @@ const MOCK_PROJECTS = [
   }
 ];
 
+const MOCK_VISUALS = [
+  {
+    id: 1,
+    title: "Alpine Silence",
+    category: "Photography",
+    image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2000&auto=format&fit=crop"
+  },
+  {
+    id: 2,
+    title: "Abstract Flow",
+    category: "Painting",
+    image: "https://images.unsplash.com/photo-1541701494587-cb58502866ab?q=80&w=2000&auto=format&fit=crop"
+  },
+  {
+    id: 3,
+    title: "Urban Geometry",
+    category: "Photography",
+    image: "https://images.unsplash.com/photo-1449034446853-66c86144b0ad?q=80&w=2000&auto=format&fit=crop"
+  },
+  {
+    id: 4,
+    title: "Dusk in Zürich",
+    category: "Photography",
+    image: "https://images.unsplash.com/photo-1515488764276-beab7607c1e6?q=80&w=2000&auto=format&fit=crop"
+  }
+];
+
 export default function Home() {
   return (
     <div className="bg-background min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans">
@@ -45,6 +72,7 @@ export default function Home() {
       <main className="relative z-10">
         <Hero />
         <ProjectGrid />
+        <VisualsGrid />
         <About />
       </main>
 
@@ -118,6 +146,41 @@ function ProjectGrid() {
         <div className="space-y-32">
           {MOCK_PROJECTS.map((project, i) => (
             <ProjectRow key={project.id} project={project} index={i} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function VisualsGrid() {
+  return (
+    <section className="py-32 px-6 bg-white/10 backdrop-blur-sm border-y border-white/20">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-20">
+          <h2 className="text-xs uppercase tracking-[0.3em] font-bold text-muted-foreground mb-4">Visual Artifacts</h2>
+          <div className="h-px w-full bg-black/5" />
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {MOCK_VISUALS.map((item, i) => (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1, duration: 0.8 }}
+              className="group relative aspect-square overflow-hidden rounded-3xl bg-white/20 border border-white/10"
+            >
+              <img 
+                src={item.image} 
+                alt={item.title}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                <p className="text-[10px] uppercase tracking-widest font-bold text-white/60 mb-1">{item.category}</p>
+                <h4 className="text-white font-medium text-sm">{item.title}</h4>
+              </div>
+            </motion.div>
           ))}
         </div>
       </div>
