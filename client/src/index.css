@@ -34,26 +34,26 @@
 }
 
 :root {
-  --background: 0 0% 98%;
-  --foreground: 240 10% 3.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 240 10% 3.9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 3.9%;
-  --primary: 240 5.9% 10%;
-  --primary-foreground: 0 0% 98%;
-  --secondary: 240 4.8% 95.9%;
-  --secondary-foreground: 240 5.9% 10%;
-  --muted: 240 4.8% 95.9%;
-  --muted-foreground: 240 3.8% 46.1%;
-  --accent: 240 4.8% 95.9%;
-  --accent-foreground: 240 5.9% 10%;
+  --background: 30 20% 97%;
+  --foreground: 20 10% 15%;
+  --card: 30 20% 98%;
+  --card-foreground: 20 10% 15%;
+  --popover: 30 20% 98%;
+  --popover-foreground: 20 10% 15%;
+  --primary: 20 10% 20%;
+  --primary-foreground: 30 20% 98%;
+  --secondary: 30 10% 90%;
+  --secondary-foreground: 20 10% 20%;
+  --muted: 30 10% 92%;
+  --muted-foreground: 20 5% 45%;
+  --accent: 35 30% 88%;
+  --accent-foreground: 20 10% 20%;
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 0 0% 98%;
-  --border: 240 5.9% 90%;
-  --input: 240 5.9% 90%;
-  --ring: 240 5.9% 10%;
-  --radius: 0.5rem;
+  --border: 30 10% 88%;
+  --input: 30 10% 88%;
+  --ring: 20 10% 20%;
+  --radius: 1rem;
 }
 
 .dark {
@@ -83,38 +83,30 @@
     @apply border-border;
   }
   body {
-    @apply font-sans antialiased bg-background text-foreground selection:bg-primary selection:text-primary-foreground;
+    @apply font-sans antialiased bg-background text-foreground selection:bg-accent selection:text-accent-foreground;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display tracking-tight;
+    @apply font-display tracking-tight font-medium;
   }
 }
 
-/* Custom Utilities for Modern Trend */
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-  .reveal-mask {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+  .bg-organic-gradient {
+    background: radial-gradient(circle at 0% 0%, hsla(35, 30%, 88%, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, hsla(20, 30%, 85%, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, hsla(45, 20%, 95%, 0.5) 0%, transparent 100%);
   }
   
-  /* Noise overlay for texture */
-  .bg-noise {
-    position: relative;
-  }
-  .bg-noise::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 50;
+  .morphing-blob {
+    animation: morph 20s ease-in-out infinite;
+    filter: blur(80px);
+    opacity: 0.6;
     mix-blend-mode: multiply;
   }
-  
-  .dark .bg-noise::before {
-    mix-blend-mode: screen;
-    opacity: 0.08;
+
+  @keyframes morph {
+    0%, 100% { border-radius: 40% 60% 70% 30% / 40% 40% 60% 50%; transform: translate(0,0) rotate(0deg); }
+    33% { border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%; transform: translate(10%, 5%) rotate(120deg); }
+    66% { border-radius: 30% 70% 70% 30% / 50% 50% 30% 30%; transform: translate(-5%, 10%) rotate(240deg); }
   }
 }
