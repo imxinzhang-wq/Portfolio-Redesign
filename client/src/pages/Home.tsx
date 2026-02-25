@@ -174,7 +174,7 @@ function ProjectGrid() {
 
 function VisualsGrid() {
   return (
-    <section className="py-32 px-6 bg-white/10 backdrop-blur-sm border-y border-white/20">
+    <section className="py-32 px-6">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-end mb-20">
           <div>
@@ -278,7 +278,7 @@ function About() {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-12 border-t border-black/5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-12">
             <div className="space-y-4">
               <h4 className="text-[10px] uppercase tracking-widest font-bold">Outside of work</h4>
               <p className="text-muted-foreground leading-relaxed text-lg font-light">
