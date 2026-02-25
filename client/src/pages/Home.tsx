@@ -165,13 +165,13 @@ function About() {
             <h2 className="text-xs uppercase tracking-[0.3em] font-bold text-muted-foreground">About Me</h2>
             <div className="text-3xl md:text-5xl font-display leading-[1.3] font-medium tracking-tight space-y-10">
               <p>
-                I moved to the United States in 2014 to pursue a degree in Human-Computer Interaction at the University of Michigan. After interning in Amazon and Adobe Research, I went on to design at Airbnb.
+                I moved to the U.S. in 2014 to study Human-Computer Interaction at the University of Michigan. Since then, my work has taken me from California to Switzerland.
               </p>
               <p>
-                A few years later, I transitioned from California to Switzerland, where I’m now a designer at Google Zürich, working on YouTube Shopping.
+                Today, I’m based in Zürich.
               </p>
               <p>
-                Beyond the screen, I love exploring the world—I’ve traveled to over 40 countries. I also enjoy film photography and painting.
+                Outside of work, I’m often traveling — 40+ countries and counting — or shooting film and painting.
               </p>
               <p className="text-xl md:text-2xl text-muted-foreground font-light italic">
                 Fun Fact: I hold a Bachelor’s degree in Applied Mathematics.
