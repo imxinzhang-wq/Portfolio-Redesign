@@ -176,27 +176,36 @@ function VisualsGrid() {
   return (
     <section className="py-32 px-6 bg-white/10 backdrop-blur-sm border-y border-white/20">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-20">
-          <h2 className="text-xs uppercase tracking-[0.3em] font-bold text-muted-foreground mb-4">Visual Artifacts</h2>
-          <div className="h-px w-full bg-black/5" />
+        <div className="flex justify-between items-end mb-20">
+          <div>
+            <h2 className="text-xs uppercase tracking-[0.3em] font-bold text-muted-foreground mb-4">Visual Artifacts</h2>
+            <div className="h-px w-24 bg-black/10" />
+          </div>
+          <a 
+            href="/photography" 
+            className="group flex items-center gap-2 text-xs font-bold uppercase tracking-widest hover:opacity-60 transition-opacity"
+            data-testid="link-view-all-photography"
+          >
+            View All <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </a>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {MOCK_VISUALS.map((item, i) => (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {MOCK_VISUALS.slice(0, 3).map((item, i) => (
             <motion.div
               key={item.id}
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.8 }}
-              className="group relative aspect-square overflow-hidden rounded-[4px] bg-white/20 border border-white/10"
+              className="group relative aspect-[4/5] overflow-hidden rounded-[4px] bg-white/20 border border-white/10"
             >
               <img 
                 src={item.image} 
                 alt={item.title}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-80"
               />
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                <p className="text-[10px] uppercase tracking-widest font-bold text-white/60 mb-1">{item.category}</p>
+              <div className="absolute inset-0 flex flex-col justify-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-t from-black/20 to-transparent">
+                <p className="text-[10px] uppercase tracking-widest font-bold text-white/80 mb-1">{item.category}</p>
                 <h4 className="text-white font-medium text-sm">{item.title}</h4>
               </div>
             </motion.div>
