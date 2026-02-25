@@ -74,16 +74,22 @@ function Navbar() {
 function Hero() {
   return (
     <section className="min-h-screen flex items-center justify-center px-6 pt-20">
-      <div className="max-w-6xl w-full">
+      <div className="max-w-5xl w-full">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1] }}
           className="text-center"
         >
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-medium tracking-tight leading-[1.15] text-balance">
-            Xin is a Product Designer at <span className="text-primary/60 transition-colors hover:text-primary cursor-default">YouTube</span>. Previously at <span className="text-primary/60 transition-colors hover:text-primary cursor-default">Airbnb</span>, <span className="text-primary/60 transition-colors hover:text-primary cursor-default">Adobe Research</span> and <span className="text-primary/60 transition-colors hover:text-primary cursor-default">Amazon</span>.
+          <span className="inline-block px-4 py-1.5 rounded-full bg-white/50 backdrop-blur-sm border border-white/20 text-[10px] uppercase tracking-widest font-bold mb-8">
+            Product Designer @ YouTube
+          </span>
+          <h1 className="text-6xl md:text-[8rem] font-display font-medium tracking-tighter leading-[0.9] mb-12">
+            Solving Problems<br />through Design.
           </h1>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-light leading-relaxed">
+            Xin is a Product Designer at YouTube. Previously at Airbnb, Adobe Research and Amazon.
+          </p>
         </motion.div>
       </div>
     </section>
