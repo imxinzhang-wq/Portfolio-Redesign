@@ -98,10 +98,10 @@
   }
   
   .morphing-blob {
-    animation: morph 25s ease-in-out infinite;
-    filter: blur(100px);
-    opacity: 0.4;
-    mix-blend-mode: soft-light;
+    animation: morph 20s ease-in-out infinite;
+    filter: blur(80px);
+    opacity: 0.6;
+    mix-blend-mode: color-burn;
   }
 
   @keyframes morph {
@@ -111,11 +111,11 @@
     }
     33% { 
       border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; 
-      transform: translate(10%, -5%) scale(1.2) rotate(90deg); 
+      transform: translate(15%, -10%) scale(1.3) rotate(120deg); 
     }
     66% { 
       border-radius: 50% 40% 60% 50% / 40% 70% 40% 60%; 
-      transform: translate(-5%, 10%) scale(0.8) rotate(180deg); 
+      transform: translate(-10%, 15%) scale(0.8) rotate(240deg); 
     }
   }
 }
