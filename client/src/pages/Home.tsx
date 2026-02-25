@@ -66,13 +66,13 @@ function Navbar() {
       <motion.nav 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className={`pointer-events-auto flex items-center justify-between gap-12 px-10 py-5 transition-all duration-500 rounded-full ${
+        className={`pointer-events-auto flex items-center justify-between w-full max-w-7xl px-10 py-5 transition-all duration-500 rounded-full ${
           isScrolled 
             ? "bg-white/60 backdrop-blur-xl border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.04)]" 
             : "bg-transparent border border-transparent"
         }`}
       >
-        <a href="/" className="text-base font-display font-bold tracking-tighter uppercase mr-6" data-testid="link-home">
+        <a href="/" className="text-base font-display font-bold tracking-tighter uppercase" data-testid="link-home">
           Xin Zhang
         </a>
         <div className="flex gap-10 text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
