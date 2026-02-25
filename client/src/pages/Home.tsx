@@ -34,7 +34,7 @@ export default function Home() {
         <div className="absolute top-[5%] left-[5%] w-[50%] h-[50%] bg-[#fbd1a2] morphing-blob" />
         <div className="absolute bottom-[5%] right-[5%] w-[45%] h-[45%] bg-[#7ebdc2] morphing-blob" style={{ animationDelay: '-4s' }} />
         <div className="absolute top-[40%] right-[15%] w-[35%] h-[35%] bg-[#efea5a] morphing-blob" style={{ animationDelay: '-8s' }} />
-        <div className="absolute inset-0 bg-organic-gradient backdrop-blur-[60px]" />
+        <div className="absolute inset-0 bg-organic-gradient backdrop-blur-[120px]" />
       </div>
 
       <Navbar />

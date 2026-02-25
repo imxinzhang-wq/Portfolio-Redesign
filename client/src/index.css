@@ -98,9 +98,9 @@
   }
   
   .morphing-blob {
-    animation: morph 12s ease-in-out infinite;
-    filter: blur(40px);
-    opacity: 0.8;
+    animation: morph 25s ease-in-out infinite;
+    filter: blur(100px);
+    opacity: 0.6;
     mix-blend-mode: multiply;
   }
 
@@ -111,11 +111,11 @@
     }
     33% { 
       border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%; 
-      transform: translate(15%, 10%) scale(1.1) rotate(120deg); 
+      transform: translate(10%, 5%) scale(1.1) rotate(40deg); 
     }
     66% { 
       border-radius: 30% 70% 70% 30% / 50% 50% 30% 30%; 
-      transform: translate(-10%, 15%) scale(0.9) rotate(240deg); 
+      transform: translate(-5%, 10%) scale(0.9) rotate(80deg); 
     }
   }
 }
