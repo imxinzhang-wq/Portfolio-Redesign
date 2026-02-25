@@ -165,16 +165,16 @@ function VisualsGrid() {
           {MOCK_VISUALS.map((item, i) => (
             <motion.div
               key={item.id}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.8 }}
-              className="group relative aspect-square overflow-hidden rounded-3xl bg-white/20 border border-white/10"
+              className="group relative aspect-square overflow-hidden rounded-sm bg-white/20 border border-white/10"
             >
               <img 
                 src={item.image} 
                 alt={item.title}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
                 <p className="text-[10px] uppercase tracking-widest font-bold text-white/60 mb-1">{item.category}</p>
@@ -200,11 +200,11 @@ function ProjectRow({ project, index }: { project: any, index: number }) {
       data-testid={`row-project-${project.id}`}
     >
       <div className="w-full md:w-3/5">
-        <div className="group relative aspect-video overflow-hidden rounded-[2.5rem] bg-white/40 backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all duration-700">
+        <div className="group relative aspect-video overflow-hidden rounded-sm bg-white/40 backdrop-blur-sm border border-white/20 transition-all duration-700">
           <img 
             src={project.image} 
             alt={project.title}
-            className="absolute inset-0 w-full h-full object-cover mix-blend-soft-light opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000 ease-out"
+            className="absolute inset-0 w-full h-full object-cover mix-blend-soft-light opacity-70 group-hover:opacity-100 transition-all duration-1000 ease-out"
           />
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
             <div className="bg-white/90 backdrop-blur-md px-6 py-3 rounded-full flex items-center gap-2 text-xs font-bold uppercase tracking-widest shadow-xl">
