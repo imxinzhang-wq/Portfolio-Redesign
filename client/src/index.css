@@ -98,25 +98,24 @@
   }
   
   .morphing-blob {
-    animation: morph 18s ease-in-out infinite;
-    filter: blur(60px);
-    opacity: 0.7;
-    mix-blend-mode: normal;
-    z-index: -1;
+    animation: morph 12s ease-in-out infinite;
+    filter: blur(40px);
+    opacity: 0.8;
+    mix-blend-mode: multiply;
   }
 
   @keyframes morph {
     0%, 100% { 
-      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; 
+      border-radius: 40% 60% 70% 30% / 40% 40% 60% 50%; 
       transform: translate(0, 0) scale(1) rotate(0deg); 
     }
     33% { 
-      border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; 
-      transform: translate(10%, -5%) scale(1.1) rotate(90deg); 
+      border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%; 
+      transform: translate(15%, 10%) scale(1.1) rotate(120deg); 
     }
     66% { 
-      border-radius: 50% 40% 60% 50% / 40% 70% 40% 60%; 
-      transform: translate(-10%, 10%) scale(0.9) rotate(180deg); 
+      border-radius: 30% 70% 70% 30% / 50% 50% 30% 30%; 
+      transform: translate(-10%, 15%) scale(0.9) rotate(240deg); 
     }
   }
 }

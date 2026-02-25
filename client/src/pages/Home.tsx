@@ -30,11 +30,11 @@ export default function Home() {
   return (
     <div className="bg-background min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans">
       {/* Background Elements */}
-      <div className="fixed inset-0 pointer-events-none z-0 bg-[#fdfcfb]">
-        <div className="absolute top-[10%] left-[10%] w-[50%] h-[50%] bg-[#D9E9BA] morphing-blob" />
-        <div className="absolute bottom-[10%] right-[10%] w-[45%] h-[45%] bg-[#C1DDC6] morphing-blob" style={{ animationDelay: '-6s' }} />
-        <div className="absolute top-[35%] right-[20%] w-[40%] h-[40%] bg-[#E8F5C8] morphing-blob" style={{ animationDelay: '-12s' }} />
-        <div className="absolute inset-0 bg-white/40 backdrop-blur-[60px]" />
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-[5%] left-[5%] w-[50%] h-[50%] bg-[#fbd1a2] morphing-blob" />
+        <div className="absolute bottom-[5%] right-[5%] w-[45%] h-[45%] bg-[#7ebdc2] morphing-blob" style={{ animationDelay: '-4s' }} />
+        <div className="absolute top-[40%] right-[15%] w-[35%] h-[35%] bg-[#efea5a] morphing-blob" style={{ animationDelay: '-8s' }} />
+        <div className="absolute inset-0 bg-organic-gradient backdrop-blur-[60px]" />
       </div>
 
       <Navbar />
