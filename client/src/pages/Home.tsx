@@ -180,13 +180,55 @@ function ProjectGrid() {
           <h2 className="text-xs uppercase tracking-[0.3em] font-bold text-muted-foreground mb-4">Case Studies</h2>
           <div className="h-px w-full bg-black/5" />
         </div>
-        <div className="space-y-32">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-32">
           {MOCK_PROJECTS.map((project, i) => (
-            <ProjectRow key={project.id} project={project} index={i} />
+            <ProjectCard key={project.id} project={project} index={i} />
           ))}
         </div>
       </div>
     </section>
+  );
+}
+
+function ProjectCard({ project, index }: { project: any, index: number }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      className="flex flex-col group"
+      data-testid={`card-project-${project.id}`}
+    >
+      <Link href={`/project/${project.id}`}>
+        <a className="block relative aspect-[4/3] overflow-hidden rounded-[4px] bg-white/40 backdrop-blur-sm border border-white/20 transition-all duration-700 mb-8">
+          <img 
+            src={project.image} 
+            alt={project.title}
+            className="absolute inset-0 w-full h-full object-cover mix-blend-soft-light opacity-70 group-hover:opacity-100 transition-all duration-1000 ease-out"
+          />
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <div className="bg-white/90 backdrop-blur-md px-6 py-3 rounded-full flex items-center gap-2 text-xs font-bold uppercase tracking-widest shadow-xl">
+              View Case Study <ArrowUpRight className="w-4 h-4" />
+            </div>
+          </div>
+        </a>
+      </Link>
+      
+      <div className="space-y-4">
+        <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground/60">0{index + 1} / {project.category}</span>
+        <h3 className="text-3xl font-display font-medium group-hover:opacity-60 transition-opacity">{project.title}</h3>
+        <p className="text-muted-foreground leading-relaxed font-light line-clamp-2">
+          {project.description}
+        </p>
+        <div className="flex gap-3 pt-2">
+          {project.tags?.slice(0, 2).map((tag: string) => (
+            <span key={tag} className="text-[8px] uppercase tracking-widest px-2 py-0.5 border border-black/5 rounded-full text-muted-foreground">
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+    </motion.div>
   );
 }
 
@@ -231,52 +273,6 @@ function VisualsGrid() {
         </div>
       </div>
     </section>
-  );
-}
-
-function ProjectRow({ project, index }: { project: any, index: number }) {
-  const isEven = index % 2 === 0;
-  
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      className={`flex flex-col ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'} gap-12 md:gap-24 items-center`}
-      data-testid={`row-project-${project.id}`}
-    >
-      <div className="w-full md:w-3/5">
-        <Link href={`/project/${project.id}`}>
-          <a className="group block relative aspect-video overflow-hidden rounded-[4px] bg-white/40 backdrop-blur-sm border border-white/20 transition-all duration-700">
-            <img 
-              src={project.image} 
-              alt={project.title}
-              className="absolute inset-0 w-full h-full object-cover mix-blend-soft-light opacity-70 group-hover:opacity-100 transition-all duration-1000 ease-out"
-            />
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <div className="bg-white/90 backdrop-blur-md px-6 py-3 rounded-full flex items-center gap-2 text-xs font-bold uppercase tracking-widest shadow-xl">
-                View Case Study <ArrowUpRight className="w-4 h-4" />
-              </div>
-            </div>
-          </a>
-        </Link>
-      </div>
-      
-      <div className="w-full md:w-2/5">
-        <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground/60 mb-4 block">0{index + 1} / {project.category}</span>
-        <h3 className="text-4xl md:text-5xl font-display font-medium mb-6">{project.title}</h3>
-        <p className="text-muted-foreground leading-relaxed mb-8 text-lg font-light">
-          {project.description}
-        </p>
-        <div className="flex gap-4">
-          {project.tags?.map((tag: string) => (
-            <span key={tag} className="text-[9px] uppercase tracking-widest px-3 py-1 border border-black/5 rounded-full text-muted-foreground">
-              {tag}
-            </span>
-          ))}
-        </div>
-      </div>
-    </motion.div>
   );
 }
 
