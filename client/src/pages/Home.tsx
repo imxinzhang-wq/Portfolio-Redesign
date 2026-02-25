@@ -192,6 +192,9 @@ function ProjectGrid() {
 
 function ProjectCard({ project, index }: { project: any, index: number }) {
   const isOffset = index % 2 !== 0;
+  // Create a varying aspect ratio based on index for a more organic feel
+  const aspectRatios = ['aspect-[4/3]', 'aspect-[3/4]', 'aspect-square', 'aspect-[16/10]'];
+  const currentAspect = aspectRatios[index % aspectRatios.length];
 
   return (
     <motion.div
@@ -202,7 +205,7 @@ function ProjectCard({ project, index }: { project: any, index: number }) {
       data-testid={`card-project-${project.id}`}
     >
       <Link href={`/project/${project.id}`}>
-        <a className="block relative aspect-[4/3] overflow-hidden rounded-[4px] bg-white/40 backdrop-blur-sm border border-white/20 transition-all duration-700 mb-8">
+        <a className={`block relative overflow-hidden rounded-[4px] bg-white/40 backdrop-blur-sm border border-white/20 transition-all duration-700 mb-8 ${currentAspect}`}>
           <img 
             src={project.image} 
             alt={project.title}
