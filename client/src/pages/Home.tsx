@@ -62,26 +62,26 @@ function Navbar() {
   }, []);
 
   return (
-    <motion.nav 
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-50 px-6 py-4 transition-all duration-300 ${
-        isScrolled 
-          ? "bg-white/40 backdrop-blur-md border-b border-white/20 py-4 shadow-sm" 
-          : "bg-transparent py-8"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <a href="/" className="text-lg font-display font-semibold tracking-tight uppercase" data-testid="link-home">
+    <div className="fixed top-0 left-0 right-0 z-50 flex justify-center p-6 pointer-events-none">
+      <motion.nav 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className={`pointer-events-auto flex items-center justify-between gap-10 px-8 py-4 transition-all duration-500 rounded-full ${
+          isScrolled 
+            ? "bg-white/60 backdrop-blur-xl border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.04)]" 
+            : "bg-white/20 backdrop-blur-sm border border-white/10"
+        }`}
+      >
+        <a href="/" className="text-sm font-display font-bold tracking-tighter uppercase mr-4" data-testid="link-home">
           Xin Zhang
         </a>
-        <div className="flex gap-10 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+        <div className="flex gap-8 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
           <a href="#work" className="hover:text-foreground transition-colors" data-testid="link-work">Work</a>
           <a href="#about" className="hover:text-foreground transition-colors" data-testid="link-about">About</a>
           <a href="#contact" className="hover:text-foreground transition-colors" data-testid="link-contact">Contact</a>
         </div>
-      </div>
-    </motion.nav>
+      </motion.nav>
+    </div>
   );
 }
 
