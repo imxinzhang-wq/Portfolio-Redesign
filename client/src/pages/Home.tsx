@@ -173,13 +173,13 @@ function About() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-12 border-t border-black/5">
             <div className="space-y-4">
               <h4 className="text-[10px] uppercase tracking-widest font-bold">Outside of work</h4>
-              <p className="text-muted-foreground leading-relaxed font-light">
+              <p className="text-muted-foreground leading-relaxed font-display text-lg">
                 I’m often traveling — 40+ countries and counting — or shooting film and painting.
               </p>
             </div>
             <div className="space-y-4">
               <h4 className="text-[10px] uppercase tracking-widest font-bold">Fun Fact</h4>
-              <p className="text-muted-foreground leading-relaxed font-light">
+              <p className="text-muted-foreground leading-relaxed font-display text-lg">
                 I hold a Bachelor’s degree in Applied Mathematics and was recognized as a Meritorious Winner in the 2013 Mathematical Contest in Modeling.
               </p>
             </div>
