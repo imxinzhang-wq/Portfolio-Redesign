@@ -65,18 +65,20 @@ function Navbar() {
     <div className="fixed top-0 left-0 right-0 z-50 flex justify-center p-6 pointer-events-none">
       <motion.nav 
         initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className={`pointer-events-auto px-8 py-4 rounded-full transition-all duration-500 ease-in-out border w-full max-w-5xl ${
-          isScrolled 
-            ? "bg-white/60 backdrop-blur-xl border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.04)]" 
-            : "bg-white/20 backdrop-blur-sm border-white/10"
+        animate={{ 
+          opacity: isScrolled ? 1 : 0, 
+          y: isScrolled ? 0 : -20,
+        }}
+        transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+        className={`pointer-events-auto px-8 py-4 rounded-full border w-full max-w-5xl bg-white/60 backdrop-blur-xl border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.04)] ${
+          isScrolled ? "translate-y-0" : "-translate-y-full pointer-events-none"
         }`}
       >
         <div className="flex items-center justify-between">
-          <a href="/" className="text-sm font-display font-bold tracking-tight uppercase" data-testid="link-home">
+          <a href="/" className="text-base font-display font-bold tracking-tight uppercase" data-testid="link-home">
             Xin Zhang
           </a>
-          <div className="flex items-center gap-8 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+          <div className="flex items-center gap-8 text-xs font-bold uppercase tracking-widest text-muted-foreground">
             <a href="#work" className="hover:text-foreground transition-colors" data-testid="link-work">Work</a>
             <a href="#about" className="hover:text-foreground transition-colors" data-testid="link-about">About</a>
             <a href="#contact" className="hover:text-foreground transition-colors" data-testid="link-contact">Contact</a>
