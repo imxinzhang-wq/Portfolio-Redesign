@@ -100,28 +100,28 @@ export default function Home() {
       <div className="fixed inset-0 pointer-events-none z-0">
         <motion.div 
           animate={{ 
-            x: mousePos.x * 120,
-            y: mousePos.y * 120,
+            x: mousePos.x * 150,
+            y: mousePos.y * 150,
           }}
-          transition={{ type: "spring", damping: 25, stiffness: 40 }}
-          className="absolute top-[5%] left-[5%] w-[50%] h-[50%] bg-[#fbd1a2] morphing-blob" 
+          transition={{ type: "spring", damping: 30, stiffness: 40 }}
+          className="absolute top-[10%] left-[10%] w-[45%] h-[45%] bg-[#fbd1a2] morphing-blob" 
         />
         <motion.div 
           animate={{ 
-            x: mousePos.x * -100,
-            y: mousePos.y * -100,
+            x: mousePos.x * 120,
+            y: mousePos.y * 120,
           }}
-          transition={{ type: "spring", damping: 30, stiffness: 35 }}
-          className="absolute bottom-[5%] right-[5%] w-[45%] h-[45%] bg-[#7ebdc2] morphing-blob" 
+          transition={{ type: "spring", damping: 35, stiffness: 35 }}
+          className="absolute bottom-[10%] right-[10%] w-[40%] h-[40%] bg-[#7ebdc2] morphing-blob" 
           style={{ animationDelay: '-4s' }} 
         />
         <motion.div 
           animate={{ 
-            x: mousePos.x * 80,
-            y: mousePos.y * -140,
+            x: mousePos.x * 180,
+            y: mousePos.y * 180,
           }}
-          transition={{ type: "spring", damping: 35, stiffness: 30 }}
-          className="absolute top-[40%] right-[15%] w-[35%] h-[35%] bg-[#efea5a] morphing-blob" 
+          transition={{ type: "spring", damping: 40, stiffness: 30 }}
+          className="absolute top-[35%] right-[20%] w-[30%] h-[30%] bg-[#efea5a] morphing-blob" 
           style={{ animationDelay: '-8s' }} 
         />
         <div id="main-bg-overlay" className="absolute inset-0 bg-white/20 backdrop-blur-[80px] border-t border-white/30 transition-colors duration-700" />
