@@ -205,7 +205,7 @@ export default function CaseStudy() {
                 ) : (
                   <div className="w-full space-y-8">
                     <div className="relative group w-full">
-                      <div className="aspect-[16/10] overflow-hidden rounded-[4px] bg-white/40 backdrop-blur-sm border border-white/20 shadow-sm">
+                      <div className="aspect-[16/10] overflow-hidden rounded-[4px] bg-[#FDFCFB] border border-black/[0.03] shadow-sm">
                         <img
                           src={section.url}
                           alt={section.caption}
