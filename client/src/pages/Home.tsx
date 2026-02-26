@@ -80,13 +80,50 @@ const MOCK_VISUALS = [
 ];
 
 export default function Home() {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      // Normalize mouse position to -1 to 1
+      setMousePos({
+        x: (e.clientX / window.innerWidth) * 2 - 1,
+        y: (e.clientY / window.innerHeight) * 2 - 1,
+      });
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
   return (
     <div className="bg-background min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans">
       {/* Background Elements */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[5%] left-[5%] w-[50%] h-[50%] bg-[#fbd1a2] morphing-blob" />
-        <div className="absolute bottom-[5%] right-[5%] w-[45%] h-[45%] bg-[#7ebdc2] morphing-blob" style={{ animationDelay: '-4s' }} />
-        <div className="absolute top-[40%] right-[15%] w-[35%] h-[35%] bg-[#efea5a] morphing-blob" style={{ animationDelay: '-8s' }} />
+        <motion.div 
+          animate={{ 
+            x: mousePos.x * 40,
+            y: mousePos.y * 40,
+          }}
+          transition={{ type: "spring", damping: 30, stiffness: 50 }}
+          className="absolute top-[5%] left-[5%] w-[50%] h-[50%] bg-[#fbd1a2] morphing-blob" 
+        />
+        <motion.div 
+          animate={{ 
+            x: mousePos.x * -30,
+            y: mousePos.y * -30,
+          }}
+          transition={{ type: "spring", damping: 35, stiffness: 45 }}
+          className="absolute bottom-[5%] right-[5%] w-[45%] h-[45%] bg-[#7ebdc2] morphing-blob" 
+          style={{ animationDelay: '-4s' }} 
+        />
+        <motion.div 
+          animate={{ 
+            x: mousePos.x * 20,
+            y: mousePos.y * -50,
+          }}
+          transition={{ type: "spring", damping: 40, stiffness: 40 }}
+          className="absolute top-[40%] right-[15%] w-[35%] h-[35%] bg-[#efea5a] morphing-blob" 
+          style={{ animationDelay: '-8s' }} 
+        />
         <div id="main-bg-overlay" className="absolute inset-0 bg-white/20 backdrop-blur-[80px] border-t border-white/30 transition-colors duration-700" />
       </div>
 
