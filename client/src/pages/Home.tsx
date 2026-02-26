@@ -205,21 +205,21 @@ function ProjectCard({ project, index }: { project: any, index: number }) {
       data-testid={`card-project-${project.id}`}
     >
       <Link href={`/project/${project.id}`}>
-        <a className="block relative aspect-[4/3] overflow-hidden rounded-[4px] bg-white/40 backdrop-blur-sm border border-white/20 transition-all duration-700 mb-8">
+        <a className="block relative aspect-[4/3] overflow-hidden rounded-[4px] bg-white/60 backdrop-blur-md border border-white/30 transition-all duration-700 mb-8">
           {project.bgImage && (
             <img 
               src={project.bgImage} 
               alt=""
-              className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity duration-1000"
+              className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-1000"
             />
           )}
           <img 
             src={project.image} 
             alt={project.title}
-            className={`absolute inset-0 w-full h-full ${project.bgImage ? 'object-contain p-8' : 'object-cover mix-blend-soft-light opacity-70'} group-hover:opacity-100 transition-all duration-1000 ease-out`}
+            className={`absolute inset-0 w-full h-full ${project.bgImage ? 'object-contain p-8' : 'object-cover mix-blend-soft-light opacity-60'} group-hover:opacity-100 transition-all duration-1000 ease-out`}
           />
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            <div className="bg-white/90 backdrop-blur-md px-6 py-3 rounded-full flex items-center gap-2 text-xs font-bold uppercase tracking-widest shadow-xl">
+            <div className="bg-white/95 backdrop-blur-md px-6 py-3 rounded-full flex items-center gap-2 text-xs font-bold uppercase tracking-widest shadow-xl">
               View Case Study <ArrowUpRight className="w-4 h-4" />
             </div>
           </div>
@@ -269,7 +269,7 @@ function VisualsGrid() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.8 }}
-              className="group relative aspect-[4/5] overflow-hidden rounded-[4px] bg-white/20 border border-white/10"
+              className="group relative aspect-[4/5] overflow-hidden rounded-[4px] bg-white/60 backdrop-blur-md border border-white/30"
             >
               <img 
                 src={item.image} 
