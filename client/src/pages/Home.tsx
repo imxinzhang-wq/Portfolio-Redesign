@@ -100,28 +100,28 @@ export default function Home() {
       <div className="fixed inset-0 pointer-events-none z-0">
         <motion.div 
           animate={{ 
-            x: mousePos.x * 150,
-            y: mousePos.y * 150,
+            x: mousePos.x * 200,
+            y: mousePos.y * 200,
           }}
-          transition={{ type: "spring", damping: 30, stiffness: 40 }}
-          className="absolute top-[10%] left-[10%] w-[45%] h-[45%] bg-[#fbd1a2] morphing-blob" 
+          transition={{ type: "spring", damping: 20, stiffness: 30 }}
+          className="absolute top-[10%] left-[10%] w-[50%] h-[50%] bg-[#fbd1a2] morphing-blob blur-[80px]" 
         />
         <motion.div 
           animate={{ 
-            x: mousePos.x * 120,
-            y: mousePos.y * 120,
+            x: mousePos.x * 160,
+            y: mousePos.y * 160,
           }}
-          transition={{ type: "spring", damping: 35, stiffness: 35 }}
-          className="absolute bottom-[10%] right-[10%] w-[40%] h-[40%] bg-[#7ebdc2] morphing-blob" 
+          transition={{ type: "spring", damping: 25, stiffness: 25 }}
+          className="absolute bottom-[10%] right-[10%] w-[45%] h-[45%] bg-[#7ebdc2] morphing-blob blur-[80px]" 
           style={{ animationDelay: '-4s' }} 
         />
         <motion.div 
           animate={{ 
-            x: mousePos.x * 180,
-            y: mousePos.y * 180,
+            x: mousePos.x * 240,
+            y: mousePos.y * 240,
           }}
-          transition={{ type: "spring", damping: 40, stiffness: 30 }}
-          className="absolute top-[35%] right-[20%] w-[30%] h-[30%] bg-[#efea5a] morphing-blob" 
+          transition={{ type: "spring", damping: 30, stiffness: 20 }}
+          className="absolute top-[35%] right-[20%] w-[35%] h-[35%] bg-[#efea5a] morphing-blob blur-[80px]" 
           style={{ animationDelay: '-8s' }} 
         />
         <div id="main-bg-overlay" className="absolute inset-0 bg-white/20 backdrop-blur-[80px] border-t border-white/30 transition-colors duration-700" />
@@ -242,7 +242,7 @@ function ProjectCard({ project, index }: { project: any, index: number }) {
       data-testid={`card-project-${project.id}`}
     >
       <Link href={`/project/${project.id}`}>
-        <a className="block relative aspect-[4/3] overflow-hidden rounded-[4px] bg-white/40 backdrop-blur-sm border border-white/20 transition-all duration-700 mb-8">
+        <div className="cursor-pointer block relative aspect-[4/3] overflow-hidden rounded-[4px] bg-white/40 backdrop-blur-sm border border-white/20 transition-all duration-700 mb-8">
           {project.bgImage && (
             <img 
               src={project.bgImage} 
@@ -260,7 +260,7 @@ function ProjectCard({ project, index }: { project: any, index: number }) {
               View Case Study <ArrowUpRight className="w-4 h-4" />
             </div>
           </div>
-        </a>
+        </div>
       </Link>
       
       <div className="space-y-4">
