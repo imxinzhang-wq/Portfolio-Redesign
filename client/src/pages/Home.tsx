@@ -80,50 +80,13 @@ const MOCK_VISUALS = [
 ];
 
 export default function Home() {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      // Normalize mouse position to -1 to 1
-      setMousePos({
-        x: (e.clientX / window.innerWidth) * 2 - 1,
-        y: (e.clientY / window.innerHeight) * 2 - 1,
-      });
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
-
   return (
     <div className="bg-background min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans">
       {/* Background Elements */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <motion.div 
-          animate={{ 
-            x: mousePos.x * 200,
-            y: mousePos.y * 200,
-          }}
-          transition={{ type: "spring", damping: 20, stiffness: 30 }}
-          className="absolute top-[10%] left-[10%] w-[50%] h-[50%] bg-[#fbd1a2] morphing-blob blur-[80px]" 
-        />
-        <motion.div 
-          animate={{ 
-            x: mousePos.x * 160,
-            y: mousePos.y * 160,
-          }}
-          transition={{ type: "spring", damping: 25, stiffness: 25 }}
-          className="absolute bottom-[10%] right-[10%] w-[45%] h-[45%] bg-[#7ebdc2] morphing-blob blur-[80px]" 
-          style={{ animationDelay: '-4s' }} 
-        />
-        <motion.div 
-          animate={{ 
-            x: mousePos.x * 240,
-            y: mousePos.y * 240,
-          }}
-          transition={{ type: "spring", damping: 30, stiffness: 20 }}
-          className="absolute top-[35%] right-[20%] w-[35%] h-[35%] bg-[#efea5a] morphing-blob blur-[80px]" 
-          style={{ animationDelay: '-8s' }} 
-        />
+        <div className="absolute top-[5%] left-[5%] w-[50%] h-[50%] bg-[#fbd1a2] morphing-blob" />
+        <div className="absolute bottom-[5%] right-[5%] w-[45%] h-[45%] bg-[#7ebdc2] morphing-blob" style={{ animationDelay: '-4s' }} />
+        <div className="absolute top-[40%] right-[15%] w-[35%] h-[35%] bg-[#efea5a] morphing-blob" style={{ animationDelay: '-8s' }} />
         <div id="main-bg-overlay" className="absolute inset-0 bg-white/20 backdrop-blur-[80px] border-t border-white/30 transition-colors duration-700" />
       </div>
 
@@ -242,7 +205,7 @@ function ProjectCard({ project, index }: { project: any, index: number }) {
       data-testid={`card-project-${project.id}`}
     >
       <Link href={`/project/${project.id}`}>
-        <div className="cursor-pointer block relative aspect-[4/3] overflow-hidden rounded-[4px] bg-white/40 backdrop-blur-sm border border-white/20 transition-all duration-700 mb-8">
+        <a className="block relative aspect-[4/3] overflow-hidden rounded-[4px] bg-white/40 backdrop-blur-sm border border-white/20 transition-all duration-700 mb-8">
           {project.bgImage && (
             <img 
               src={project.bgImage} 
@@ -260,7 +223,7 @@ function ProjectCard({ project, index }: { project: any, index: number }) {
               View Case Study <ArrowUpRight className="w-4 h-4" />
             </div>
           </div>
-        </div>
+        </a>
       </Link>
       
       <div className="space-y-4">
