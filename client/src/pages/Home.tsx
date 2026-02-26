@@ -80,13 +80,42 @@ const MOCK_VISUALS = [
 ];
 
 export default function Home() {
+  const mouseX = useSpring(0, { stiffness: 50, damping: 20 });
+  const mouseY = useSpring(0, { stiffness: 50, damping: 20 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [mouseX, mouseY]);
+
   return (
     <div className="bg-background min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans">
       {/* Background Elements */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[5%] left-[5%] w-[50%] h-[50%] bg-[#fbd1a2] morphing-blob" />
-        <div className="absolute bottom-[5%] right-[5%] w-[45%] h-[45%] bg-[#7ebdc2] morphing-blob" style={{ animationDelay: '-4s' }} />
-        <div className="absolute top-[40%] right-[15%] w-[35%] h-[35%] bg-[#efea5a] morphing-blob" style={{ animationDelay: '-8s' }} />
+        <motion.div 
+          style={{ x: mouseX, y: mouseY }}
+          className="absolute -left-[25%] -top-[25%] w-[50%] h-[50%] bg-[#fbd1a2] morphing-blob opacity-60" 
+        />
+        <motion.div 
+          style={{ 
+            x: useTransform(mouseX, (v) => v * 1.1), 
+            y: useTransform(mouseY, (v) => v * 0.9) 
+          }}
+          className="absolute -left-[20%] -top-[20%] w-[45%] h-[45%] bg-[#7ebdc2] morphing-blob opacity-40" 
+          style={{ animationDelay: '-4s' }} 
+        />
+        <motion.div 
+          style={{ 
+            x: useTransform(mouseX, (v) => v * 0.8), 
+            y: useTransform(mouseY, (v) => v * 1.2) 
+          }}
+          className="absolute -left-[30%] -top-[30%] w-[35%] h-[35%] bg-[#efea5a] morphing-blob opacity-30" 
+          style={{ animationDelay: '-8s' }} 
+        />
         <div id="main-bg-overlay" className="absolute inset-0 bg-white/20 backdrop-blur-[80px] border-t border-white/30 transition-colors duration-700" />
       </div>
 
