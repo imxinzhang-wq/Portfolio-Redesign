@@ -123,7 +123,7 @@ export default function CaseStudy() {
               </h1>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-12 border-t border-black/5 pt-12">
                 <div className="md:col-span-2">
-                  <p className="text-xl md:text-2xl font-light leading-relaxed text-muted-foreground">
+                  <p className="text-xl md:text-2xl font-normal leading-relaxed text-muted-foreground">
                     {project.description}
                   </p>
                 </div>
@@ -132,7 +132,7 @@ export default function CaseStudy() {
                     <h4 className="text-[10px] uppercase tracking-widest font-bold mb-2">
                       Role
                     </h4>
-                    <p className="text-sm text-muted-foreground font-light">
+                    <p className="text-sm text-muted-foreground font-normal">
                       Lead Product Designer
                     </p>
                   </div>
@@ -140,7 +140,7 @@ export default function CaseStudy() {
                     <h4 className="text-[10px] uppercase tracking-widest font-bold mb-2">
                       Duration
                     </h4>
-                    <p className="text-sm text-muted-foreground font-light">
+                    <p className="text-sm text-muted-foreground font-normal">
                       6 Months
                     </p>
                   </div>
@@ -198,7 +198,7 @@ export default function CaseStudy() {
                     <h3 className="text-4xl md:text-5xl font-display font-medium leading-[1.1] tracking-tight">
                       {section.heading}
                     </h3>
-                    <p className="text-xl text-muted-foreground font-light leading-relaxed">
+                    <p className="text-xl text-muted-foreground font-normal leading-relaxed">
                       {section.body}
                     </p>
                   </div>
