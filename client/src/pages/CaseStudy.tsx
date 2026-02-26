@@ -70,6 +70,11 @@ const PROJECTS_DATA: Record<string, any> = {
         heading: "The Challenge",
         body: "Friction in Flow: The global Airbnb signup/payment flow (email-based) was incompatible with Chinese users' preference for phone-number login and WeChat Pay.Platform Gap: The mobile web experience felt like a desktop port and lacked the smoothness of native Chinese apps.",
       },
+      {
+        type: "text",
+        heading: "The Solution: A China-First Mini-App",
+        body: "Friction in Flow: The global Airbnb signup/payment flow (email-based) was incompatible with Chinese users' preference for phone-number login and WeChat Pay.Platform Gap: The mobile web experience felt like a desktop port and lacked the smoothness of native Chinese apps.",
+      },
     ],
   },
 };
@@ -175,7 +180,7 @@ export default function CaseStudy() {
 
         {/* Content Sections */}
         <section className="container mx-auto px-6 pb-40">
-          <div className="max-w-3xl mx-auto space-y-32">
+          <div className="max-w-5xl mx-auto">
             {project.content.map((section: any, idx: number) => (
               <motion.div
                 key={idx}
@@ -183,28 +188,45 @@ export default function CaseStudy() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.8 }}
-                className="space-y-8"
+                className={`flex flex-col gap-16 mb-40 ${
+                  section.type === "text"
+                    ? idx % 2 === 0
+                      ? "lg:flex-row items-start"
+                      : "lg:flex-row-reverse items-start"
+                    : "items-center"
+                }`}
               >
                 {section.type === "text" ? (
                   <>
-                    <h3 className="text-2xl font-display font-medium">
-                      {section.heading}
-                    </h3>
-                    <p className="text-lg text-muted-foreground font-light leading-relaxed">
-                      {section.body}
-                    </p>
+                    <div className="lg:w-1/2 space-y-8">
+                      <div className="inline-block px-3 py-1 bg-black/[0.03] rounded-full text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground/60">
+                        Chapter 0{idx + 1}
+                      </div>
+                      <h3 className="text-4xl md:text-5xl font-display font-medium leading-[1.1] tracking-tight">
+                        {section.heading}
+                      </h3>
+                      <p className="text-xl text-muted-foreground font-light leading-relaxed">
+                        {section.body}
+                      </p>
+                    </div>
+                    <div className="lg:w-1/2 hidden lg:flex items-center justify-center pt-20">
+                      <div className="w-px h-40 bg-gradient-to-b from-transparent via-black/10 to-transparent" />
+                    </div>
                   </>
                 ) : (
-                  <div className="space-y-4">
-                    <div className="aspect-video overflow-hidden rounded-[4px] bg-white/20 border border-white/10 shadow-sm">
-                      <img
-                        src={section.url}
-                        alt={section.caption}
-                        className="w-full h-full object-cover"
-                      />
+                  <div className="w-full space-y-8 text-center">
+                    <div className="relative group inline-block w-full">
+                      <div className="absolute -inset-6 bg-black/[0.02] rounded-2xl scale-[0.98] group-hover:scale-100 transition-transform duration-1000 -z-10" />
+                      <div className="aspect-[16/10] overflow-hidden rounded-[4px] bg-white/20 border border-white/10 shadow-sm">
+                        <img
+                          src={section.url}
+                          alt={section.caption}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
                     </div>
-                    <p className="text-center text-xs text-muted-foreground font-light uppercase tracking-widest italic">
-                      — {section.caption}
+                    <p className="text-[10px] text-muted-foreground font-light uppercase tracking-[0.3em] italic">
+                      // {section.caption}
                     </p>
                   </div>
                 )}
