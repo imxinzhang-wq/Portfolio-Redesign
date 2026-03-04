@@ -31,8 +31,8 @@ const PROJECTS_DATA: Record<string, any> = {
     ],
   },
   "2": {
-    title: "NexPay Mobile",
-    category: "Fintech • iOS/Android",
+    title: "Darmi IBS food diary",
+    category: "Health • Vibe Coding",
     description:
       "Redesigning the checkout experience for the next generation of digital-native users.",
     image:
@@ -42,7 +42,7 @@ const PROJECTS_DATA: Record<string, any> = {
       {
         type: "text",
         heading: "Context",
-        body: "Gen-Z users expect payment flows to be as fluid as their social feeds. Static forms and multi-step redirects were causing significant drop-offs in the legacy app.",
+        body: "In Summer 2025, I experimented with vibe coding to solve a personal challenge: managing Irritable Bowel Syndrome (IBS). Existing tracking apps didn't fit my specific workflow of logging food, emotions, and symptoms. I treated this as both a technical experiment and a product challenge—using Gemini, ChatGPT, Replit and Lovable to build a custom, functional app from scratch.",
       },
       {
         type: "image",
