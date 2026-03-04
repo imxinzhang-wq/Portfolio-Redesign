@@ -46,7 +46,7 @@ const PROJECTS_DATA: Record<string, any> = {
       },
       {
         type: "image",
-        url: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=2670&auto=format&fit=crop",
+        url: "@assets/Darmi.png",
         caption: "The new streamlined checkout flow.",
       },
     ],
