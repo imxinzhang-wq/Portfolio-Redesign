@@ -203,11 +203,11 @@ function ProjectCard({ project, index }: { project: any, index: number }) {
       data-testid={`card-project-${project.id}`}
     >
       <Link href={`/project/${project.id}`}>
-        <a className="block relative aspect-[4/3] overflow-hidden rounded-[4px] bg-white/60 backdrop-blur-md border border-white/30 transition-all duration-700 mb-8">
+        <a className="block relative aspect-[4/3] overflow-hidden rounded-[4px] bg-white/60 backdrop-blur-md transition-all duration-700 mb-8">
           <img 
             src={project.image} 
             alt={project.title}
-            className="absolute inset-0 w-full h-full object-contain p-8 opacity-100 group-hover:opacity-100 transition-all duration-1000 ease-out"
+            className="absolute inset-0 w-full h-full object-contain p-8 opacity-60 group-hover:opacity-60 transition-all duration-1000 ease-out"
           />
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
             <div className="bg-white/95 backdrop-blur-md px-6 py-3 rounded-full flex items-center gap-2 text-xs font-bold uppercase tracking-widest shadow-xl">
