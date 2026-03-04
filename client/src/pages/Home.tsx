@@ -8,9 +8,8 @@ import photo2 from "@assets/6C23377C-15B6-42EA-B1D5-96A84D83C61E_4_5005_c_177205
 import photo3 from "@assets/7CC2EAF5-2C07-42BE-8AAB-1027083FD2CF_4_5005_c_1772054814414.jpeg";
 import photo4 from "@assets/81C93177-9204-4A44-8C60-4E530DEBAB95_4_5005_c_1772054814415.jpeg";
 import photo5 from "@assets/ACA80C8E-CD60-460B-A794-9B92DECF6107_4_5005_c_1772054814415.jpeg";
-import photo6 from "@assets/E7311041-CF0E-48D1-85C5-BA16849E0601_4_5005_c_1772054814415.jpeg";
-import project2Mockup from "@assets/overview_1772056935126.png";
-import project2Bg from "@assets/Darmi.png";
+import photo6 from "@assets/E7311041-CF0E-48D1-85C5-BA16849E0601_4_5005_c_1772054814415.jpeg";;
+import project2 from "@assets/Darmi.png";
 
 const MOCK_PROJECTS = [
   {
@@ -23,12 +22,10 @@ const MOCK_PROJECTS = [
   },
   {
     id: 2,
-    title: "Health Insights App",
-    category: "Healthcare • Mobile",
-    description: "A comprehensive health tracking and insights application designed for intuitive pain analysis and dietary tracking.",
-    image: project2Mockup,
-    bgImage: project2Bg,
-    tags: ["Mobile UX", "Health Tech", "Data Vis"]
+    title: "Darmi IBS food diary",
+    category: "Health • Vibe Coding",
+    description: "An exploration of Vibe Coding and end-to-end AI product workflows",
+    image: project2,
   },
   {
     id: 3,
