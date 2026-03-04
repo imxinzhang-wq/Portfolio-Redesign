@@ -126,7 +126,7 @@ function Navbar() {
             : "bg-transparent border border-transparent"
         }`}
       >
-        <a href="/" className="text-base font-display font-bold tracking-tighter uppercase" data-testid="link-home">
+        <a href="#/" className="text-base font-display font-bold tracking-tighter uppercase" data-testid="link-home">
           Xin Zhang
         </a>
         <div className="flex gap-10 text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
@@ -170,7 +170,7 @@ function ProjectGrid() {
   useEffect(() => {
     const bg = document.getElementById('main-bg-overlay');
     const unsubscribe = bgOpacity.on("change", (latest) => {
-      if (bg) bg.style.backdropBlur = `${80 + (1 - latest) * 40}px`;
+      if (bg) bg.style.backdropFilter = `blur(${80 + (1 - latest) * 40}px)`;
       if (bg) bg.style.backgroundColor = `rgba(255, 255, 255, ${0.2 + (1 - latest) * 0.6})`;
     });
     return () => unsubscribe();
@@ -254,7 +254,7 @@ function VisualsGrid() {
             <div className="h-px w-24 bg-black/10" />
           </div>
           <a 
-            href="/photography" 
+            href="#/photography" 
             className="group flex items-center gap-2 text-xs font-bold uppercase tracking-widest hover:opacity-60 transition-opacity"
             data-testid="link-view-all-photography"
           >
@@ -300,7 +300,7 @@ function About() {
     const unsubscribe = scrollYProgress.on("change", (latest) => {
       if (bg && latest > 0) {
         bg.style.backgroundColor = `rgba(255, 255, 255, ${0.8 - latest * 0.6})`;
-        bg.style.backdropBlur = `${120 - latest * 40}px`;
+        bg.style.backdropFilter = `blur(${120 - latest * 40}px)`;
       }
     });
     return () => unsubscribe();
