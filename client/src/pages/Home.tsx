@@ -213,7 +213,7 @@ function ProjectCard({ project, index }: { project: any, index: number }) {
           <img 
             src={project.image} 
             alt={project.title}
-            className={`absolute inset-0 w-full h-full ${project.bgImage ? 'object-contain p-8' : 'object-cover mix-blend-soft-light opacity-60'} group-hover:opacity-100 transition-all duration-1000 ease-out`}
+            className={`absolute inset-0 w-full h-full ${project.bgImage ? 'object-contain p-8 group-hover:opacity-100' : 'object-cover group-hover:opacity-40'} transition-all duration-1000 ease-out`}
           />
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
             <div className="bg-white/95 backdrop-blur-md px-6 py-3 rounded-full flex items-center gap-2 text-xs font-bold uppercase tracking-widest shadow-xl">
