@@ -8,8 +8,8 @@ import photo2 from "@assets/6C23377C-15B6-42EA-B1D5-96A84D83C61E_4_5005_c_177205
 import photo3 from "@assets/7CC2EAF5-2C07-42BE-8AAB-1027083FD2CF_4_5005_c_1772054814414.jpeg";
 import photo4 from "@assets/81C93177-9204-4A44-8C60-4E530DEBAB95_4_5005_c_1772054814415.jpeg";
 import photo5 from "@assets/ACA80C8E-CD60-460B-A794-9B92DECF6107_4_5005_c_1772054814415.jpeg";
-import photo6 from "@assets/E7311041-CF0E-48D1-85C5-BA16849E0601_4_5005_c_1772054814415.jpeg";
-import project2Image from "@assets/Darmi.png";
+import photo6 from "@assets/E7311041-CF0E-48D1-85C5-BA16849E0601_4_5005_c_1772054814415.jpeg";;
+import project2 from "@assets/Darmi.png";
 
 const MOCK_PROJECTS = [
   {
@@ -22,11 +22,10 @@ const MOCK_PROJECTS = [
   },
   {
     id: 2,
-    title: "Health Insights App",
-    category: "Healthcare • Mobile",
-    description: "A comprehensive health tracking and insights application designed for intuitive pain analysis and dietary tracking.",
-    image: project2Image,
-    tags: ["Mobile UX", "Health Tech", "Data Vis"]
+    title: "Darmi IBS food diary",
+    category: "Health • Vibe Coding",
+    description: "An exploration of Vibe Coding and end-to-end AI product workflows",
+    image: project2,
   },
   {
     id: 3,
@@ -204,10 +203,17 @@ function ProjectCard({ project, index }: { project: any, index: number }) {
     >
       <Link href={`/project/${project.id}`}>
         <a className="block relative aspect-[4/3] overflow-hidden rounded-[4px] bg-white/60 backdrop-blur-md border border-white/30 transition-all duration-700 mb-8">
+          {project.bgImage && (
+            <img 
+              src={project.bgImage} 
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-1000"
+            />
+          )}
           <img 
             src={project.image} 
             alt={project.title}
-            className="absolute inset-0 w-full h-full object-contain p-8 opacity-100 group-hover:opacity-100 transition-all duration-1000 ease-out"
+            className={`absolute inset-0 w-full h-full ${project.bgImage ? 'object-contain p-8' : 'object-cover mix-blend-soft-light opacity-60'} group-hover:opacity-100 transition-all duration-1000 ease-out`}
           />
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
             <div className="bg-white/95 backdrop-blur-md px-6 py-3 rounded-full flex items-center gap-2 text-xs font-bold uppercase tracking-widest shadow-xl">
