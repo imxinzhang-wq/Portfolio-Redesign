@@ -34,7 +34,7 @@ const PROJECTS_DATA: Record<string, any> = {
     title: "Darmi IBS food diary",
     category: "Health • Vibe Coding",
     description:
-      "Redesigning the checkout experience for the next generation of digital-native users.",
+      "An exploration of Vibe Coding and end-to-end AI product workflows.",
     image:
       "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=2670&auto=format&fit=crop",
     tags: ["Mobile UX", "Interaction Design", "User Testing"],
@@ -53,7 +53,7 @@ const PROJECTS_DATA: Record<string, any> = {
   },
   "3": {
     title: "Airbnb WeChat Mini-App",
-    category: "2018—2019 • Airbnb",
+    category: "Travel • Localization",
     description:
       "Localized the Airbnb guest experience for the China market by launching a native WeChat Mini-app, acquiring 2 million users in the first month and surpassing mobile web bookings.",
     image:
