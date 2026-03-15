@@ -79,9 +79,9 @@ export default function Home() {
     <div className="bg-background min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans">
       {/* Background Elements */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[5%] left-[5%] w-[50%] h-[50%] bg-[#f5e2d6] morphing-blob" />
+        <div className="absolute top-[5%] left-[5%] w-[45%] h-[45%] bg-[#f5dbca] morphing-blob" />
         <div className="absolute bottom-[5%] right-[5%] w-[45%] h-[45%] bg-[#d2e6df] morphing-blob" style={{ animationDelay: '-4s' }} />
-        <div className="absolute top-[40%] right-[15%] w-[35%] h-[35%] bg-[#eadcef] morphing-blob" style={{ animationDelay: '-8s' }} />
+        <div className="absolute top-[40%] right-[15%] w-[35%] h-[35%] bg-[#efd2dc] morphing-blob" style={{ animationDelay: '-8s' }} />
         <div id="main-bg-overlay" className="absolute inset-0 bg-white/20 backdrop-blur-[80px] border-t border-white/30 transition-colors duration-700" />
       </div>
 
