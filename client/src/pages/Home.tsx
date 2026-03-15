@@ -173,7 +173,7 @@ function ProjectGrid() {
 
   return (
     <section id="work" ref={targetRef} className="py-32 px-6">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <div className="mb-20">
           <h2 className="text-xs uppercase tracking-[0.3em] font-bold text-muted-foreground mb-4">Case Studies</h2>
           <div className="h-px w-full bg-black/5" />
@@ -242,7 +242,7 @@ function ProjectCard({ project, index }: { project: any, index: number }) {
 function VisualsGrid() {
   return (
     <section className="py-32 px-6">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <div className="flex justify-between items-end mb-20">
           <div>
             <h2 className="text-xs uppercase tracking-[0.3em] font-bold text-muted-foreground mb-4">Visual Artifacts</h2>
