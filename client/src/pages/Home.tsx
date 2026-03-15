@@ -15,22 +15,22 @@ const MOCK_PROJECTS = [
   {
     id: 1,
     title: "YT Shopping Collections",
-    category: "Enterprise UX • SaaS",
-    description: "Streamlining complex environmental data into actionable insights for global logistics.",
+    category: "2024 • YouTube",
+    description: "Architected 'Shopping Collections' to replace links with a native curation format, driving creator branding and engagement.",
     image: "https://images.unsplash.com/photo-1551288049-bbbda536639a?q=80&w=2670&auto=format&fit=crop",
   },
   {
     id: 2,
     title: "Darmi IBS food diary",
-    category: "Health • Vibe Coding",
-    description: "An exploration of Vibe Coding and end-to-end AI product workflows",
+    category: "2026 • Personal Project",
+    description: "An exploration of Vibe Coding and end-to-end AI workflows—now live on the App Store.",
     image: project2,
   },
   {
     id: 3,
-    title: "Vault Design System",
-    category: "Internal Tooling • Systems",
-    description: "Building a scalable component library for a team of 50+ designers and engineers.",
+    title: "Airbnb WeChat Mini-app",
+    category: "2018 • Airbnb",
+    description: "Co-led the design and launch of Airbnb's first WeChat Mini-app and shaping its future vision through data-driven sprints",
     image: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=2670&auto=format&fit=crop",
   }
 ];
