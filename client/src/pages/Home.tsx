@@ -19,7 +19,7 @@ const MOCK_PROJECTS = [
     title: "YT Shopping Collections",
     category: "2024 • YouTube",
     description: "Architected Shopping Collections to replace links with a native curation format, driving creator branding and engagement.",
-    image: "https://images.unsplash.com/photo-1551288049-bbbda536639a?q=80&w=2670&auto=format&fit=crop",
+    image: project1,
   },
   {
     id: 2,
