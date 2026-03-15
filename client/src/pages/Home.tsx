@@ -13,18 +13,21 @@ import project2 from "@assets/Darmi.png";
 
 const MOCK_PROJECTS = [
   {
+    id: 1,
     title: "YT Shopping Collections",
     category: "2024 • YouTube",
     description: "Architected Shopping Collections to replace links with a native curation format, driving creator branding and engagement.",
     image: "https://images.unsplash.com/photo-1551288049-bbbda536639a?q=80&w=2670&auto=format&fit=crop",
   },
   {
+    id: 2,
     title: "Darmi IBS food diary",
     category: "2026 • Personal Project",
     description: "An exploration of Vibe Coding and end-to-end AI workflows—now live on the App Store.",
     image: project2,
   },
   {
+    id: 3,
     title: "Airbnb WeChat Mini-app",
     category: "2018 • Airbnb",
     description: "Co-led the design and launch of Airbnb's first WeChat Mini-app and shaping its future vision through data-driven sprints",
@@ -221,7 +224,7 @@ function ProjectCard({ project, index }: { project: any, index: number }) {
       <div className="space-y-4">
         <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground/60">0{index + 1} / {project.category}</span>
         <h3 className="text-3xl font-display font-medium group-hover:opacity-60 transition-opacity mt-2 mb-4">{project.title}</h3>
-        <p className="text-muted-foreground leading-relaxed font-light line-clamp-2 text-lg">
+        <p className="text-muted-foreground leading-relaxed font-light line-clamp-3 text-lg">
           {project.description}
         </p>
         <div className="flex gap-3 pt-4">
