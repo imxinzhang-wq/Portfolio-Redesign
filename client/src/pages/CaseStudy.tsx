@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 const PROJECTS_DATA: Record<string, any> = {
   "1": {
-    title: "EcoSphere Dashboard",
+    title: "YT Shopping Collections",
     category: "Enterprise UX • SaaS",
     description:
       "Streamlining complex environmental data into actionable insights for global logistics.",
@@ -16,7 +16,20 @@ const PROJECTS_DATA: Record<string, any> = {
       {
         type: "text",
         heading: "The Challenge",
-        body: "Modern logistics companies face a tidal wave of environmental data. The challenge was to create a dashboard that doesn't just display numbers, but tells a story of impact and opportunity.",
+        body: "Today, creators use descriptions to share products that are not in the video but may be relevant to their audience. This helps scale their shoppy recommendations. However, descriptions provide a subpar viewer experience and are difficult for Creators to maintain and curate.",
+      },
+         {
+        type: "text",
+        heading: "The Challenge",
+        body: "Today, creators use descriptions to share products that are not in the video but may be relevant to their audience. This helps scale their shoppy recommendations. However, descriptions provide a subpar viewer experience and are difficult for Creators to maintain and curate.",
+      },
+         {
+        type: "text",
+        body: "Recommendations are Tied to the Video: Our current product tools are fundamentally video-centric, designed for items prominently featured. It fails to address the creator need for a way to share curation beyond the video itself.",
+      },
+         {
+        type: "text",
+        body: "We're Sending Users Off-Platform: Creators resort to third-party platforms and links to curate collections. This creates a disjointed and untrustworthy journey for viewers, while handing our revenue and brand loyalty to competitors.",
       },
       {
         type: "image",
