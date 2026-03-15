@@ -13,21 +13,18 @@ import project2 from "@assets/Darmi.png";
 
 const MOCK_PROJECTS = [
   {
-    id: 1,
     title: "YT Shopping Collections",
     category: "2024 • YouTube",
-    description: "Architected 'Shopping Collections' to replace links with a native curation format, driving creator branding and engagement.",
+    description: "Architected Shopping Collections to replace links with a native curation format, driving creator branding and engagement.",
     image: "https://images.unsplash.com/photo-1551288049-bbbda536639a?q=80&w=2670&auto=format&fit=crop",
   },
   {
-    id: 2,
     title: "Darmi IBS food diary",
     category: "2026 • Personal Project",
     description: "An exploration of Vibe Coding and end-to-end AI workflows—now live on the App Store.",
     image: project2,
   },
   {
-    id: 3,
     title: "Airbnb WeChat Mini-app",
     category: "2018 • Airbnb",
     description: "Co-led the design and launch of Airbnb's first WeChat Mini-app and shaping its future vision through data-driven sprints",
