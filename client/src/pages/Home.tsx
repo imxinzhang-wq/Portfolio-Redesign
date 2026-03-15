@@ -14,11 +14,10 @@ import project2 from "@assets/Darmi.png";
 const MOCK_PROJECTS = [
   {
     id: 1,
-    title: "EcoSphere Dashboard",
+    title: "YT Shopping Collections",
     category: "Enterprise UX • SaaS",
     description: "Streamlining complex environmental data into actionable insights for global logistics.",
     image: "https://images.unsplash.com/photo-1551288049-bbbda536639a?q=80&w=2670&auto=format&fit=crop",
-    tags: ["UX Research", "UI Design", "Prototyping"]
   },
   {
     id: 2,
@@ -33,7 +32,6 @@ const MOCK_PROJECTS = [
     category: "Internal Tooling • Systems",
     description: "Building a scalable component library for a team of 50+ designers and engineers.",
     image: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=2670&auto=format&fit=crop",
-    tags: ["Design Systems", "Documentation", "Accessibility"]
   }
 ];
 
@@ -81,9 +79,9 @@ export default function Home() {
     <div className="bg-background min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans">
       {/* Background Elements */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[5%] left-[5%] w-[50%] h-[50%] bg-[#fbd1a2] morphing-blob" />
-        <div className="absolute bottom-[5%] right-[5%] w-[45%] h-[45%] bg-[#7ebdc2] morphing-blob" style={{ animationDelay: '-4s' }} />
-        <div className="absolute top-[40%] right-[15%] w-[35%] h-[35%] bg-[#efea5a] morphing-blob" style={{ animationDelay: '-8s' }} />
+        <div className="absolute top-[5%] left-[5%] w-[50%] h-[50%] bg-[#f5e2d6] morphing-blob" />
+        <div className="absolute bottom-[5%] right-[5%] w-[45%] h-[45%] bg-[#d2e6df] morphing-blob" style={{ animationDelay: '-4s' }} />
+        <div className="absolute top-[40%] right-[15%] w-[35%] h-[35%] bg-[#eadcef] morphing-blob" style={{ animationDelay: '-8s' }} />
         <div id="main-bg-overlay" className="absolute inset-0 bg-white/20 backdrop-blur-[80px] border-t border-white/30 transition-colors duration-700" />
       </div>
 
