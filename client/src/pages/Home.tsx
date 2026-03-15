@@ -200,7 +200,7 @@ function ProjectCard({ project, index }: { project: any, index: number }) {
       data-testid={`card-project-${project.id}`}
     >
       <Link href={`/project/${project.id}`}>
-        <a className="block relative aspect-[4/3] overflow-hidden rounded-[4px] bg-white/60 backdrop-blur-md border border-white/30 transition-all duration-700 mb-8">
+        <a className="block relative aspect-[4/3] overflow-hidden rounded-[24px] bg-white/60 backdrop-blur-md border border-white/30 transition-all duration-700 mb-8">
           {project.bgImage && (
             <img 
               src={project.bgImage} 
