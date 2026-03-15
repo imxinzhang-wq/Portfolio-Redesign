@@ -36,7 +36,7 @@ const PROJECTS_DATA: Record<string, any> = {
     description:
       "An exploration of Vibe Coding and end-to-end AI product workflows.",
     image:
-      "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=2670&auto=format&fit=crop",
+      "@assets/Darmi.png",
     tags: ["Mobile UX", "Interaction Design", "User Testing"],
     content: [
       {
