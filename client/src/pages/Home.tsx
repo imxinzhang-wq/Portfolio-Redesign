@@ -174,7 +174,7 @@ function ProjectGrid() {
   }, [bgOpacity]);
 
   return (
-    <section id="work" ref={targetRef} className="py-24 px-6 md:px-12 max-w-5xl mx-auto">
+    <section id="work" ref={targetRef} className="py-24 px-6 md:px-12 max-w-6xl mx-auto">
       <div className="flex flex-col gap-32">
         {MOCK_PROJECTS.map((project, i) => (
           <div key={project.id} className="group cursor-pointer">
@@ -194,7 +194,7 @@ function ProjectGrid() {
                   </p>
                 </div>
                 
-                <div className="w-full aspect-[21/9] overflow-hidden bg-black/5 rounded-lg">
+                <div className="w-full aspect-[18/9] overflow-hidden bg-black/5 rounded-lg">
                   <img 
                     src={project.image} 
                     alt={project.title}
