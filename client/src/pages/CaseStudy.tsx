@@ -375,17 +375,32 @@ export default function CaseStudy() {
                       {section.heading}
                     </h3>
                   )}
-                  <ul className="space-y-6">
-                    {section.items.map((item: string, i: number) => (
-                      <li key={i} className="flex items-start gap-6">
-                        <span className="text-[10px] font-mono text-muted-foreground mt-1.5 opacity-50">
-                          {String(i + 1).padStart(2, '0')}
-                        </span>
-                        <span className="text-lg md:text-xl font-light text-foreground leading-relaxed max-w-2xl">
-                          {item}
-                        </span>
-                      </li>
-                    ))}
+                  <ul className="space-y-8">
+                    {section.items.map((item: string, i: number) => {
+                      const hasColon = item.includes(':');
+                      const [prefix, ...rest] = hasColon ? item.split(':') : [item];
+                      const suffix = hasColon ? rest.join(':').trim() : '';
+
+                      return (
+                        <li key={i} className="flex flex-col md:flex-row gap-4 md:gap-8 items-start">
+                          <div className="flex items-center gap-4 md:w-1/3 shrink-0">
+                            <span className="text-[10px] font-mono text-muted-foreground opacity-50">
+                              {String(i + 1).padStart(2, '0')}
+                            </span>
+                            <span className="text-lg font-medium text-foreground">
+                              {prefix}
+                            </span>
+                          </div>
+                          {hasColon && (
+                            <div className="md:w-2/3">
+                              <span className="text-lg md:text-xl font-light text-muted-foreground leading-relaxed block">
+                                {suffix}
+                              </span>
+                            </div>
+                          )}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               )}
