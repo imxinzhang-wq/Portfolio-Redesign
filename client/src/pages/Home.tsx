@@ -189,7 +189,7 @@ function ProjectGrid() {
                     {project.category}
                   </p>
                   
-                  <p className="text-[16px] md:text-xl text-muted-foreground font-light leading-relaxed max-w-2xl">
+                  <p className="text-[16px] md:text-xl text-muted-foreground font-light leading-relaxed max-w-xl">
                     {project.description}
                   </p>
                 </div>
