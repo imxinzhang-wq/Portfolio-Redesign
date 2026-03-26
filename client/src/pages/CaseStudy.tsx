@@ -440,16 +440,34 @@ export default function CaseStudy() {
                   )}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
                     {section.metrics.map((metric: any, i: number) => (
-                      <div key={i} className="flex flex-col border-t border-border/10 pt-8">
-                        <span className="text-5xl md:text-6xl lg:text-7xl font-display font-medium tracking-tighter text-foreground mb-4">
-                          {metric.value}
-                        </span>
-                        <span className="text-sm font-mono uppercase tracking-widest text-foreground/90 mb-4 font-medium">
-                          {metric.label}
-                        </span>
-                        <p className="text-base text-foreground/60 font-light leading-relaxed">
-                          {metric.description}
-                        </p>
+                      <div key={i} className="flex flex-col border-t border-border/10 pt-8 overflow-hidden">
+                        <motion.div
+                          initial={{ y: 40, opacity: 0, rotateX: 45 }}
+                          whileInView={{ y: 0, opacity: 1, rotateX: 0 }}
+                          viewport={{ once: true, margin: "-50px" }}
+                          transition={{ 
+                            duration: 0.8, 
+                            delay: i * 0.15,
+                            ease: [0.21, 0.47, 0.32, 0.98] 
+                          }}
+                        >
+                          <span className="text-5xl md:text-6xl lg:text-7xl font-display font-medium tracking-tighter text-foreground mb-4 block origin-bottom">
+                            {metric.value}
+                          </span>
+                        </motion.div>
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          whileInView={{ opacity: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.5, delay: 0.4 + (i * 0.1) }}
+                        >
+                          <span className="text-sm font-mono uppercase tracking-widest text-foreground/90 mb-4 font-medium block">
+                            {metric.label}
+                          </span>
+                          <p className="text-base text-foreground/60 font-light leading-relaxed">
+                            {metric.description}
+                          </p>
+                        </motion.div>
                       </div>
                     ))}
                   </div>
