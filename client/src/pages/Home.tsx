@@ -174,38 +174,32 @@ function ProjectGrid() {
   }, [bgOpacity]);
 
   return (
-    <section id="work" ref={targetRef} className="py-24 px-6 md:px-12 max-w-7xl mx-auto">
-      <div className="flex flex-col gap-24">
+    <section id="work" ref={targetRef} className="py-24 px-6 md:px-12 max-w-5xl mx-auto">
+      <div className="flex flex-col gap-32">
         {MOCK_PROJECTS.map((project, i) => (
           <div key={project.id} className="group cursor-pointer">
             <Link href={`/project/${project.id}`}>
               <a className="block">
-                <div className="flex flex-col lg:flex-row lg:items-baseline justify-between gap-4 mb-6">
-                  <div>
-                    <h3 className="text-4xl md:text-5xl lg:text-[4rem] font-display font-medium tracking-tighter transition-colors duration-300 group-hover:text-black/70">
-                      {project.title}
-                    </h3>
-                  </div>
-                  <div>
-                    <p className="text-[11px] font-mono text-muted-foreground uppercase">{project.category}</p>
-                  </div>
+                <div className="mb-10 flex flex-col items-start">
+                  <h3 className="text-[2.5rem] md:text-[3.5rem] font-display font-medium tracking-tighter transition-colors duration-300 group-hover:text-black/70 mb-4">
+                    {project.title}
+                  </h3>
+                  
+                  <p className="text-[11px] md:text-xs font-mono text-muted-foreground uppercase tracking-widest mb-8">
+                    {project.category}
+                  </p>
+                  
+                  <p className="text-[16px] md:text-xl text-muted-foreground font-light leading-relaxed max-w-2xl">
+                    {project.description}
+                  </p>
                 </div>
                 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                  <div className="lg:col-span-4 lg:col-start-1">
-                    <p className="text-[15px] md:text-[17px] text-muted-foreground font-light leading-relaxed max-w-sm mb-4 lg:mb-0">
-                      {project.description}
-                    </p>
-                  </div>
-                  <div className="lg:col-span-8 lg:col-start-5">
-                    <div className="aspect-[21/9] overflow-hidden bg-black/5 rounded-[2px]">
-                      <img 
-                        src={project.image} 
-                        alt={project.title}
-                        className="w-full h-full object-cover origin-center transform transition-transform duration-1000 group-hover:scale-[1.03]"
-                      />
-                    </div>
-                  </div>
+                <div className="w-full aspect-[16/9] overflow-hidden bg-black/5 rounded-lg">
+                  <img 
+                    src={project.image} 
+                    alt={project.title}
+                    className="w-full h-full object-cover object-center transform transition-transform duration-1000 group-hover:scale-[1.03]"
+                  />
                 </div>
               </a>
             </Link>
