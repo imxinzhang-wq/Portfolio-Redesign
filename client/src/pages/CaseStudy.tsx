@@ -67,12 +67,24 @@ const PROJECTS_DATA: Record<string, any> = {
         body: "As the lead, I navigated significant organizational complexity to bring this vision to life. I stepped in to lead the workstream when ownership between the Viewer and Creator teams was unclear, aligning both sides on a unified set of KPIs. I facilitated a global design sprint to align the priorities of Viewer, Creator, and Affiliate teams across three different geographic regions, and partnered with PMs and Engineering to translate a broad vision into actionable, phased milestones for a successful April 2024 pilot."
       },
       {
-        type: "list",
+        type: "metrics",
         heading: "Impact & Recognition",
-        items: [
-          "83% of creators in the pilot found the Collections feature highly useful.",
-          "12% of users were 'new-to-shopping' creators who had never used tagging before.",
-          "Positive Press — Featured in TechCrunch and Business Insider as a significant evolution of YouTube’s social commerce strategy."
+        metrics: [
+          {
+            value: "83%",
+            label: "Pilot Creators",
+            description: "found the Collections feature highly useful for curation."
+          },
+          {
+            value: "12%",
+            label: "New Adopters",
+            description: "were 'new-to-shopping' creators who had never used tagging."
+          },
+          {
+            value: "Top Tier",
+            label: "Media Coverage",
+            description: "Featured in TechCrunch and Business Insider as a commerce evolution."
+          }
         ]
       },
       {
@@ -416,6 +428,31 @@ export default function CaseStudy() {
                       );
                     })}
                   </ul>
+                </div>
+              )}
+
+              {section.type === "metrics" && (
+                <div className="w-full py-12 md:py-20">
+                  {section.heading && (
+                    <h3 className="text-3xl md:text-4xl lg:text-5xl font-display font-medium tracking-tight mb-12 md:mb-16 leading-[1.15] text-balance">
+                      {section.heading}
+                    </h3>
+                  )}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+                    {section.metrics.map((metric: any, i: number) => (
+                      <div key={i} className="flex flex-col border-t border-border/10 pt-8">
+                        <span className="text-5xl md:text-6xl lg:text-7xl font-display font-medium tracking-tighter text-foreground mb-4">
+                          {metric.value}
+                        </span>
+                        <span className="text-sm font-mono uppercase tracking-widest text-foreground/90 mb-4 font-medium">
+                          {metric.label}
+                        </span>
+                        <p className="text-base text-foreground/60 font-light leading-relaxed">
+                          {metric.description}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
 
