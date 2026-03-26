@@ -8,6 +8,9 @@ import darmiImg1 from "@assets/image_1774537420038.png";
 // If you want to use the actual Darmi cover from Home, you can import it:
 import project2Cover from "@assets/Darmi_Cover.PNG"; 
 import project1Cover from "@assets/Collection_Cover.png"; 
+import collectionCreateGif from "@assets/Collection-create_1774547429730.gif";
+import collectionGif from "@assets/Collection_1774547429731.gif";
+import creationJpg from "@assets/creation_1774547429731.jpg";
 
 const PROJECTS_DATA: Record<string, any> = {
   "1": {
@@ -48,6 +51,14 @@ const PROJECTS_DATA: Record<string, any> = {
           "Compelling Formats: Introducing color sampling and adaptable layouts to ensure collections felt like a 'shopping destination.'",
           "Amplified Reach: Designing contextual entry points across Search, Shorts, Watch pages, and Channel stores.",
           "The Feedback Loop: Building an analytics suite so creators could track performance and optimize their curation."
+        ]
+      },
+      {
+        type: "gallery",
+        images: [
+          collectionCreateGif,
+          creationJpg,
+          collectionGif
         ]
       },
       {
@@ -295,6 +306,22 @@ export default function CaseStudy() {
                       {section.caption}
                     </p>
                   )}
+                </div>
+              )}
+
+              {section.type === "gallery" && (
+                <div className="w-full my-12">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {section.images.map((img: string, i: number) => (
+                      <div key={i} className="w-full overflow-hidden rounded-3xl border-[0.5px] border-white/50 bg-white/5 p-2">
+                        <img
+                          src={img}
+                          alt={`Gallery image ${i + 1}`}
+                          className="w-full h-auto object-cover rounded-[20px]"
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
 
