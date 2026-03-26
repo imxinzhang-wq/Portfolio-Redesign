@@ -110,7 +110,7 @@ export default function CaseStudy() {
   if (!project) return <div>Project not found</div>;
 
   return (
-    <div className="bg-[#fcfaf8] min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans">
+    <div className="bg-[#f5f0e6] min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans">
       <main className="relative z-10 pb-32">
         {/* Navigation */}
         <nav className="px-6 md:px-12 py-12 max-w-7xl mx-auto flex items-center justify-between">
