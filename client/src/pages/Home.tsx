@@ -194,7 +194,7 @@ function ProjectGrid() {
                   </p>
                 </div>
                 
-                <div className="w-full aspect-[16/9] overflow-hidden bg-black/5 rounded-lg">
+                <div className="w-full aspect-[21/9] overflow-hidden bg-black/5 rounded-lg">
                   <img 
                     src={project.image} 
                     alt={project.title}
