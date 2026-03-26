@@ -294,13 +294,13 @@ export default function CaseStudy() {
               className="w-full"
             >
               {section.type === "text" && (
-                <div className="max-w-4xl space-y-10">
+                <div className="max-w-4xl space-y-6">
                   {section.heading && (
-                    <h3 className="text-4xl md:text-6xl lg:text-7xl font-display font-medium tracking-tighter mb-10 md:mb-16 leading-[1.05] text-balance">
+                    <h3 className="text-3xl md:text-4xl lg:text-5xl font-display font-medium tracking-tight mb-6 md:mb-8 leading-[1.15] text-balance">
                       {section.heading}
                     </h3>
                   )}
-                  <p className="text-base md:text-lg lg:text-xl text-foreground/70 font-light leading-[1.9] md:leading-[2] text-pretty max-w-3xl">
+                  <p className="text-base md:text-lg text-foreground/70 font-light leading-[1.7] md:leading-[1.8] text-pretty max-w-3xl">
                     {section.body}
                   </p>
                 </div>
@@ -340,14 +340,14 @@ export default function CaseStudy() {
               )}
 
               {section.type === "split" && (
-                <div className={`flex flex-col ${section.imageFirst ? 'md:flex-row' : 'md:flex-row-reverse'} gap-12 md:gap-24 items-start`}>
-                  <div className="w-full md:w-1/2 space-y-10 pt-4">
+                <div className={`flex flex-col ${section.imageFirst ? 'md:flex-row' : 'md:flex-row-reverse'} gap-10 md:gap-16 items-start`}>
+                  <div className="w-full md:w-1/2 space-y-6 pt-4">
                     {section.heading && (
-                      <h3 className="text-4xl md:text-6xl lg:text-7xl font-display font-medium tracking-tighter mb-8 md:mb-12 leading-[1.05] text-balance">
+                      <h3 className="text-3xl md:text-4xl lg:text-5xl font-display font-medium tracking-tight mb-4 md:mb-6 leading-[1.15] text-balance">
                         {section.heading}
                       </h3>
                     )}
-                    <p className="text-base md:text-lg lg:text-xl text-foreground/70 font-light leading-[1.9] md:leading-[2] text-pretty">
+                    <p className="text-base md:text-lg text-foreground/70 font-light leading-[1.7] md:leading-[1.8] text-pretty">
                       {section.body}
                     </p>
                   </div>
@@ -371,11 +371,11 @@ export default function CaseStudy() {
               {section.type === "list" && (
                 <div className="w-full">
                   {section.heading && (
-                    <h3 className="text-4xl md:text-6xl lg:text-7xl font-display font-medium tracking-tighter mb-12 md:mb-20 leading-[1.05] text-balance">
+                    <h3 className="text-3xl md:text-4xl lg:text-5xl font-display font-medium tracking-tight mb-8 md:mb-12 leading-[1.15] text-balance">
                       {section.heading}
                     </h3>
                   )}
-                  <ul className="space-y-12">
+                  <ul className="space-y-8">
                     {section.items.map((item: string, i: number) => {
                       const idx = item.indexOf(':');
                       const hasColon = idx > 0 && idx < 60;
@@ -433,13 +433,13 @@ export default function CaseStudy() {
               )}
 
               {section.type === "statement" && (
-                <div className="max-w-5xl py-12 md:py-20">
+                <div className="max-w-4xl py-10 md:py-16">
                   {section.heading && (
-                    <h3 className="text-xs md:text-sm font-mono uppercase tracking-[0.3em] text-muted-foreground mb-8 md:mb-12">
+                    <h3 className="text-xs md:text-sm font-mono uppercase tracking-[0.3em] text-muted-foreground mb-6 md:mb-8">
                       {section.heading}
                     </h3>
                   )}
-                  <p className="text-5xl md:text-7xl lg:text-[5.5rem] font-display font-medium leading-[1.05] tracking-tight text-foreground text-balance">
+                  <p className="text-3xl md:text-4xl lg:text-5xl font-display font-medium leading-[1.2] tracking-tight text-foreground text-balance">
                     {section.text}
                   </p>
                 </div>
