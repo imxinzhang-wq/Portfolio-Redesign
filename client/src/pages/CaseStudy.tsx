@@ -81,9 +81,9 @@ const PROJECTS_DATA: Record<string, any> = {
             description: "were 'new-to-shopping' creators who had never used tagging."
           },
           {
-            value: "2",
-            label: "Major Publications",
-            description: "Featured in TechCrunch and Business Insider as a commerce evolution."
+            value: "Press",
+            label: "INDUSTRY RECOGNITION",
+            description: "Featured in TechCrunch, Business Insider, and other major publications."
           }
         ]
       },
