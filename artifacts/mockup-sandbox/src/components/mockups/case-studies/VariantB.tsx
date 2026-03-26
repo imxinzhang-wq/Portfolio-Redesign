@@ -39,16 +39,16 @@ export default function VariantB() {
           <span className="text-sm font-mono text-muted-foreground">2018 - 2026</span>
         </div>
         
-        <div className="flex flex-col gap-40">
+        <div className="flex flex-col gap-6">
           {MOCK_PROJECTS.map((project, i) => (
             <div key={project.id} className="group cursor-pointer relative">
-              <div className="absolute -left-12 top-0 text-[12rem] font-display font-bold leading-none text-black/5 -z-10 group-hover:text-black/10 transition-colors select-none hidden md:block">
+              <div className="absolute -left-12 top-0 text-[6rem] font-display font-bold leading-none text-black/5 -z-10 group-hover:text-black/10 transition-colors select-none hidden md:block">
                 0{i + 1}
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
                 <div className="md:col-span-8">
-                  <div className="aspect-[4/5] md:aspect-[16/10] overflow-hidden bg-black/5">
+                  <div className="aspect-[24/7] overflow-hidden bg-black/5 rounded-[8px]">
                     <img 
                       src={project.image} 
                       alt={project.title}
@@ -57,19 +57,19 @@ export default function VariantB() {
                   </div>
                 </div>
                 
-                <div className="md:col-span-4 md:pt-12">
-                  <div className="sticky top-24">
-                    <div className="border-t border-black/10 pt-6 mb-6">
-                      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{project.category}</p>
+                <div className="md:col-span-4">
+                  <div className="sticky top-24 pt-2">
+                    <div className="mb-2">
+                      <p className="text-[10px] font-mono tracking-[0.2em] text-muted-foreground">{project.category}</p>
                     </div>
-                    <h3 className="text-3xl md:text-4xl font-display font-medium tracking-tight mb-6">
+                    <h3 className="text-xl font-display font-medium tracking-tight mb-2 group-hover:opacity-70 transition-opacity">
                       {project.title}
                     </h3>
-                    <p className="text-base text-muted-foreground font-light leading-relaxed mb-10">
+                    <p className="text-xs text-muted-foreground font-light leading-relaxed mb-4 line-clamp-2">
                       {project.description}
                     </p>
-                    <button className="w-12 h-12 rounded-full border border-black/20 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all duration-300">
-                      <ArrowUpRight className="w-5 h-5" />
+                    <button className="w-8 h-8 rounded-full border border-black/10 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all duration-300">
+                      <ArrowUpRight className="w-3 h-3" />
                     </button>
                   </div>
                 </div>
