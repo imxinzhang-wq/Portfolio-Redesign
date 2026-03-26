@@ -24,7 +24,8 @@ export default function Photography() {
     <div className="bg-background min-h-screen relative text-foreground font-sans selection:bg-accent selection:text-accent-foreground">
       {/* Background Elements */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 bg-[#fafafa]" />
+        <div className="absolute top-[5%] left-[5%] w-[50%] h-[50%] bg-[#fbd1a2] morphing-blob opacity-40" />
+        <div className="absolute inset-0 bg-white/20 backdrop-blur-[100px]" />
       </div>
 
       <main className="relative z-10 container mx-auto px-6 py-24">
