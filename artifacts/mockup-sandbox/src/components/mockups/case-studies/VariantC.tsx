@@ -38,37 +38,37 @@ export default function VariantC() {
           <h2 className="text-xs uppercase tracking-[0.4em] font-medium text-muted-foreground">Index of Works</h2>
         </div>
         
-        <div className="flex flex-col mt-8">
+        <div className="flex flex-col border-t border-black/10">
           {MOCK_PROJECTS.map((project, i) => (
-            <div key={project.id} className="group cursor-pointer mb-8 last:mb-0">
-              <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-2 items-center">
+            <div key={project.id} className="group cursor-pointer border-b border-black/10 py-16">
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-12 items-end">
                 <div className="lg:col-span-2">
-                  <h3 className="text-2xl md:text-3xl font-display font-medium tracking-tighter transition-colors duration-300 group-hover:opacity-70">
+                  <h3 className="text-4xl md:text-5xl lg:text-6xl font-display font-medium tracking-tighter transition-colors duration-300 group-hover:text-black/70">
                     {project.title}
                   </h3>
                 </div>
                 <div className="lg:col-span-1">
-                  <p className="text-[10px] font-mono text-muted-foreground uppercase">{project.category}</p>
+                  <p className="text-sm font-mono text-muted-foreground uppercase">{project.category}</p>
                 </div>
-                <div className="lg:col-span-1 flex justify-start lg:justify-end opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span className="inline-flex items-center gap-2 text-[9px] font-bold uppercase tracking-widest">
-                    View Project <ArrowUpRight className="w-3 h-3 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                <div className="lg:col-span-1 flex justify-start lg:justify-end">
+                  <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest">
+                    View <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
                   </span>
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 <div className="lg:col-span-3 lg:col-start-1">
-                  <p className="text-xs text-muted-foreground font-light leading-relaxed line-clamp-2 mt-1">
+                  <p className="text-lg text-muted-foreground font-light leading-relaxed max-w-sm">
                     {project.description}
                   </p>
                 </div>
                 <div className="lg:col-span-8 lg:col-start-5">
-                  <div className="aspect-[8/1] overflow-hidden bg-black/5 rounded-[4px]">
+                  <div className="aspect-[21/9] overflow-hidden bg-black/5">
                     <img 
                       src={project.image} 
                       alt={project.title}
-                      className="w-full h-full object-cover origin-center transform transition-transform duration-1000 group-hover:scale-[1.02]"
+                      className="w-full h-full object-cover origin-center transform transition-transform duration-1000 group-hover:scale-[1.03]"
                     />
                   </div>
                 </div>
