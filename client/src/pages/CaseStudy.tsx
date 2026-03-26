@@ -268,9 +268,6 @@ export default function CaseStudy() {
             >
               {section.type === "text" && (
                 <div className="max-w-3xl space-y-6">
-                  <div className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground mb-4">
-                    Chapter 0{idx + 1}
-                  </div>
                   {section.heading && (
                     <h3 className="text-3xl md:text-5xl font-display font-medium tracking-tight mb-6">
                       {section.heading}
