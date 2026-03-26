@@ -72,7 +72,7 @@ const PROJECTS_DATA: Record<string, any> = {
         items: [
           "83% of creators in the pilot found the Collections feature highly useful.",
           "12% of users were 'new-to-shopping' creators who had never used tagging before.",
-          "Positive Press: Featured in TechCrunch and Business Insider as a significant evolution of YouTube’s social commerce strategy."
+          "Positive Press — Featured in TechCrunch and Business Insider as a significant evolution of YouTube’s social commerce strategy."
         ]
       },
       {
@@ -377,27 +377,41 @@ export default function CaseStudy() {
                   )}
                   <ul className="space-y-8">
                     {section.items.map((item: string, i: number) => {
-                      const hasColon = item.includes(':');
-                      const [prefix, ...rest] = hasColon ? item.split(':') : [item];
-                      const suffix = hasColon ? rest.join(':').trim() : '';
+                      const idx = item.indexOf(':');
+                      const hasColon = idx > 0 && idx < 60;
 
-                      return (
-                        <li key={i} className="flex flex-col md:flex-row gap-4 md:gap-8 items-start">
-                          <div className="flex items-center gap-4 md:w-1/3 shrink-0">
-                            <span className="text-[10px] font-mono text-muted-foreground opacity-50">
-                              {String(i + 1).padStart(2, '0')}
-                            </span>
-                            <span className="text-lg font-medium text-foreground">
-                              {prefix}
-                            </span>
-                          </div>
-                          {hasColon && (
-                            <div className="md:w-2/3">
+                      if (hasColon) {
+                        const prefix = item.substring(0, idx);
+                        const suffix = item.substring(idx + 1).trim();
+
+                        return (
+                          <li key={i} className="flex flex-col md:flex-row md:gap-8 gap-4 items-start">
+                            <div className="flex items-start gap-4 md:w-1/3 shrink-0">
+                              <span className="text-[10px] font-mono text-muted-foreground opacity-50 mt-1.5">
+                                {String(i + 1).padStart(2, '0')}
+                              </span>
+                              <span className="text-lg font-medium text-foreground">
+                                {prefix}
+                              </span>
+                            </div>
+                            <div className="md:w-2/3 pt-1 md:pt-0">
                               <span className="text-lg md:text-xl font-light text-muted-foreground leading-relaxed block">
                                 {suffix}
                               </span>
                             </div>
-                          )}
+                          </li>
+                        );
+                      }
+
+                      // Normal layout without splitting
+                      return (
+                        <li key={i} className="flex items-start gap-6">
+                          <span className="text-[10px] font-mono text-muted-foreground mt-1.5 opacity-50">
+                            {String(i + 1).padStart(2, '0')}
+                          </span>
+                          <span className="text-lg md:text-xl font-light text-foreground leading-relaxed max-w-2xl">
+                            {item}
+                          </span>
                         </li>
                       );
                     })}
