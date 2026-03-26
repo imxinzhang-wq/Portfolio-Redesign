@@ -2,9 +2,9 @@ import './_group.css';
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
-import project1 from "@/assets/Collection_Cover.png";
-import project2 from "@/assets/Darmi_Cover.PNG";
-import project3 from "@/assets/Airbnb_Cover.gif";
+import project1 from "../../../assets/Collection_Cover.png";
+import project2 from "../../../assets/Darmi_Cover.PNG";
+import project3 from "../../../assets/Airbnb_Cover.gif";
 
 const MOCK_PROJECTS = [
   {
