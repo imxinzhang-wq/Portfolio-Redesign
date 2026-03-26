@@ -175,12 +175,12 @@ function ProjectGrid() {
 
   return (
     <section id="work" ref={targetRef} className="py-32 px-6">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <div className="mb-20">
           <h2 className="text-xs uppercase tracking-[0.3em] font-bold text-muted-foreground mb-4">Case Studies</h2>
           <div className="h-px w-full bg-black/5" />
         </div>
-        <div className="space-y-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-24 items-start">
           {MOCK_PROJECTS.map((project, i) => (
             <ProjectCard key={project.id} project={project} index={i} />
           ))}
@@ -191,16 +191,18 @@ function ProjectGrid() {
 }
 
 function ProjectCard({ project, index }: { project: any, index: number }) {
+  const isOffset = index % 2 !== 0;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
-      className="flex flex-col group"
+      className={`flex flex-col group md:col-span-1 ${isOffset ? 'md:mt-24' : ''}`}
       data-testid={`card-project-${project.id}`}
     >
       <Link href={`/project/${project.id}`}>
-        <a className="block relative aspect-video overflow-hidden rounded-[4px] bg-white/60 backdrop-blur-md border border-black/5 transition-all duration-700 mb-8">
+        <a className="block relative aspect-[4/3] overflow-hidden rounded-[24px] bg-white/60 backdrop-blur-md border border-white/30 transition-all duration-700 mb-8">
           {project.bgImage && (
             <img 
               src={project.bgImage} 
@@ -223,24 +225,18 @@ function ProjectCard({ project, index }: { project: any, index: number }) {
       
       <div className="space-y-4">
         <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground/60">0{index + 1} / {project.category}</span>
-        <h3 className="text-4xl font-display font-medium group-hover:opacity-60 transition-opacity">
-          {project.title}
-        </h3>
-        <p className="text-lg text-muted-foreground leading-relaxed font-normal">
+        <h3 className="text-3xl font-display font-medium group-hover:opacity-60 transition-opacity mt-2 mb-4">{project.title}</h3>
+        <p className="text-muted-foreground leading-relaxed font-light line-clamp-3 text-lg">
           {project.description}
         </p>
-        <div className="flex flex-wrap gap-3 pt-4">
+        <div className="flex gap-3 pt-4">
           {project.tags?.slice(0, 3).map((tag: string) => (
-            <span key={tag} className="text-[8px] uppercase tracking-widest px-3 py-1.5 border border-black/5 rounded-full text-muted-foreground hover:bg-white/60 transition-colors">
+            <span key={tag} className="text-[8px] uppercase tracking-widest px-2 py-0.5 border border-black/5 rounded-full text-muted-foreground">
               {tag}
             </span>
           ))}
         </div>
       </div>
-
-      {index < MOCK_PROJECTS.length - 1 && (
-        <div className="mt-24 h-px bg-black/5" />
-      )}
     </motion.div>
   );
 }
@@ -248,7 +244,7 @@ function ProjectCard({ project, index }: { project: any, index: number }) {
 function VisualsGrid() {
   return (
     <section className="py-32 px-6">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <div className="flex justify-between items-end mb-20">
           <div>
             <h2 className="text-xs uppercase tracking-[0.3em] font-bold text-muted-foreground mb-4">Visual Artifacts</h2>
@@ -262,7 +258,7 @@ function VisualsGrid() {
             View All <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </a>
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {MOCK_VISUALS.slice(0, 3).map((item, i) => (
             <motion.div
               key={item.id}
@@ -270,7 +266,7 @@ function VisualsGrid() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.8 }}
-              className="group relative aspect-[4/5] overflow-hidden rounded-[4px] bg-white/60 backdrop-blur-md border border-black/5"
+              className="group relative aspect-[4/5] overflow-hidden rounded-[4px] bg-white/60 backdrop-blur-md border border-white/30"
             >
               <img 
                 src={item.image} 
@@ -309,7 +305,7 @@ function About() {
 
   return (
     <section id="about" ref={targetRef} className="py-40 px-6">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -317,14 +313,14 @@ function About() {
         >
           <div className="space-y-12">
             <h2 className="text-xs uppercase tracking-[0.3em] font-bold text-muted-foreground">About Me</h2>
-            <div className="text-3xl md:text-4xl font-display leading-[1.3] font-medium tracking-tight space-y-8">
+            <div className="text-3xl md:text-5xl font-display leading-[1.3] font-medium tracking-tight space-y-10">
               <p>
                 I moved to the U.S. in 2014 to study Human-Computer Interaction at the University of Michigan. Since then, my work has taken me from California to Switzerland.
               </p>
             </div>
           </div>
           
-          <div className="grid grid-cols-1 gap-8 pt-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-12">
             <div className="space-y-4">
               <h4 className="text-[10px] uppercase tracking-widest font-bold">Outside of work</h4>
               <p className="text-muted-foreground leading-relaxed text-lg font-light">

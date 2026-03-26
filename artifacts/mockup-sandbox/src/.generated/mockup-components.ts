@@ -4,6 +4,5 @@ export const modules: ModuleMap = {
   "./components/mockups/portfolio-variations/Conversation.tsx": () => import("../components/mockups/portfolio-variations/Conversation.tsx"),
   "./components/mockups/portfolio-variations/DeepDiveFirst.tsx": () => import("../components/mockups/portfolio-variations/DeepDiveFirst.tsx"),
   "./components/mockups/portfolio-variations/IndexGallery.tsx": () => import("../components/mockups/portfolio-variations/IndexGallery.tsx"),
-  "./components/mockups/portfolio-variations/SingleColumn.tsx": () => import("../components/mockups/portfolio-variations/SingleColumn.tsx"),
   "./components/mockups/portfolio-variations/TimelineJourney.tsx": () => import("../components/mockups/portfolio-variations/TimelineJourney.tsx")
 };
