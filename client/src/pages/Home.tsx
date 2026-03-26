@@ -185,7 +185,7 @@ function ProjectGrid() {
                     {project.title}
                   </h3>
                   
-                  <p className="text-[11px] md:text-xs font-mono text-muted-foreground uppercase tracking-widest mb-8">
+                  <p className="text-[11px] md:text-xs font-mono text-muted-foreground uppercase tracking-[0.3em] mb-8">
                     {project.category}
                   </p>
                   
