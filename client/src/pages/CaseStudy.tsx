@@ -110,7 +110,15 @@ export default function CaseStudy() {
   if (!project) return <div>Project not found</div>;
 
   return (
-    <div className="bg-[#fafafa] min-h-screen relative text-foreground font-sans selection:bg-black selection:text-white">
+    <div className="bg-background min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans">
+      {/* Background Elements matching Home */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-[5%] left-[5%] w-[40%] h-[40%] bg-[#fbd1a2] morphing-blob" />
+        <div className="absolute bottom-[5%] right-[5%] w-[45%] h-[45%] bg-[#7ebdc2] morphing-blob" style={{ animationDelay: '-4s' }} />
+        <div className="absolute top-[40%] right-[15%] w-[35%] h-[35%] bg-[#efea5a] morphing-blob" style={{ animationDelay: '-8s' }} />
+        <div id="main-bg-overlay" className="absolute inset-0 bg-white/20 backdrop-blur-[80px] border-t border-white/30 transition-colors duration-700" />
+      </div>
+
       <main className="relative z-10 pb-32">
         {/* Navigation */}
         <nav className="px-6 md:px-12 py-12 max-w-7xl mx-auto flex items-center justify-between">
@@ -152,13 +160,13 @@ export default function CaseStudy() {
                     <h4 className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground mb-3">
                       Disciplines
                     </h4>
-                    <div className="flex flex-wrap gap-2">
-                      {project.tags.map((tag: string) => (
+                    <div className="flex flex-wrap gap-x-3 gap-y-2">
+                      {project.tags.map((tag: string, index: number) => (
                         <span
                           key={tag}
-                          className="text-[13px] px-3 py-1 bg-black/5 rounded-full"
+                          className="text-[15px] font-light text-foreground/80"
                         >
-                          {tag}
+                          {tag}{index < project.tags.length - 1 ? ',' : ''}
                         </span>
                       ))}
                     </div>
@@ -175,7 +183,7 @@ export default function CaseStudy() {
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, delay: 0.2 }}
-            className="w-full aspect-[16/9] overflow-hidden rounded-lg bg-black/5"
+            className="w-full aspect-[16/9] overflow-hidden"
           >
             <img
               src={project.image}
@@ -198,7 +206,7 @@ export default function CaseStudy() {
             >
               {section.type === "text" && (
                 <div className="max-w-3xl space-y-6">
-                  <div className="inline-block px-3 py-1 bg-black/[0.04] rounded-full text-[10px] uppercase tracking-[0.2em] font-bold text-black/60 mb-2">
+                  <div className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground mb-4">
                     Chapter 0{idx + 1}
                   </div>
                   {section.heading && (
@@ -214,7 +222,7 @@ export default function CaseStudy() {
 
               {section.type === "image" && (
                 <div className="w-full space-y-4 my-8">
-                  <div className="w-full overflow-hidden rounded-lg bg-black/5">
+                  <div className="w-full overflow-hidden">
                     <img
                       src={section.url}
                       alt={section.caption}
@@ -242,7 +250,7 @@ export default function CaseStudy() {
                     </p>
                   </div>
                   <div className="w-full md:w-1/2">
-                    <div className="overflow-hidden rounded-lg bg-black/5 w-full">
+                    <div className="overflow-hidden w-full">
                       <img
                         src={section.imageUrl}
                         alt={section.imageCaption}
@@ -259,19 +267,19 @@ export default function CaseStudy() {
               )}
 
               {section.type === "list" && (
-                <div className="w-full p-8 md:p-12 bg-white border border-black/[0.06] rounded-2xl shadow-sm">
+                <div className="w-full">
                   {section.heading && (
-                    <h3 className="text-2xl md:text-3xl font-display font-medium mb-8">
+                    <h3 className="text-2xl md:text-3xl font-display font-medium tracking-tight mb-8 pb-4 border-b border-black/10">
                       {section.heading}
                     </h3>
                   )}
                   <ul className="space-y-6">
                     {section.items.map((item: string, i: number) => (
-                      <li key={i} className="flex items-start gap-5">
-                        <div className="mt-1.5 bg-black/5 p-1.5 rounded-full flex-shrink-0">
-                          <Check className="w-3.5 h-3.5 text-black/70" strokeWidth={3} />
-                        </div>
-                        <span className="text-[17px] md:text-lg font-light text-foreground/80 leading-relaxed">
+                      <li key={i} className="flex items-start gap-6">
+                        <span className="text-[10px] font-mono text-muted-foreground mt-1.5 opacity-50">
+                          {String(i + 1).padStart(2, '0')}
+                        </span>
+                        <span className="text-lg md:text-xl font-light text-foreground leading-relaxed max-w-2xl">
                           {item}
                         </span>
                       </li>
