@@ -296,7 +296,7 @@ export default function CaseStudy() {
               {section.type === "text" && (
                 <div className="max-w-3xl space-y-6">
                   {section.heading && (
-                    <h3 className="text-3xl md:text-5xl font-display font-medium tracking-tight mb-6">
+                    <h3 className="text-3xl md:text-4xl font-display font-medium tracking-tight mb-6">
                       {section.heading}
                     </h3>
                   )}
@@ -371,7 +371,7 @@ export default function CaseStudy() {
               {section.type === "list" && (
                 <div className="w-full">
                   {section.heading && (
-                    <h3 className="text-2xl md:text-3xl font-display font-medium tracking-tight mb-8">
+                    <h3 className="text-3xl md:text-4xl font-display font-medium tracking-tight mb-8">
                       {section.heading}
                     </h3>
                   )}
