@@ -74,6 +74,20 @@ const PROJECTS_DATA: Record<string, any> = {
           "12% of users were 'new-to-shopping' creators who had never used tagging before.",
           "Positive Press: Featured in TechCrunch and Business Insider as a significant evolution of YouTube’s social commerce strategy."
         ]
+      },
+      {
+        type: "links",
+        heading: "Project Links",
+        links: [
+          {
+            title: "Read the TechCrunch Coverage",
+            url: "https://techcrunch.com/2024/04/09/youtube-launches-new-shopping-features-to-help-creators-market-products-and-grow-their-earnings/",
+          },
+          {
+            title: "Watch Official YouTube Launch Video",
+            url: "https://youtu.be/fPglZDXS5gM",
+          }
+        ]
       }
     ],
   },
@@ -399,6 +413,34 @@ export default function CaseStudy() {
                   <p className="text-3xl md:text-5xl font-display font-medium leading-tight tracking-tight text-foreground">
                     {section.text}
                   </p>
+                </div>
+              )}
+
+              {section.type === "links" && (
+                <div className="w-full py-8 border-t border-border/10 mt-12">
+                  {section.heading && (
+                    <h3 className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-6">
+                      {section.heading}
+                    </h3>
+                  )}
+                  <div className="flex flex-col gap-4">
+                    {section.links.map((link: any, i: number) => (
+                      <a
+                        key={i}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex items-center justify-between p-6 rounded-2xl bg-white/50 hover:bg-white transition-colors border border-border/5"
+                      >
+                        <span className="text-xl font-display font-medium text-foreground/90 group-hover:text-foreground transition-colors">
+                          {link.title}
+                        </span>
+                        <svg className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors transform group-hover:translate-x-1 group-hover:-translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                      </a>
+                    ))}
+                  </div>
                 </div>
               )}
             </motion.div>
