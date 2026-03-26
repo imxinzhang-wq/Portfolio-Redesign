@@ -313,7 +313,7 @@ export default function CaseStudy() {
                 <div className="w-full my-12">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {section.images.map((img: string, i: number) => (
-                      <div key={i} className="w-full h-[500px] overflow-hidden rounded-[40px] border-2 border-[#d4cfc4] bg-[#ebe5da] p-2 flex flex-col justify-start">
+                      <div key={i} className="w-full aspect-[360/780] overflow-hidden rounded-[40px] border-2 border-[#d4cfc4] bg-[#ebe5da] p-2 flex flex-col justify-start">
                         <img
                           src={img}
                           alt={`Gallery image ${i + 1}`}
