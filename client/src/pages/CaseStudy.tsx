@@ -294,13 +294,13 @@ export default function CaseStudy() {
               className="w-full"
             >
               {section.type === "text" && (
-                <div className="max-w-3xl space-y-6">
+                <div className="max-w-4xl space-y-10">
                   {section.heading && (
-                    <h3 className="text-3xl md:text-4xl font-display font-medium tracking-tight mb-6">
+                    <h3 className="text-4xl md:text-6xl lg:text-7xl font-display font-medium tracking-tighter mb-10 md:mb-16 leading-[1.05] text-balance">
                       {section.heading}
                     </h3>
                   )}
-                  <p className="text-lg md:text-xl text-muted-foreground font-light leading-relaxed">
+                  <p className="text-base md:text-lg lg:text-xl text-foreground/70 font-light leading-[1.9] md:leading-[2] text-pretty max-w-3xl">
                     {section.body}
                   </p>
                 </div>
@@ -340,14 +340,14 @@ export default function CaseStudy() {
               )}
 
               {section.type === "split" && (
-                <div className={`flex flex-col ${section.imageFirst ? 'md:flex-row' : 'md:flex-row-reverse'} gap-12 md:gap-20 items-center`}>
-                  <div className="w-full md:w-1/2 space-y-6">
+                <div className={`flex flex-col ${section.imageFirst ? 'md:flex-row' : 'md:flex-row-reverse'} gap-12 md:gap-24 items-start`}>
+                  <div className="w-full md:w-1/2 space-y-10 pt-4">
                     {section.heading && (
-                      <h3 className="text-3xl md:text-4xl font-display font-medium tracking-tight">
+                      <h3 className="text-4xl md:text-6xl lg:text-7xl font-display font-medium tracking-tighter mb-8 md:mb-12 leading-[1.05] text-balance">
                         {section.heading}
                       </h3>
                     )}
-                    <p className="text-lg md:text-xl text-muted-foreground font-light leading-relaxed">
+                    <p className="text-base md:text-lg lg:text-xl text-foreground/70 font-light leading-[1.9] md:leading-[2] text-pretty">
                       {section.body}
                     </p>
                   </div>
@@ -371,11 +371,11 @@ export default function CaseStudy() {
               {section.type === "list" && (
                 <div className="w-full">
                   {section.heading && (
-                    <h3 className="text-3xl md:text-4xl font-display font-medium tracking-tight mb-8">
+                    <h3 className="text-4xl md:text-6xl lg:text-7xl font-display font-medium tracking-tighter mb-12 md:mb-20 leading-[1.05] text-balance">
                       {section.heading}
                     </h3>
                   )}
-                  <ul className="space-y-8">
+                  <ul className="space-y-12">
                     {section.items.map((item: string, i: number) => {
                       const idx = item.indexOf(':');
                       const hasColon = idx > 0 && idx < 60;
@@ -385,17 +385,17 @@ export default function CaseStudy() {
                         const suffix = item.substring(idx + 1).trim();
 
                         return (
-                          <li key={i} className="flex flex-col md:flex-row md:gap-8 gap-4 items-start">
+                          <li key={i} className="flex flex-col md:flex-row md:gap-8 gap-4 items-start border-t border-border/10 pt-8">
                             <div className="flex items-start gap-4 md:w-1/3 shrink-0">
-                              <span className="text-[10px] font-mono text-muted-foreground opacity-50 mt-1.5">
+                              <span className="text-[10px] font-mono text-muted-foreground opacity-50 mt-2">
                                 {String(i + 1).padStart(2, '0')}
                               </span>
-                              <span className="text-lg font-medium text-foreground">
+                              <span className="text-xl md:text-2xl font-display font-medium tracking-tight text-foreground">
                                 {prefix}
                               </span>
                             </div>
                             <div className="md:w-2/3 pt-1 md:pt-0">
-                              <span className="text-lg md:text-xl font-light text-muted-foreground leading-relaxed block">
+                              <span className="text-base md:text-lg lg:text-xl font-light text-foreground/70 leading-[1.9] block">
                                 {suffix}
                               </span>
                             </div>
@@ -405,11 +405,11 @@ export default function CaseStudy() {
 
                       // Normal layout without splitting
                       return (
-                        <li key={i} className="flex items-start gap-6">
-                          <span className="text-[10px] font-mono text-muted-foreground mt-1.5 opacity-50">
+                        <li key={i} className="flex items-start gap-6 border-t border-border/10 pt-8">
+                          <span className="text-[10px] font-mono text-muted-foreground mt-2 opacity-50">
                             {String(i + 1).padStart(2, '0')}
                           </span>
-                          <span className="text-lg md:text-xl font-light text-foreground leading-relaxed max-w-2xl">
+                          <span className="text-base md:text-lg lg:text-xl font-light text-foreground/70 leading-[1.9] max-w-2xl">
                             {item}
                           </span>
                         </li>
@@ -420,12 +420,12 @@ export default function CaseStudy() {
               )}
 
               {section.type === "quote" && (
-                <div className="max-w-4xl mx-auto text-center space-y-8 py-12">
-                  <p className="text-2xl md:text-4xl font-display font-medium leading-tight tracking-tight text-foreground/90">
+                <div className="max-w-5xl mx-auto text-center space-y-10 py-16 md:py-24">
+                  <p className="text-4xl md:text-6xl font-display font-medium leading-[1.1] tracking-tight text-foreground/90">
                     "{section.text}"
                   </p>
                   {section.author && (
-                    <p className="text-[11px] font-mono text-muted-foreground uppercase tracking-widest">
+                    <p className="text-xs md:text-sm font-mono text-muted-foreground uppercase tracking-[0.3em]">
                       — {section.author}
                     </p>
                   )}
@@ -433,13 +433,13 @@ export default function CaseStudy() {
               )}
 
               {section.type === "statement" && (
-                <div className="max-w-4xl py-8">
+                <div className="max-w-5xl py-12 md:py-20">
                   {section.heading && (
-                    <h3 className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-6">
+                    <h3 className="text-xs md:text-sm font-mono uppercase tracking-[0.3em] text-muted-foreground mb-8 md:mb-12">
                       {section.heading}
                     </h3>
                   )}
-                  <p className="text-3xl md:text-5xl font-display font-medium leading-tight tracking-tight text-foreground">
+                  <p className="text-5xl md:text-7xl lg:text-[5.5rem] font-display font-medium leading-[1.05] tracking-tight text-foreground text-balance">
                     {section.text}
                   </p>
                 </div>
