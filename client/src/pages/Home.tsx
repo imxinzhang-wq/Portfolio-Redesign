@@ -175,12 +175,12 @@ function ProjectGrid() {
 
   return (
     <section id="work" ref={targetRef} className="py-32 px-6">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <div className="mb-20">
           <h2 className="text-xs uppercase tracking-[0.3em] font-bold text-muted-foreground mb-4">Case Studies</h2>
           <div className="h-px w-full bg-black/5" />
         </div>
-        <div className="space-y-0">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-24 items-start">
           {MOCK_PROJECTS.map((project, i) => (
             <ProjectCard key={project.id} project={project} index={i} />
           ))}
@@ -191,58 +191,50 @@ function ProjectGrid() {
 }
 
 function ProjectCard({ project, index }: { project: any, index: number }) {
-  const isEven = index % 2 === 0;
+  const isOffset = index % 2 !== 0;
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
-      className="grid grid-cols-2 gap-0 min-h-[400px] items-stretch group"
+      className={`flex flex-col group md:col-span-1 ${isOffset ? 'md:mt-24' : ''}`}
       data-testid={`card-project-${project.id}`}
     >
-      {/* Image side */}
       <Link href={`/project/${project.id}`}>
-        <a className={`${isEven ? 'order-1' : 'order-2'} relative overflow-hidden rounded-[4px] bg-black/5 cursor-pointer`}>
+        <a className="block relative aspect-[4/3] overflow-hidden rounded-[24px] bg-white/60 backdrop-blur-md border border-white/30 transition-all duration-700 mb-8">
+          {project.bgImage && (
+            <img 
+              src={project.bgImage} 
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-1000"
+            />
+          )}
           <img 
             src={project.image} 
             alt={project.title}
-            className="w-full h-full object-cover group-hover:opacity-80 transition-opacity duration-500"
+            className={`absolute inset-0 w-full h-full ${project.bgImage ? 'object-contain p-8 group-hover:opacity-100' : 'object-cover group-hover:opacity-40'} transition-all duration-1000 ease-out`}
           />
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <div className="bg-white/95 backdrop-blur-md px-6 py-3 rounded-full flex items-center gap-2 text-xs font-bold uppercase tracking-widest shadow-xl">
+              View Case Study <ArrowUpRight className="w-4 h-4" />
+            </div>
+          </div>
         </a>
       </Link>
-
-      {/* Content side */}
-      <div className={`${isEven ? 'order-2' : 'order-1'} p-12 flex flex-col justify-center border-l border-black/5`}>
-        <div className="space-y-6 max-w-lg">
-          {/* Year/Company badge */}
-          <div className="inline-flex items-center gap-3">
-            <span className="text-xs font-bold uppercase tracking-[0.2em] px-3 py-1 bg-black/5 rounded-full text-muted-foreground">
-              {project.category.split(' • ')[0]}
+      
+      <div className="space-y-4">
+        <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground/60">0{index + 1} / {project.category}</span>
+        <h3 className="text-3xl font-display font-medium group-hover:opacity-60 transition-opacity mt-2 mb-4">{project.title}</h3>
+        <p className="text-muted-foreground leading-relaxed font-light line-clamp-3 text-lg">
+          {project.description}
+        </p>
+        <div className="flex gap-3 pt-4">
+          {project.tags?.slice(0, 3).map((tag: string) => (
+            <span key={tag} className="text-[8px] uppercase tracking-widest px-2 py-0.5 border border-black/5 rounded-full text-muted-foreground">
+              {tag}
             </span>
-            <span className="text-xs uppercase tracking-widest text-muted-foreground/70 font-bold">
-              {project.category.split(' • ')[1]}
-            </span>
-          </div>
-
-          {/* Title */}
-          <h2 className="text-4xl md:text-5xl font-display font-medium leading-tight tracking-tight">
-            {project.title}
-          </h2>
-
-          {/* Description */}
-          <p className="text-lg text-muted-foreground leading-relaxed font-light">
-            {project.description}
-          </p>
-
-          {/* CTA */}
-          <div className="pt-4">
-            <Link href={`/project/${project.id}`}>
-              <a className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest hover:opacity-60 transition-opacity">
-                View Case Study <ArrowUpRight className="w-4 h-4" />
-              </a>
-            </Link>
-          </div>
+          ))}
         </div>
       </div>
     </motion.div>
