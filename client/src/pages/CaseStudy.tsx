@@ -31,12 +31,14 @@ const PROJECTS_DATA: Record<string, any> = {
         ]
       },
       {
-        type: "split",
+        type: "statement",
         heading: "The Strategic Vision",
-        body: "Our goal was to create a new, high-engagement format that empowered creators to curate product recommendations while building their personal brand.",
-        imageUrl: project1Cover,
-        imageCaption: "Exploring native curation formats.",
-        imageFirst: true,
+        text: "A new format for Creators to curate and share their product recommendations while showcasing their unique perspectives and building their brands.",
+      },
+      {
+        type: "image",
+        url: project1Cover,
+        caption: "Exploring native curation formats.",
       },
       {
         type: "list",
@@ -357,6 +359,19 @@ export default function CaseStudy() {
                       — {section.author}
                     </p>
                   )}
+                </div>
+              )}
+
+              {section.type === "statement" && (
+                <div className="max-w-4xl py-8">
+                  {section.heading && (
+                    <h3 className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-6">
+                      {section.heading}
+                    </h3>
+                  )}
+                  <p className="text-3xl md:text-5xl font-display font-medium leading-tight tracking-tight text-foreground">
+                    {section.text}
+                  </p>
                 </div>
               )}
             </motion.div>
