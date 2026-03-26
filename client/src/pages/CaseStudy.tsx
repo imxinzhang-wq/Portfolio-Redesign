@@ -15,12 +15,52 @@ const PROJECTS_DATA: Record<string, any> = {
     category: "2024 • YouTube",
     description: "Architected Shopping Collections to replace links with a native curation format, driving creator branding and engagement.",
     image: project1Cover,
-    tags: ["Product Design", "UX Strategy", "Prototyping"],
+    tags: ["Design Lead", "3 Designers", "2 Researchers", "2 PMs"],
     content: [
       {
         type: "text",
-        heading: "The Challenge",
-        body: "Today, creators use descriptions to share products that are not in the video but may be relevant to their audience. This helps scale their shoppy recommendations. However, descriptions provide a subpar viewer experience and are difficult for Creators to maintain and curate.",
+        heading: "The Challenge: Beyond Video-Centric Shopping",
+        body: "While YouTube Shopping successfully allowed creators to tag products within specific videos, the experience was fundamentally restricted. We identified three core friction points.",
+      },
+      {
+        type: "list",
+        items: [
+          "Video-Centric Limitations: Product discovery was tied to a single video's lifecycle, failing to support creators who wanted to curate long-term recommendations.",
+          "Off-Platform Leakage: Creators were forced to use third-party tools (e.g., LTK, Amazon Storefronts) to build shoppable lists, leading to a disjointed user journey and lost revenue.",
+          "Brand Identity Gap: Creators lacked a native way to express their unique aesthetic and 'vibe' through product curation."
+        ]
+      },
+      {
+        type: "split",
+        heading: "The Strategic Vision",
+        body: "Our goal was to create a new, high-engagement format that empowered creators to curate product recommendations while building their personal brand.",
+        imageUrl: project1Cover,
+        imageCaption: "Exploring native curation formats.",
+        imageFirst: true,
+      },
+      {
+        type: "list",
+        heading: "Design Pillars",
+        items: [
+          "Low-Effort Creation: Automated 'ready-made' collections based on previous tags and community interests.",
+          "Compelling Formats: Introducing color sampling and adaptable layouts to ensure collections felt like a 'shopping destination.'",
+          "Amplified Reach: Designing contextual entry points across Search, Shorts, Watch pages, and Channel stores.",
+          "The Feedback Loop: Building an analytics suite so creators could track performance and optimize their curation."
+        ]
+      },
+      {
+        type: "text",
+        heading: "Leadership & Cross-Functional Alignment",
+        body: "As the lead, I navigated significant organizational complexity to bring this vision to life. I stepped in to lead the workstream when ownership between the Viewer and Creator teams was unclear, aligning both sides on a unified set of KPIs. I facilitated a global design sprint to align the priorities of Viewer, Creator, and Affiliate teams across three different geographic regions, and partnered with PMs and Engineering to translate a broad vision into actionable, phased milestones for a successful April 2024 pilot."
+      },
+      {
+        type: "list",
+        heading: "Impact & Recognition",
+        items: [
+          "83% of creators in the pilot found the Collections feature highly useful.",
+          "12% of users were 'new-to-shopping' creators who had never used tagging before.",
+          "Positive Press: Featured in TechCrunch and Business Insider as a significant evolution of YouTube’s social commerce strategy."
+        ]
       }
     ],
   },
@@ -80,20 +120,50 @@ const PROJECTS_DATA: Record<string, any> = {
     category: "2018 • Airbnb",
     description: "Co-led the design and launch of Airbnb's first WeChat Mini-app and shaping its future vision through data-driven sprints",
     image: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=2670&auto=format&fit=crop",
-    tags: ["China Market", "Localization", "Growth"],
+    tags: ["Senior Design Lead", "2 Designers", "1 Researcher", "2 PMs"],
     content: [
       {
         type: "text",
-        heading: "Overview",
-        body: "In 2018, Airbnb faced a challenge in China: while brand awareness was high, the conversion rate on the mobile web was low because it didn't align with the WeChat-centric lifestyle of Chinese users.",
+        heading: "The Context: The 'Foreign Flow' Friction",
+        body: "In 2018, Airbnb China faced a significant hurdle: despite high brand awareness, conversion rates for users coming from WeChat were low. The 'global-first' mobile web (MoWeb) experience was failing the local market.",
+      },
+      {
+        type: "list",
+        items: [
+          "UX Inefficiency: The MoWeb experience was a desktop port—lengthy, slow, and non-optimized for mobile-first Chinese users.",
+          "Friction in Trust: Registration, verification, and payment methods did not align with local industry standards (e.g., lack of WeChat Pay integration).",
+          "Technical Dependency: Any MoWeb change required global approval, slowing down the China team’s ability to iterate."
+        ]
       },
       {
         type: "split",
-        heading: "Friction in Flow",
-        body: "The global Airbnb signup/payment flow (email-based) was incompatible with Chinese users' preference for phone-number login and WeChat Pay. The mobile web experience felt like a desktop port and lacked the smoothness of native Chinese apps.",
+        heading: "The Opportunity: A Native Ecosystem",
+        body: "We identified the WeChat Mini-app as the strategic solution. This allowed us to build a 'China-first' experience that leveraged 1 billion monthly active users while bypassing the friction of app downloads and global web dependencies.",
         imageUrl: "https://images.unsplash.com/photo-1551288049-bbbda536639a?q=80&w=2670&auto=format&fit=crop",
-        imageCaption: "Existing vs proposed flow.",
-        imageFirst: true,
+        imageCaption: "Mapping the native ecosystem.",
+        imageFirst: false,
+      },
+      {
+        type: "text",
+        heading: "The Solution: Designing for Local Social Contexts",
+        body: "I led the design of an MVP that focused on the unique social behaviors of Chinese travelers. This meant designing for speed and connection."
+      },
+      {
+        type: "list",
+        items: [
+          "Lightweight Onboarding: Built-in WeChat verification and one-click payment to eliminate registration drop-off.",
+          "Social Coordination: Recognizing that group travel is dominant in China, we designed a 'Voting' feature, allowing users to share listings directly into WeChat groups for collective decision-making.",
+          "Performance-First UI: A streamlined interface designed for speed, moving away from heavy imagery to a more functional, 'get-it-booked' layout."
+        ]
+      },
+      {
+        type: "list",
+        heading: "Outcomes & Strategic Pivot",
+        items: [
+          "Rapid Acquisition: Reached 2 million users within the first month of launch.",
+          "Channel Dominance: Mini-app booking volume quickly surpassed the traditional MoWeb channel.",
+          "Strategic Insight: The demographic data from WeChat allowed us to pivot our marketing and design focus from Millennials to the emerging Gen Z traveler."
+        ]
       }
     ],
   },
