@@ -110,15 +110,7 @@ export default function CaseStudy() {
   if (!project) return <div>Project not found</div>;
 
   return (
-    <div className="bg-background min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans">
-      {/* Background Elements matching Home */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[5%] left-[5%] w-[40%] h-[40%] bg-[#fbd1a2] morphing-blob" />
-        <div className="absolute bottom-[5%] right-[5%] w-[45%] h-[45%] bg-[#7ebdc2] morphing-blob" style={{ animationDelay: '-4s' }} />
-        <div className="absolute top-[40%] right-[15%] w-[35%] h-[35%] bg-[#efea5a] morphing-blob" style={{ animationDelay: '-8s' }} />
-        <div id="main-bg-overlay" className="absolute inset-0 bg-white/20 backdrop-blur-[80px] border-t border-white/30 transition-colors duration-700" />
-      </div>
-
+    <div className="bg-[#fcfaf8] min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans">
       <main className="relative z-10 pb-32">
         {/* Navigation */}
         <nav className="px-6 md:px-12 py-12 max-w-7xl mx-auto flex items-center justify-between">
@@ -141,7 +133,7 @@ export default function CaseStudy() {
                 {project.title}
               </h1>
               
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-24 pt-12 border-t border-black/10">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-24 pt-12">
                 <div className="md:col-span-8">
                   <p className="text-xl md:text-2xl font-light leading-relaxed text-muted-foreground">
                     {project.description}
@@ -269,7 +261,7 @@ export default function CaseStudy() {
               {section.type === "list" && (
                 <div className="w-full">
                   {section.heading && (
-                    <h3 className="text-2xl md:text-3xl font-display font-medium tracking-tight mb-8 pb-4 border-b border-black/10">
+                    <h3 className="text-2xl md:text-3xl font-display font-medium tracking-tight mb-8">
                       {section.heading}
                     </h3>
                   )}
@@ -305,7 +297,7 @@ export default function CaseStudy() {
         </section>
 
         {/* Footer Navigation */}
-        <section className="mt-40 border-t border-black/10 py-24 px-6 md:px-12 max-w-7xl mx-auto">
+        <section className="mt-40 py-24 px-6 md:px-12 max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
             <Link href="/">
               <a className="group flex flex-col space-y-2">
