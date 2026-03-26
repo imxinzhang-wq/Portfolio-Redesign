@@ -375,7 +375,7 @@ export default function CaseStudy() {
                       {section.heading}
                     </h3>
                   )}
-                  <ul className="space-y-8">
+                  <ul className="space-y-4">
                     {section.items.map((item: string, i: number) => {
                       const idx = item.indexOf(':');
                       const hasColon = idx > 0 && idx < 60;
@@ -385,7 +385,7 @@ export default function CaseStudy() {
                         const suffix = item.substring(idx + 1).trim();
 
                         return (
-                          <li key={i} className="flex flex-col md:flex-row md:gap-8 gap-4 items-start border-t border-border/10 pt-8">
+                          <li key={i} className="flex flex-col md:flex-row md:gap-8 gap-4 items-start border-t border-border/10 pt-4">
                             <div className="flex items-start gap-4 md:w-1/3 shrink-0">
                               <span className="text-[10px] font-mono text-muted-foreground opacity-50 mt-2">
                                 {String(i + 1).padStart(2, '0')}
@@ -405,7 +405,7 @@ export default function CaseStudy() {
 
                       // Normal layout without splitting
                       return (
-                        <li key={i} className="flex items-start gap-6 border-t border-border/10 pt-8">
+                        <li key={i} className="flex items-start gap-6 border-t border-border/10 pt-4">
                           <span className="text-[10px] font-mono text-muted-foreground mt-2 opacity-50">
                             {String(i + 1).padStart(2, '0')}
                           </span>
