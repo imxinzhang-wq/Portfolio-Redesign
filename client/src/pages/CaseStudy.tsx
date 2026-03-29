@@ -23,6 +23,9 @@ import darmiProcess1 from "@assets/competiitor_1774794598190.png";
 import darmiProcess2 from "@assets/PRD_1774794598191.jpg";
 import darmiProcess3 from "@assets/Proto_1774794598191.jpg";
 import darmiProcess4 from "@assets/UI-2_1774794598190.png";
+import darmiHome from "@assets/home_1774795123376.png";
+import darmiAdd from "@assets/add_1774795123374.png";
+import darmiInsights from "@assets/insights_1774795123376.png";
 
 const PROJECTS_DATA: Record<string, any> = {
   "1": {
@@ -169,9 +172,8 @@ const PROJECTS_DATA: Record<string, any> = {
         ]
       },
       {
-        type: "image",
-        url: darmiImg1,
-        caption: "Streamlined daily log interface."
+        type: "gallery",
+        images: [darmiHome, darmiAdd, darmiInsights]
       },
       {
         type: "metrics",
