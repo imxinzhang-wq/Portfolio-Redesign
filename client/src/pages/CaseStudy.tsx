@@ -117,11 +117,11 @@ const PROJECTS_DATA: Record<string, any> = {
   },
   "2": {
     title: "Darmi IBS food diary",
-    category: "Summer 2025 • iOS App",
+    category: "2026",
     description: "Built and launched an IBS tracking app from 0→1 using an AI-assisted workflow, exploring how far a solo designer can go with modern AI tools.",
     image: project2Cover,
-    tagsTitle: "Role & Tools",
-    tags: ["Solo Designer & Developer", "Gemini", "ChatGPT", "Lovable", "Replit"],
+    tagsTitle: "Tools",
+    tags: ["Gemini", "ChatGPT", "Lovable", "Replit"],
     content: [
       {
         type: "text",
