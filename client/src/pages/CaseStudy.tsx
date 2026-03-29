@@ -62,9 +62,13 @@ const PROJECTS_DATA: Record<string, any> = {
         ]
       },
       {
-        type: "text",
-        heading: "Leadership & Cross-Functional Alignment",
-        body: "As the lead, I navigated significant organizational complexity to bring this vision to life. I stepped in to lead the workstream when ownership between the Viewer and Creator teams was unclear, aligning both sides on a unified set of KPIs. I facilitated a global design sprint to align the priorities of Viewer, Creator, and Affiliate teams across three different geographic regions, and partnered with PMs and Engineering to translate a broad vision into actionable, phased milestones for a successful April 2024 pilot."
+        type: "list",
+        heading: "Challenges and how I led through them",
+        items: [
+          "Leading through unclear ownership: The project lacked clear ownership between Viewer and Creator teams. I stepped up to lead the workstream and aligned both sides on shared goals.",
+          "Driving cross-geo, cross-actor alignment: Viewer, Creator, and Affiliate teams across three regions had different priorities. I led a global sprint to align direction and establish a common product vision.",
+          "Turning vision into actionable delivery: I partnered with PM and Eng to define phased milestones and shape a realistic roadmap."
+        ]
       },
       {
         type: "metrics",
