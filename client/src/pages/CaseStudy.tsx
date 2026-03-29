@@ -56,8 +56,8 @@ const PROJECTS_DATA: Record<string, any> = {
       {
         type: "gallery",
         images: [
-          collectionCreateGif,
           creationJpg,
+          collectionCreateGif,
           collectionGif
         ]
       },
