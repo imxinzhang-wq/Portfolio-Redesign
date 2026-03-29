@@ -595,26 +595,23 @@ export default function CaseStudy() {
                 <div className="w-full py-12 md:py-20">
                   <div className="space-y-12 md:space-y-24">
                     {section.steps.map((step: any, idx: number) => (
-                      <div key={idx} className="flex flex-col md:flex-row gap-8 md:gap-16 items-stretch group">
-                        <div className={`w-full md:w-1/2 rounded-[24px] overflow-hidden bg-[#ebe5da] ${idx % 2 !== 0 ? 'md:order-last' : ''}`}>
-                          <div className="w-full aspect-[4/3] relative overflow-hidden">
-                            <img 
-                              src={step.image} 
-                              alt={step.title} 
-                              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                            />
-                          </div>
-                        </div>
-                        <div className="w-full md:w-1/2 flex flex-col justify-center py-6">
-                          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#1a1918]/40 mb-4 font-bold">
-                            Step 0{idx + 1}
-                          </span>
+                      <div key={idx} className="flex flex-col md:flex-row gap-8 md:gap-16 items-center">
+                        <div className="w-full md:w-[35%] flex flex-col justify-center py-6">
                           <h4 className="text-2xl md:text-3xl lg:text-4xl font-display font-medium mb-6 text-[#1a1918]">
                             {step.title}
                           </h4>
                           <p className="text-base md:text-lg text-[#1a1918]/70 font-light leading-[1.8] max-w-lg">
                             {step.description}
                           </p>
+                        </div>
+                        <div className="w-full md:w-[65%] rounded-[24px] overflow-hidden bg-[#ebe5da]">
+                          <div className="w-full aspect-[4/3] relative overflow-hidden">
+                            <img 
+                              src={step.image} 
+                              alt={step.title} 
+                              className="absolute inset-0 w-full h-full object-cover"
+                            />
+                          </div>
                         </div>
                       </div>
                     ))}
