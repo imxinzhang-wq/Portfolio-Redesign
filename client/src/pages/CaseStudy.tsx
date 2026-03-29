@@ -13,6 +13,7 @@ import collectionGif from "@assets/Collection_1774547429731.gif";
 import creationJpg from "@assets/creation_1774547429731.jpg";
 import airbnbSol1 from "@assets/s-blob-v1-IMAGE-DuANVKTdceA_1774776952323.jpg";
 import airbnbSol2 from "@assets/s-blob-v1-IMAGE-QKfUHNi0kV8_1774776952324.jpg";
+import airbnbBefore from "@assets/Before_1774777767520.png";
 
 const PROJECTS_DATA: Record<string, any> = {
   "1": {
@@ -180,6 +181,11 @@ const PROJECTS_DATA: Record<string, any> = {
           "Inefficient Consumption: MoWeb was not a priority for the global team; it remained consistent with the desktop experience without optimization, resulting in lengthy and inefficient information delivery.",
           "Global Dependency: While the mobile app was forked for China, any changes to MoWeb still carried global dependencies, creating the risk of impacting global products and slowing local iteration."
         ]
+      },
+      {
+        type: "image",
+        url: airbnbBefore,
+        caption: "The original MoWeb experience"
       },
       {
         type: "text",
