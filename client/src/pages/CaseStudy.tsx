@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import darmiImg1 from "@assets/image_1774537420038.png";
 // If you want to use the actual Darmi cover from Home, you can import it:
 import project2Cover from "@assets/Darmi_Cover.PNG"; 
-import project1Cover from "@assets/Collection_Cover.png"; 
+import project1Cover from "@assets/Exploration_1774795828671.png"; 
 import collectionCreateGif from "@assets/Collection-create_1774547429730.gif";
 import collectionGif from "@assets/Collection_1774547429731.gif";
 import creationJpg from "@assets/creation_1774547429731.jpg";
