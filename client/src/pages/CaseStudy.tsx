@@ -19,6 +19,11 @@ import airbnbPdp from "@assets/PDP_1774780857668.png";
 import airbnbGroup from "@assets/group_1774781372500.png";
 import airbnbVote from "@assets/Vote_1774781565815.png";
 
+import darmiProcess1 from "@assets/competiitor_1774794598190.png";
+import darmiProcess2 from "@assets/PRD_1774794598191.jpg";
+import darmiProcess3 from "@assets/Proto_1774794598191.jpg";
+import darmiProcess4 from "@assets/UI-2_1774794598190.png";
+
 const PROJECTS_DATA: Record<string, any> = {
   "1": {
     title: "YouTube Shopping Collections",
@@ -139,12 +144,28 @@ const PROJECTS_DATA: Record<string, any> = {
         body: "This project prioritized speed and iteration over extensive upfront design, focusing on getting a functional version into users’ hands early, iterating based on usage and feedback, and using AI to reduce the cost of execution.",
       },
       {
-        type: "list",
-        items: [
-          "Research & synthesis: Used language models to summarize discussions from Reddit and App Store reviews, helping identify common pain points and gaps in existing solutions.",
-          "Scoping & structure: Generated an initial PRD and information architecture to define scope and core flows. These were refined manually to ensure the product remained focused and buildable.",
-          "Design & iteration: Skipped traditional high-fidelity prototyping. Used quick sketches and AI-generated UI as a starting point, then manually adjusted layout, spacing, and visual details.",
-          "Development: Used AI tools for scaffolding and debugging. A large portion of the application was generated and iterated quickly, while more complex issues required manual intervention and fixes."
+        type: "process-zigzag",
+        steps: [
+          {
+            title: "Research & synthesis",
+            description: "Used language models to summarize discussions from Reddit and App Store reviews, helping identify common pain points and gaps in existing solutions.",
+            image: darmiProcess1
+          },
+          {
+            title: "Scoping & structure",
+            description: "Generated an initial PRD and information architecture to define scope and core flows. These were refined manually to ensure the product remained focused and buildable.",
+            image: darmiProcess2
+          },
+          {
+            title: "Design & iteration",
+            description: "Skipped traditional high-fidelity prototyping. Used quick sketches and AI-generated UI as a starting point, then manually adjusted layout, spacing, and visual details.",
+            image: darmiProcess3
+          },
+          {
+            title: "Development",
+            description: "Used AI tools for scaffolding and debugging. A large portion of the application was generated and iterated quickly, while more complex issues required manual intervention and fixes.",
+            image: darmiProcess4
+          }
         ]
       },
       {
@@ -567,6 +588,37 @@ export default function CaseStudy() {
                       — {section.author}
                     </p>
                   )}
+                </div>
+              )}
+
+              {section.type === "process-zigzag" && (
+                <div className="w-full py-12 md:py-20">
+                  <div className="space-y-12 md:space-y-24">
+                    {section.steps.map((step: any, idx: number) => (
+                      <div key={idx} className="flex flex-col md:flex-row gap-8 md:gap-16 items-stretch group">
+                        <div className={`w-full md:w-1/2 rounded-[24px] overflow-hidden bg-[#ebe5da] ${idx % 2 !== 0 ? 'md:order-last' : ''}`}>
+                          <div className="w-full aspect-[4/3] relative overflow-hidden">
+                            <img 
+                              src={step.image} 
+                              alt={step.title} 
+                              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                            />
+                          </div>
+                        </div>
+                        <div className="w-full md:w-1/2 flex flex-col justify-center py-6">
+                          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#1a1918]/40 mb-4 font-bold">
+                            Step 0{idx + 1}
+                          </span>
+                          <h4 className="text-2xl md:text-3xl lg:text-4xl font-display font-medium mb-6 text-[#1a1918]">
+                            {step.title}
+                          </h4>
+                          <p className="text-base md:text-lg text-[#1a1918]/70 font-light leading-[1.8] max-w-lg">
+                            {step.description}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
 
