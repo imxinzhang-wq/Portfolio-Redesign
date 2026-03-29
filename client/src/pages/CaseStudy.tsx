@@ -117,53 +117,84 @@ const PROJECTS_DATA: Record<string, any> = {
   },
   "2": {
     title: "Darmi IBS food diary",
-    category: "2026 • Personal Project",
-    description: "An exploration of Vibe Coding and end-to-end AI product workflows—now live on the App Store.",
+    category: "Summer 2025 • iOS App",
+    description: "Built and launched an IBS tracking app from 0→1 using an AI-assisted workflow, exploring how far a solo designer can go with modern AI tools.",
     image: project2Cover,
-    tagsTitle: "Disciplines",
-    tags: ["Mobile UX", "Vibe Coding", "AI Workflows"],
+    tagsTitle: "Role & Tools",
+    tags: ["Solo Designer & Developer", "Gemini", "ChatGPT", "Lovable", "Replit"],
     content: [
       {
         type: "text",
-        heading: "Context & Origin",
-        body: "In Summer 2026, I experimented with vibe coding to solve a personal challenge: managing Irritable Bowel Syndrome (IBS). Existing tracking apps didn't fit my specific workflow of logging food, emotions, and symptoms. I treated this as both a technical experiment and a product challenge—using modern AI tools to build a custom, functional app from scratch.",
-      },
-      {
-        type: "split",
-        heading: "A New Way to Build",
-        body: "Instead of traditional design tools, I used natural language to generate the UI and logic directly. This allowed for rapid iteration and testing on-device. The primary design focus was on input speed: reducing the friction of logging multiple entries per day so it wouldn't feel like a chore.",
-        imageUrl: darmiImg1,
-        imageCaption: "Streamlined daily log interface.",
-        imageFirst: false,
+        heading: "Overview",
+        body: "I built and launched an IBS tracking app from 0→1 using an AI-assisted workflow. The goal was to explore how far a single designer could go from idea to launch by leveraging AI across research, design, and development. Instead of building a hypothetical concept, I focused on a real problem—managing my own Irritable Bowel Syndrome (IBS)—to ensure the product was grounded in actual use.",
       },
       {
         type: "list",
-        heading: "Core Features & Interactions",
+        heading: "Product Direction",
         items: [
-          "One-tap logging for common meals and recurring symptoms",
-          "AI-powered insights connecting food intake to flare-ups over time",
-          "Minimalist, native iOS feel with smooth haptic micro-interactions",
-          "Dark mode optimized for late-night symptom entries",
-          "Exportable data reports formatted for medical consultations"
+          "The app is designed to help users move beyond simple tracking toward pattern awareness. Key goals:",
+          "Make daily logging lightweight and sustainable",
+          "Capture food, symptoms, and context in a structured way",
+          "Enable users to reflect on patterns over time rather than rely on immediate conclusions"
+        ]
+      },
+      {
+        type: "list",
+        heading: "Approach",
+        items: [
+          "This project prioritized speed and iteration over extensive upfront design. Rather than defining a fully polished product strategy before building, I focused on:",
+          "Getting a functional version into users’ hands early",
+          "Iterating based on usage and feedback",
+          "Using AI to reduce the cost of execution"
+        ]
+      },
+      {
+        type: "statement",
+        text: "The objective was to validate both the product idea and an AI-assisted workflow for building end-to-end products."
+      },
+      {
+        type: "list",
+        heading: "AI-Assisted Workflow",
+        items: [
+          "Research & synthesis: Used language models to summarize discussions from Reddit and App Store reviews, helping identify common pain points and gaps in existing solutions.",
+          "Scoping & structure: Generated an initial PRD and information architecture to define scope and core flows. These were refined manually to ensure the product remained focused and buildable.",
+          "Design & iteration: Skipped traditional high-fidelity prototyping. Used quick sketches and AI-generated UI as a starting point, then manually adjusted layout, spacing, and visual details.",
+          "Development: Used AI tools for scaffolding and debugging. A large portion of the application was generated and iterated quickly, while more complex issues required manual intervention and fixes."
         ]
       },
       {
         type: "image",
         url: darmiImg1,
-        caption: "Detailed view of the tracking calendar and entry log.",
+        caption: "Streamlined daily log interface."
+      },
+      {
+        type: "metrics",
+        heading: "Outcome",
+        metrics: [
+          { value: "0→1", label: "Launched", description: "Fully functional app deployed" },
+          { value: "2K+", label: "Downloads", description: "In the first month of release" },
+          { value: "4.9", label: "Rating", description: "Positive early feedback on usability" }
+        ]
+      },
+      {
+        type: "text",
+        heading: "Reflection",
+        body: "This project demonstrated that AI can significantly reduce the time required to move from idea to shipped product, especially for solo-led work. At the same time, it reinforced that AI is most effective when paired with human judgment. AI is useful for generating a baseline and accelerating iteration, but human input is still required for scope control, refinement, and final quality."
+      },
+      {
+        type: "list",
+        heading: "The Evolving Role of the Designer",
+        items: [
+          "In this workflow, the designer's focus shifts toward:",
+          "Framing problems clearly",
+          "Guiding structure and direction",
+          "Making final decisions on quality and usability"
+        ]
       },
       {
         type: "quote",
-        text: "The goal wasn't just to build an app, but to explore how AI can collapse the distance between a personal problem and a deployed solution.",
-        author: "Project Reflection"
-      },
-      {
-        type: "split",
-        heading: "The Iteration Loop",
-        body: "Because I was building the app for myself, the feedback loop was instantaneous. I would use the app during lunch, find a UX friction point, and prompt the AI to fix it by dinnertime. This completely redefined my relationship with product development.",
-        imageUrl: project2Cover,
-        imageCaption: "Final app aesthetics.",
-        imageFirst: true,
+        text: "This project is less about a single product, and more about testing a practical way of building—where AI supports execution, while human judgment defines the outcome.",
+        author: "Final Thought"
       }
     ],
   },
