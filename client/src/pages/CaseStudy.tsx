@@ -18,6 +18,7 @@ import airbnbSearch from "@assets/Search_1774780857668.png";
 import airbnbPdp from "@assets/PDP_1774780857668.png";
 import airbnbGroup from "@assets/group_1774781372500.png";
 import airbnbVote from "@assets/Vote_1774781565815.png";
+import collectionExploration from "@assets/Exploration_1774795909258.png";
 
 import darmiProcess1 from "@assets/competiitor_1774794598190.png";
 import darmiProcess2 from "@assets/PRD_1774794598191.jpg";
@@ -56,8 +57,9 @@ const PROJECTS_DATA: Record<string, any> = {
       },
       {
         type: "image",
-        url: project1Cover,
-        caption: "Exploring native curation formats.",
+        url: collectionExploration,
+        caption: "",
+        fullWidth: true
       },
       {
         type: "list",
