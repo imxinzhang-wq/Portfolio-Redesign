@@ -443,13 +443,13 @@ export default function CaseStudy() {
 
               {section.type === "gallery" && (
                 <div className="w-full my-12">
-                  <div className="flex flex-col md:flex-row justify-center gap-6">
+                  <div className="flex flex-col md:flex-row justify-center gap-6 items-start">
                     {section.images.map((img: string, i: number) => (
-                      <div key={i} className="w-full md:w-[calc((100%-3rem)/3)] shrink-0 aspect-[360/780] overflow-hidden rounded-[40px] border-2 border-[#d4cfc4] bg-[#ebe5da] p-2 flex flex-col justify-start">
+                      <div key={i} className="w-full md:w-[calc((100%-3rem)/3)] shrink-0 overflow-hidden rounded-[40px] border-2 border-[#d4cfc4] bg-[#ebe5da] p-2 flex flex-col justify-start">
                         <img
                           src={img}
                           alt={`Gallery image ${i + 1}`}
-                          className="w-full h-full object-cover object-top rounded-[32px]"
+                          className="w-full h-auto rounded-[32px]"
                         />
                       </div>
                     ))}
