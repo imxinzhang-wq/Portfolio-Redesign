@@ -31,5 +31,8 @@ export const modules: ModuleMap = {
   "./components/mockups/portfolio-variations/EditorialLayout3.tsx": () => import("../components/mockups/portfolio-variations/EditorialLayout3.tsx"),
   "./components/mockups/portfolio-variations/IndexGallery.tsx": () => import("../components/mockups/portfolio-variations/IndexGallery.tsx"),
   "./components/mockups/portfolio-variations/MinimalistSingular.tsx": () => import("../components/mockups/portfolio-variations/MinimalistSingular.tsx"),
-  "./components/mockups/portfolio-variations/TimelineJourney.tsx": () => import("../components/mockups/portfolio-variations/TimelineJourney.tsx")
+  "./components/mockups/portfolio-variations/TimelineJourney.tsx": () => import("../components/mockups/portfolio-variations/TimelineJourney.tsx"),
+  "./components/mockups/process-layouts/VariantA_ZigZag.tsx": () => import("../components/mockups/process-layouts/VariantA_ZigZag.tsx"),
+  "./components/mockups/process-layouts/VariantB_BentoGrid.tsx": () => import("../components/mockups/process-layouts/VariantB_BentoGrid.tsx"),
+  "./components/mockups/process-layouts/VariantC_Timeline.tsx": () => import("../components/mockups/process-layouts/VariantC_Timeline.tsx")
 };
