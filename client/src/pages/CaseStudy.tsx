@@ -129,32 +129,14 @@ const PROJECTS_DATA: Record<string, any> = {
         body: "I built and launched an IBS tracking app from 0→1 using an AI-assisted workflow. The goal was to explore how far a single designer could go from idea to launch by leveraging AI across research, design, and development. Instead of building a hypothetical concept, I focused on a real problem—managing my own Irritable Bowel Syndrome (IBS)—to ensure the product was grounded in actual use.",
       },
       {
-        type: "list",
-        heading: "Product Direction",
-        items: [
-          "The app is designed to help users move beyond simple tracking toward pattern awareness. Key goals:",
-          "Make daily logging lightweight and sustainable",
-          "Capture food, symptoms, and context in a structured way",
-          "Enable users to reflect on patterns over time rather than rely on immediate conclusions"
-        ]
-      },
-      {
-        type: "list",
-        heading: "Approach",
-        items: [
-          "This project prioritized speed and iteration over extensive upfront design. Rather than defining a fully polished product strategy before building, I focused on:",
-          "Getting a functional version into users’ hands early",
-          "Iterating based on usage and feedback",
-          "Using AI to reduce the cost of execution"
-        ]
-      },
-      {
         type: "statement",
-        text: "The objective was to validate both the product idea and an AI-assisted workflow for building end-to-end products."
-      },
+        heading: "The Problem",
+        text: "IBS users need to identify patterns and triggers across food, lifestyle, and symptoms, but these relationships are often delayed and influenced by multiple factors.",
+      },    
       {
         type: "list",
         heading: "AI-Assisted Workflow",
+        body: "This project prioritized speed and iteration over extensive upfront design, focusing on getting a functional version into users’ hands early, iterating based on usage and feedback, and using AI to reduce the cost of execution.",
         items: [
           "Research & synthesis: Used language models to summarize discussions from Reddit and App Store reviews, helping identify common pain points and gaps in existing solutions.",
           "Scoping & structure: Generated an initial PRD and information architecture to define scope and core flows. These were refined manually to ensure the product remained focused and buildable.",
