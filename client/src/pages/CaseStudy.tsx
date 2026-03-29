@@ -312,7 +312,7 @@ export default function CaseStudy() {
         <nav className="px-6 md:px-12 py-12 max-w-7xl mx-auto flex items-center justify-between">
           <Link href="/">
             <a className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest hover:opacity-60 transition-opacity">
-              <ArrowLeft className="w-4 h-4" /> Index
+              <ArrowLeft className="w-4 h-4" /> Home
             </a>
           </Link>
         </nav>
