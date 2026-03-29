@@ -73,6 +73,7 @@ const PROJECTS_DATA: Record<string, any> = {
       },
       {
         type: "gallery",
+        fixedHeight: true,
         images: [
           creationJpg,
           collectionCreateGif,
@@ -447,11 +448,11 @@ export default function CaseStudy() {
                 <div className="w-full my-12">
                   <div className="flex flex-col md:flex-row justify-center gap-6 items-start">
                     {section.images.map((img: string, i: number) => (
-                      <div key={i} className="w-full md:w-[calc((100%-3rem)/3)] shrink-0 overflow-hidden rounded-[40px] border-2 border-[#d4cfc4] bg-[#ebe5da] p-2 flex flex-col justify-start">
+                      <div key={i} className={`w-full md:w-[calc((100%-3rem)/3)] shrink-0 overflow-hidden rounded-[40px] border-2 border-[#d4cfc4] bg-[#ebe5da] p-2 flex flex-col justify-start ${section.fixedHeight ? 'h-[500px]' : ''}`}>
                         <img
                           src={img}
                           alt={`Gallery image ${i + 1}`}
-                          className="w-full h-auto rounded-[32px]"
+                          className={`w-full ${section.fixedHeight ? 'h-full object-cover' : 'h-auto'} rounded-[32px]`}
                         />
                       </div>
                     ))}
