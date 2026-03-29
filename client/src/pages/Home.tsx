@@ -108,21 +108,21 @@ function Navbar() {
               const y = el.getBoundingClientRect().top + window.scrollY - 100;
               window.scrollTo({ top: y, behavior: 'smooth' });
             }
-          }} className="hover:text-foreground transition-colors" data-testid="link-work">Work</button>
+          }} className="hover:text-foreground transition-colors" data-testid="link-work">WORK</button>
           <button onClick={() => {
             const el = document.getElementById('about');
             if (el) {
               const y = el.getBoundingClientRect().top + window.scrollY - 100;
               window.scrollTo({ top: y, behavior: 'smooth' });
             }
-          }} className="hover:text-foreground transition-colors" data-testid="link-about">About</button>
+          }} className="hover:text-foreground transition-colors" data-testid="link-about">ABOUT</button>
           <button onClick={() => {
             const el = document.getElementById('contact');
             if (el) {
               const y = el.getBoundingClientRect().top + window.scrollY - 100;
               window.scrollTo({ top: y, behavior: 'smooth' });
             }
-          }} className="hover:text-foreground transition-colors" data-testid="link-contact">Contact</button>
+          }} className="hover:text-foreground transition-colors" data-testid="link-contact">CONTACT</button>
         </div>
       </motion.nav>
     </div>
