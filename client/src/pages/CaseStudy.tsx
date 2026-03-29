@@ -17,7 +17,7 @@ import airbnbBefore from "@assets/Before_1774777767520.png";
 import airbnbSearch from "@assets/Search_1774780857668.png";
 import airbnbPdp from "@assets/PDP_1774780857668.png";
 import airbnbGroup from "@assets/group_1774781372500.png";
-import airbnbVote from "@assets/Vote_1774781372503.png";
+import airbnbVote from "@assets/Vote_1774781565815.png";
 
 const PROJECTS_DATA: Record<string, any> = {
   "1": {
