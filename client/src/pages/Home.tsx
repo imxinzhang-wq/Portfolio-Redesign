@@ -359,14 +359,12 @@ function Footer() {
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
         <div className="text-center md:text-left">
           <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-muted-foreground mb-2">Let's build the future together</p>
-          <a href="mailto:hello@imxinzhang.com" className="text-2xl font-display hover:opacity-50 transition-opacity" data-testid="link-email">
-            hello@imxinzhang.com
+          <a href="mailto:about.dala@gmail.com" className="text-2xl font-display hover:opacity-50 transition-opacity" data-testid="link-email">
+            about.dala@gmail.com
           </a>
         </div>
         <div className="flex gap-8 text-[10px] uppercase tracking-widest font-bold text-muted-foreground">
-          <a href="#" className="hover:text-foreground">Resume</a>
-          <a href="#" className="hover:text-foreground">LinkedIn</a>
-          <a href="#" className="hover:text-foreground">Twitter</a>
+          <a href="www.linkedin.com/in/imxinzhang" className="hover:text-foreground">LinkedIn</a>
         </div>
       </div>
     </footer>
