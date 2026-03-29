@@ -1,0 +1,25 @@
+Airbnb: WeChat Mini-App Localization
+Role: Design Lead | Market: China
+Team: 2 Designers, 1 Researcher, 2 Product Managers
+Background
+While users frequently discussed and initiated hotel bookings within WeChat, Airbnb’s conversion rates and click-through rates for app downloads from the platform remained low. We identified that our existing mobile web (MoWeb) experience was failing to meet the expectations of the local market.
+The Challenges: The "Foreign Flow"
+Our global-first approach created three significant barriers to growth:
+• Foreign Flow: Our process—from registration and verification to payment—differed from local industry standards, leading to confusion and unfamiliarity among Chinese guests.
+• Inefficient Consumption: MoWeb was not a priority for the global team; it remained consistent with the desktop experience without optimization, resulting in lengthy and inefficient information delivery.
+• Global Dependency: While the mobile app was forked for China, any changes to MoWeb still carried global dependencies, creating the risk of impacting global products and slowing local iteration.
+The Opportunity
+In 2018, the introduction of WeChat Mini-apps provided a strategic opening to address these channel issues and unlock new business growth:
+• Huge Acquisition Potential: Leveraging WeChat’s one billion monthly active users allowed us to acquire users at a significantly lower cost.
+• Fast and Lightweight: Mini-apps offered built-in verification, native payment methods, and superior performance compared to MoWeb, providing a seamless portal for focused tasks.
+• China-First Features: We gained the freedom to explore localized experiences—such as Social Voting for group travel—and develop features specific to this unique ecosystem.
+The Solution: A Native Ecosystem
+We designed a localized entry point that prioritized speed and social context:
+• Streamlined Onboarding: Integrated native WeChat verification and payment to eliminate the "foreign flow" friction.
+• Social Decision Making: Introduced a Voting feature within WeChat groups, allowing users to invite friends to help select listings directly within the chat interface.
+• Optimized Information Architecture: Replaced the lengthy MoWeb layout with a high-performance, mobile-native interface designed for the specific needs of the WeChat user.
+Impact
+The MVP launch successfully unblocked the booking journey and provided a foundation for localized social campaigns:
+• 2 Million Users Acquired: Within the first month of launch, we reached two million users.
+• Channel Shift: Bookings made via the Mini-app quickly surpassed those made through MoWeb.
+• Strategic Pivot: The demographic data provided by WeChat led to a critical shift in our focus, moving from Millennials to Gen Z as a primary growth driver.

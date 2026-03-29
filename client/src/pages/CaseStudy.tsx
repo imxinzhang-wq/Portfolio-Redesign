@@ -161,51 +161,69 @@ const PROJECTS_DATA: Record<string, any> = {
   "3": {
     title: "Airbnb WeChat Mini-App",
     category: "2018 • Airbnb",
-    description: "Co-led the design and launch of Airbnb's first WeChat Mini-app and shaping its future vision through data-driven sprints",
+    description: "Led the design and launch of Airbnb's first WeChat Mini-app, streamlining the booking journey for the Chinese market.",
     image: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=2670&auto=format&fit=crop",
-    tags: ["Senior Design Lead", "2 Designers", "1 Researcher", "2 PMs"],
+    tags: ["Design Lead", "2 Designers", "1 Researcher", "2 PMs"],
     content: [
       {
         type: "text",
-        heading: "The Context: The 'Foreign Flow' Friction",
-        body: "In 2018, Airbnb China faced a significant hurdle: despite high brand awareness, conversion rates for users coming from WeChat were low. The 'global-first' mobile web (MoWeb) experience was failing the local market.",
+        heading: "Background",
+        body: "While users frequently discussed and initiated hotel bookings within WeChat, Airbnb’s conversion rates and click-through rates for app downloads from the platform remained low. We identified that our existing mobile web (MoWeb) experience was failing to meet the expectations of the local market.",
       },
       {
         type: "list",
+        heading: "The Challenges: The \"Foreign Flow\"",
         items: [
-          "UX Inefficiency: The MoWeb experience was a desktop port—lengthy, slow, and non-optimized for mobile-first Chinese users.",
-          "Friction in Trust: Registration, verification, and payment methods did not align with local industry standards (e.g., lack of WeChat Pay integration).",
-          "Technical Dependency: Any MoWeb change required global approval, slowing down the China team’s ability to iterate."
+          "Foreign Flow: Our process—from registration and verification to payment—differed from local industry standards, leading to confusion and unfamiliarity among Chinese guests.",
+          "Inefficient Consumption: MoWeb was not a priority for the global team; it remained consistent with the desktop experience without optimization, resulting in lengthy and inefficient information delivery.",
+          "Global Dependency: While the mobile app was forked for China, any changes to MoWeb still carried global dependencies, creating the risk of impacting global products and slowing local iteration."
         ]
-      },
-      {
-        type: "split",
-        heading: "The Opportunity: A Native Ecosystem",
-        body: "We identified the WeChat Mini-app as the strategic solution. This allowed us to build a 'China-first' experience that leveraged 1 billion monthly active users while bypassing the friction of app downloads and global web dependencies.",
-        imageUrl: "https://images.unsplash.com/photo-1551288049-bbbda536639a?q=80&w=2670&auto=format&fit=crop",
-        imageCaption: "Mapping the native ecosystem.",
-        imageFirst: false,
       },
       {
         type: "text",
-        heading: "The Solution: Designing for Local Social Contexts",
-        body: "I led the design of an MVP that focused on the unique social behaviors of Chinese travelers. This meant designing for speed and connection."
+        heading: "The Opportunity",
+        body: "In 2018, the introduction of WeChat Mini-apps provided a strategic opening to address these channel issues and unlock new business growth:",
       },
       {
         type: "list",
         items: [
-          "Lightweight Onboarding: Built-in WeChat verification and one-click payment to eliminate registration drop-off.",
-          "Social Coordination: Recognizing that group travel is dominant in China, we designed a 'Voting' feature, allowing users to share listings directly into WeChat groups for collective decision-making.",
-          "Performance-First UI: A streamlined interface designed for speed, moving away from heavy imagery to a more functional, 'get-it-booked' layout."
+          "Huge Acquisition Potential: Leveraging WeChat’s one billion monthly active users allowed us to acquire users at a significantly lower cost.",
+          "Fast and Lightweight: Mini-apps offered built-in verification, native payment methods, and superior performance compared to MoWeb, providing a seamless portal for focused tasks.",
+          "China-First Features: We gained the freedom to explore localized experiences—such as Social Voting for group travel—and develop features specific to this unique ecosystem."
         ]
       },
       {
+        type: "text",
+        heading: "The Solution: A Native Ecosystem",
+        body: "We designed a localized entry point that prioritized speed and social context:",
+      },
+      {
         type: "list",
-        heading: "Outcomes & Strategic Pivot",
         items: [
-          "Rapid Acquisition: Reached 2 million users within the first month of launch.",
-          "Channel Dominance: Mini-app booking volume quickly surpassed the traditional MoWeb channel.",
-          "Strategic Insight: The demographic data from WeChat allowed us to pivot our marketing and design focus from Millennials to the emerging Gen Z traveler."
+          "Streamlined Onboarding: Integrated native WeChat verification and payment to eliminate the \"foreign flow\" friction.",
+          "Social Decision Making: Introduced a Voting feature within WeChat groups, allowing users to invite friends to help select listings directly within the chat interface.",
+          "Optimized Information Architecture: Replaced the lengthy MoWeb layout with a high-performance, mobile-native interface designed for the specific needs of the WeChat user."
+        ]
+      },
+      {
+        type: "metrics",
+        heading: "Impact",
+        metrics: [
+          {
+            value: "2M+",
+            label: "Users Acquired",
+            description: "Within the first month of launch, we reached two million users."
+          },
+          {
+            value: "Shift",
+            label: "Channel Dominance",
+            description: "Bookings made via the Mini-app quickly surpassed those made through MoWeb."
+          },
+          {
+            value: "Gen Z",
+            label: "Strategic Pivot",
+            description: "Demographic data provided by WeChat led to a critical shift in our focus, moving from Millennials to Gen Z."
+          }
         ]
       }
     ],
