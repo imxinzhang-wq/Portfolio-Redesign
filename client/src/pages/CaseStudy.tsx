@@ -23,7 +23,7 @@ const PROJECTS_DATA: Record<string, any> = {
   "1": {
     title: "YT Shopping Collections",
     category: "2024 • YouTube",
-    description: "I led a team of two designers to define the Shopping Collections vision, moving YouTube from video-centric tagging to a native curation ecosystem. My role involved defining the experience across both viewer and creator surfaces and aligning cross-functional teams on key delivery milestones. We successfully launched the M1 creator experience, establishing the foundational framework for a multi-phase strategy",
+    description: "Led the vision for Shopping Collections, shifting YT Shopping from a video-centric tagging feature into a scalable curation ecosystem for viewers and creators.",
     image: project1Cover,
     tags: ["3 Designers", "2 Researchers", "2 PMs"],
     content: [
