@@ -58,7 +58,7 @@ const PROJECTS_DATA: Record<string, any> = {
       {
         type: "image",
         url: collectionExploration,
-        caption: "",
+        caption: "Early explorations during our design sprint",
         fullWidth: true
       },
       {
