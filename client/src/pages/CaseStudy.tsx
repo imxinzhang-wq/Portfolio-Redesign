@@ -14,6 +14,8 @@ import creationJpg from "@assets/creation_1774547429731.jpg";
 import airbnbSol1 from "@assets/s-blob-v1-IMAGE-DuANVKTdceA_1774776952323.jpg";
 import airbnbSol2 from "@assets/s-blob-v1-IMAGE-QKfUHNi0kV8_1774776952324.jpg";
 import airbnbBefore from "@assets/Before_1774777767520.png";
+import airbnbSearch from "@assets/Search_1774780857668.png";
+import airbnbPdp from "@assets/PDP_1774780857668.png";
 
 const PROJECTS_DATA: Record<string, any> = {
   "1": {
@@ -199,6 +201,10 @@ const PROJECTS_DATA: Record<string, any> = {
           "Fast and Lightweight: Mini-apps offered built-in verification, native payment methods, and superior performance compared to MoWeb, providing a seamless portal for focused tasks.",
           "China-First Features: We gained the freedom to explore localized experiences—such as Social Voting for group travel—and develop features specific to this unique ecosystem."
         ]
+      },
+      {
+        type: "gallery",
+        images: [airbnbSol1, airbnbSearch, airbnbPdp]
       },
       {
         type: "text",
