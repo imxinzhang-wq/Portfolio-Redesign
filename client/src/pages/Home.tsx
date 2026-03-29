@@ -32,6 +32,27 @@ const MOCK_PROJECTS = [
 ];
 
 export default function Home() {
+  useEffect(() => {
+    // Handle hash navigation on mount and hash change
+    const handleHash = () => {
+      const hash = window.location.hash;
+      // We only care about root hashes like #work, not route hashes like #/project
+      if (hash && !hash.startsWith('#/')) {
+        const id = hash.replace('#', '');
+        setTimeout(() => {
+          const element = document.getElementById(id);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 100);
+      }
+    };
+    
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
+
   return (
     <div className="bg-background min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans">
       {/* Background Elements */}
@@ -77,13 +98,31 @@ function Navbar() {
             : "bg-transparent border border-transparent"
         }`}
       >
-        <a href="#/" className="text-base font-display font-bold tracking-tighter uppercase" data-testid="link-home">
+        <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-base font-display font-bold tracking-tighter uppercase" data-testid="link-home">
           Xin Zhang
-        </a>
+        </button>
         <div className="flex gap-10 text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
-          <a href="#work" className="hover:text-foreground transition-colors" data-testid="link-work">Work</a>
-          <a href="#about" className="hover:text-foreground transition-colors" data-testid="link-about">About</a>
-          <a href="#contact" className="hover:text-foreground transition-colors" data-testid="link-contact">Contact</a>
+          <button onClick={() => {
+            const el = document.getElementById('work');
+            if (el) {
+              const y = el.getBoundingClientRect().top + window.scrollY - 100;
+              window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+          }} className="hover:text-foreground transition-colors" data-testid="link-work">Work</button>
+          <button onClick={() => {
+            const el = document.getElementById('about');
+            if (el) {
+              const y = el.getBoundingClientRect().top + window.scrollY - 100;
+              window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+          }} className="hover:text-foreground transition-colors" data-testid="link-about">About</button>
+          <button onClick={() => {
+            const el = document.getElementById('contact');
+            if (el) {
+              const y = el.getBoundingClientRect().top + window.scrollY - 100;
+              window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+          }} className="hover:text-foreground transition-colors" data-testid="link-contact">Contact</button>
         </div>
       </motion.nav>
     </div>
