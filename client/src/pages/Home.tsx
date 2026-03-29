@@ -5,7 +5,7 @@ import { useRef, useEffect, useState } from "react";
 
 import project1 from "@assets/Collection_Cover.png";
 import project2 from "@assets/Darmi_Cover.PNG";
-import project3 from "@assets/Airbnb_Cover.gif";
+import project3 from "@assets/Airbnb_Cover_1774813459702.jpg";
 
 const MOCK_PROJECTS = [
   {

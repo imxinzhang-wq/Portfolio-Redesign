@@ -8,6 +8,7 @@ import darmiImg1 from "@assets/image_1774537420038.png";
 // If you want to use the actual Darmi cover from Home, you can import it:
 import project2Cover from "@assets/Darmi_Cover.PNG"; 
 import project1Cover from "@assets/Collection_Cover.png"; 
+import project3Cover from "@assets/Airbnb_Cover_1774813459702.jpg";
 import collectionCreateGif from "@assets/Collection-create_1774547429730.gif";
 import collectionGif from "@assets/Collection_1774547429731.gif";
 import creationJpg from "@assets/creation_1774547429731.jpg";
@@ -208,7 +209,7 @@ const PROJECTS_DATA: Record<string, any> = {
     title: "Airbnb WeChat Mini-App",
     category: "2018 • Airbnb",
     description: "Led the design and launch of Airbnb's first WeChat Mini-app, streamlining the booking journey for the Chinese market.",
-    image: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=2670&auto=format&fit=crop",
+    image: project3Cover,
     tagsTitle: "Project Team",
     tags: ["Design Lead", "2 Designers", "1 Researcher", "2 PMs"],
     content: [
