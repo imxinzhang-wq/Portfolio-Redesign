@@ -28,9 +28,10 @@ const PROJECTS_DATA: Record<string, any> = {
       {
         type: "list",
         items: [
-          "Video-Centric Limitations: Product discovery was tied to a single video's lifecycle, failing to support creators who wanted to curate long-term recommendations.",
-          "Off-Platform Leakage: Creators were forced to use third-party tools (e.g., LTK, Amazon Storefronts) to build shoppable lists, leading to a disjointed user journey and lost revenue.",
-          "Brand Identity Gap: Creators lacked a native way to express their unique aesthetic and 'vibe' through product curation."
+          "Product recommendations are tied to the Video: Our current product tools are fundamentally video-centric, designed for items prominently featured. It fails to address the creator need for a way to share curation beyond the video itself.",
+          "We're Sending Users Off-Platform: Creators use third-party platforms and links to curate collections. This creates a disjointed and untrustworthy journey for viewers. We lose both engagement and revenue to competitors.
+",
+          "Creators Lack Tools to Build Their Brand: In today's social commerce landscape, success is about more than just revenue. Creators need dedicated tools to express their unique style and personality."
         ]
       },
       {
@@ -49,7 +50,7 @@ const PROJECTS_DATA: Record<string, any> = {
         items: [
           "Low-Effort Creation: Automated 'ready-made' collections based on previous tags and community interests.",
           "Compelling Formats: Introducing color sampling and adaptable layouts to ensure collections felt like a 'shopping destination.'",
-          "Amplified Reach: Designing contextual entry points across Search, Shorts, Watch pages, and Channel stores.",
+          "Amplified Reach: Designing contextual entry points across Search, Shorts, Watch pages, Channel stores and beyond YouTube.",
           "The Feedback Loop: Building an analytics suite so creators could track performance and optimize their curation."
         ]
       },
