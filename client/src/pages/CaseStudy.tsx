@@ -29,8 +29,7 @@ const PROJECTS_DATA: Record<string, any> = {
         type: "list",
         items: [
           "Product recommendations are tied to the Video: Our current product tools are fundamentally video-centric, designed for items prominently featured. It fails to address the creator need for a way to share curation beyond the video itself.",
-          "We're Sending Users Off-Platform: Creators use third-party platforms and links to curate collections. This creates a disjointed and untrustworthy journey for viewers. We lose both engagement and revenue to competitors.
-",
+          "We're Sending Users Off-Platform: Creators use third-party platforms and links to curate collections. This creates a disjointed and untrustworthy journey for viewers. We lose both engagement and revenue to competitors.",
           "Creators Lack Tools to Build Their Brand: In today's social commerce landscape, success is about more than just revenue. Creators need dedicated tools to express their unique style and personality."
         ]
       },
