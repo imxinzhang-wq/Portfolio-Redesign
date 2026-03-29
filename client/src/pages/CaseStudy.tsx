@@ -310,7 +310,7 @@ export default function CaseStudy() {
 
   return (
     <div className="bg-[#f5f0e6] min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans">
-      <main className="relative z-10 pb-32">
+      <main className="relative z-10 pb-12">
         {/* Navigation */}
         <nav className="px-6 md:px-12 py-12 max-w-7xl mx-auto flex items-center justify-between">
           <Link href="/">
@@ -669,7 +669,7 @@ export default function CaseStudy() {
         </section>
 
         {/* Footer Navigation */}
-        <section className="mt-40 py-24 px-6 md:px-12 max-w-7xl mx-auto">
+        <section className="mt-8 pt-4 pb-8 px-6 md:px-12 max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
             {nextProject && (
               <Link href={`/project/${nextProjectId}`}>
