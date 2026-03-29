@@ -23,9 +23,9 @@ const PROJECTS_DATA: Record<string, any> = {
   "1": {
     title: "YT Shopping Collections",
     category: "2024 • YouTube",
-    description: "Architected Shopping Collections to replace links with a native curation format, driving creator branding and engagement.",
+    description: "I led a team of two designers to define the Shopping Collections vision, moving YouTube from video-centric tagging to a native curation ecosystem. My role involved defining the experience across both viewer and creator surfaces and aligning cross-functional teams on key delivery milestones. We successfully launched the M1 creator experience, establishing the foundational framework for a multi-phase strategy",
     image: project1Cover,
-    tags: ["Design Lead", "3 Designers", "2 Researchers", "2 PMs"],
+    tags: ["3 Designers", "2 Researchers", "2 PMs"],
     content: [
       {
         type: "text",
@@ -35,9 +35,9 @@ const PROJECTS_DATA: Record<string, any> = {
       {
         type: "list",
         items: [
-          "Product recommendations are tied to the Video: Our current product tools are fundamentally video-centric, designed for items prominently featured. It fails to address the creator need for a way to share curation beyond the video itself.",
-          "We're Sending Users Off-Platform: Creators use third-party platforms and links to curate collections. This creates a disjointed and untrustworthy journey for viewers. We lose both engagement and revenue to competitors.",
-          "Creators Lack Tools to Build Their Brand: In today's social commerce landscape, success is about more than just revenue. Creators need dedicated tools to express their unique style and personality."
+          "Product recommendations are tied to the video: Our current product tools are fundamentally video-centric, designed for items prominently featured. It fails to address the creator need for a way to share curation beyond the video itself.",
+          "We're sending users off-platform: Creators use third-party platforms and links to curate collections. This creates a disjointed and untrustworthy journey for viewers. We lose both engagement and revenue to competitors.",
+          "Creators lack tools to build their brand: In today's social commerce landscape, success is about more than just revenue. Creators need dedicated tools to express their unique style and personality."
         ]
       },
       {
