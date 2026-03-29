@@ -4,7 +4,9 @@ import { Link, useRoute } from "wouter";
 import { useEffect } from "react";
 
 // Import user uploaded image
-import darmiImg1 from "@assets/image_1774537420038.png";
+// import darmiImg1 from "@assets/image_1774537420038.png";
+const darmiImg1 = "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=2574&auto=format&fit=crop";
+
 // If you want to use the actual Darmi cover from Home, you can import it:
 import project2Cover from "@assets/Darmi_Cover.PNG"; 
 import project1Cover from "@assets/Collection_Cover.png"; 
