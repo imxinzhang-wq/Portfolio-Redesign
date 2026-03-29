@@ -31,10 +31,12 @@ jobs:
         run: npm ci
 
       - name: Build static site
+        working-directory: client  # <--- 增加这一行
         env:
           NODE_ENV: production
           VITE_BASE_PATH: /
         run: npm run build
+
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -42,7 +44,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist # <--- 大多数 Vite 项目打包后就在 dist 文件夹
+          path: client/dist # <--- 大多数 Vite 项目打包后就在 dist 文件夹
 
 
   deploy:
