@@ -11,9 +11,6 @@ import project1Cover from "@assets/Collection_Cover.png";
 import collectionCreateGif from "@assets/Collection-create_1774547429730.gif";
 import collectionGif from "@assets/Collection_1774547429731.gif";
 import creationJpg from "@assets/creation_1774547429731.jpg";
-import airbnbSol1 from "@assets/s-blob-v1-IMAGE-DuANVKTdceA_1774776952323.jpg";
-import airbnbSol2 from "@assets/s-blob-v1-IMAGE-QKfUHNi0kV8_1774776952324.jpg";
-import airbnbBefore from "@assets/Before_1774777767520.png";
 
 const PROJECTS_DATA: Record<string, any> = {
   "1": {
@@ -183,11 +180,6 @@ const PROJECTS_DATA: Record<string, any> = {
         ]
       },
       {
-        type: "image",
-        url: airbnbBefore,
-        caption: "The original MoWeb experience"
-      },
-      {
         type: "text",
         heading: "The Opportunity",
         body: "In 2018, the introduction of WeChat Mini-apps provided a strategic opening to address these channel issues and unlock new business growth:",
@@ -212,10 +204,6 @@ const PROJECTS_DATA: Record<string, any> = {
           "Social Decision Making: Introduced a Voting feature within WeChat groups, allowing users to invite friends to help select listings directly within the chat interface.",
           "Optimized Information Architecture: Replaced the lengthy MoWeb layout with a high-performance, mobile-native interface designed for the specific needs of the WeChat user."
         ]
-      },
-      {
-        type: "gallery",
-        images: [airbnbSol1, airbnbSol2]
       },
       {
         type: "metrics",
@@ -369,27 +357,11 @@ export default function CaseStudy() {
                 </div>
               )}
 
-              {section.type === "image-row" && (
-                <div className="w-full my-12">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
-                    {section.images.map((img: string, i: number) => (
-                      <div key={i} className="w-full overflow-hidden rounded-[24px]">
-                        <img
-                          src={img}
-                          alt={`Solution image ${i + 1}`}
-                          className="w-full h-auto object-cover"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
               {section.type === "gallery" && (
                 <div className="w-full my-12">
-                  <div className="flex flex-col md:flex-row justify-center gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {section.images.map((img: string, i: number) => (
-                      <div key={i} className="w-full md:w-[calc((100%-3rem)/3)] shrink-0 aspect-[360/780] overflow-hidden rounded-[40px] border-2 border-[#d4cfc4] bg-[#ebe5da] p-2 flex flex-col justify-start">
+                      <div key={i} className="w-full aspect-[360/780] overflow-hidden rounded-[40px] border-2 border-[#d4cfc4] bg-[#ebe5da] p-2 flex flex-col justify-start">
                         <img
                           src={img}
                           alt={`Gallery image ${i + 1}`}
