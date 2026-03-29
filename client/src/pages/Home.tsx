@@ -3,15 +3,15 @@ import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 
-import photo1 from "@assets/1BBF94CC-BA7C-432C-A0C8-C410E45FE149_4_5005_c_1772054814413.jpeg";
-import photo2 from "@assets/6C23377C-15B6-42EA-B1D5-96A84D83C61E_4_5005_c_1772054814414.jpeg";
-import photo3 from "@assets/7CC2EAF5-2C07-42BE-8AAB-1027083FD2CF_4_5005_c_1772054814414.jpeg";
-import photo4 from "@assets/81C93177-9204-4A44-8C60-4E530DEBAB95_4_5005_c_1772054814415.jpeg";
-import photo5 from "@assets/ACA80C8E-CD60-460B-A794-9B92DECF6107_4_5005_c_1772054814415.jpeg";
-import photo6 from "@assets/E7311041-CF0E-48D1-85C5-BA16849E0601_4_5005_c_1772054814415.jpeg";;
-import project1 from "@assets/Collection_Cover.png";
-import project2 from "@assets/Darmi_Cover.PNG";
-import project3 from "@assets/Airbnb_Cover.gif";
+const photo1 = "https://images.unsplash.com/photo-1518098268026-4e89f1a2cd8e?q=80&w=2000&auto=format&fit=crop";
+const photo2 = "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?q=80&w=2000&auto=format&fit=crop";
+const photo3 = "https://images.unsplash.com/photo-1542314831-c6a4d140b648?q=80&w=2000&auto=format&fit=crop";
+const photo4 = "https://images.unsplash.com/photo-1480796927426-f609979314bd?q=80&w=2000&auto=format&fit=crop";
+const photo5 = "https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2000&auto=format&fit=crop";
+const photo6 = "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2000&auto=format&fit=crop";
+const project1 = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2000&auto=format&fit=crop";
+const project2 = "https://images.unsplash.com/photo-1555949963-aa79dcee981c?q=80&w=2000&auto=format&fit=crop";
+const project3 = "https://images.unsplash.com/photo-1432821596592-e2c18b78144f?q=80&w=2000&auto=format&fit=crop";
 
 const MOCK_PROJECTS = [
   {
