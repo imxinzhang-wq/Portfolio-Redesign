@@ -208,10 +208,10 @@ const PROJECTS_DATA: Record<string, any> = {
   "3": {
     title: "Airbnb WeChat Mini-App",
     category: "2018 • Airbnb",
-    description: "Led the design and launch of Airbnb's first WeChat Mini-app, streamlining the booking journey for the Chinese market.",
+    description: "Launched Airbnb's first WeChat Mini-app, streamlining the booking journey for the Chinese market.",
     image: project3Cover,
     tagsTitle: "Project Team",
-    tags: ["Design Lead", "2 Designers", "1 Researcher", "2 PMs"],
+    tags: ["2 Designers", "1 Researcher", "2 PMs"],
     content: [
       {
         type: "text",
