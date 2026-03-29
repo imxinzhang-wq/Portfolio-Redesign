@@ -266,7 +266,15 @@ const PROJECTS_DATA: Record<string, any> = {
 
 export default function CaseStudy() {
   const [match, params] = useRoute("/project/:id");
-  const project = params?.id ? PROJECTS_DATA[params.id] : null;
+  const projectId = params?.id;
+  const project = projectId ? PROJECTS_DATA[projectId] : null;
+
+  // Calculate next project
+  const projectIds = Object.keys(PROJECTS_DATA);
+  const currentIndex = projectIds.indexOf(projectId || "");
+  const nextIndex = (currentIndex + 1) % projectIds.length;
+  const nextProjectId = projectIds[nextIndex];
+  const nextProject = PROJECTS_DATA[nextProjectId];
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -609,16 +617,18 @@ export default function CaseStudy() {
         {/* Footer Navigation */}
         <section className="mt-40 py-24 px-6 md:px-12 max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
-            <Link href="/">
-              <a className="group flex flex-col space-y-2">
-                <span className="text-[11px] font-mono text-muted-foreground uppercase tracking-widest">
-                  Up Next
-                </span>
-                <span className="text-3xl font-display font-medium group-hover:text-black/60 transition-colors">
-                  Airbnb WeChat Mini-App
-                </span>
-              </a>
-            </Link>
+            {nextProject && (
+              <Link href={`/project/${nextProjectId}`}>
+                <a className="group flex flex-col space-y-2">
+                  <span className="text-[11px] font-mono text-muted-foreground uppercase tracking-widest">
+                    Up Next
+                  </span>
+                  <span className="text-3xl font-display font-medium group-hover:text-black/60 transition-colors">
+                    {nextProject.title}
+                  </span>
+                </a>
+              </Link>
+            )}
             <button 
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               className="text-[11px] font-mono font-bold uppercase tracking-widest hover:opacity-50 transition-opacity flex items-center gap-2"
