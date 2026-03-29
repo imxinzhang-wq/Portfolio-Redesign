@@ -25,6 +25,7 @@ const PROJECTS_DATA: Record<string, any> = {
     category: "2024 • YouTube",
     description: "Led the vision for Shopping Collections, shifting YT Shopping from a video-centric tagging feature into a scalable curation ecosystem for viewers and creators.",
     image: project1Cover,
+    tagsTitle: "Project Team",
     tags: ["3 Designers", "2 Researchers", "2 PMs"],
     content: [
       {
@@ -119,6 +120,7 @@ const PROJECTS_DATA: Record<string, any> = {
     category: "2026 • Personal Project",
     description: "An exploration of Vibe Coding and end-to-end AI product workflows—now live on the App Store.",
     image: project2Cover,
+    tagsTitle: "Disciplines",
     tags: ["Mobile UX", "Vibe Coding", "AI Workflows"],
     content: [
       {
@@ -170,6 +172,7 @@ const PROJECTS_DATA: Record<string, any> = {
     category: "2018 • Airbnb",
     description: "Led the design and launch of Airbnb's first WeChat Mini-app, streamlining the booking journey for the Chinese market.",
     image: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=2670&auto=format&fit=crop",
+    tagsTitle: "Project Team",
     tags: ["Design Lead", "2 Designers", "1 Researcher", "2 PMs"],
     content: [
       {
@@ -296,13 +299,13 @@ export default function CaseStudy() {
                   </div>
                   <div>
                     <h4 className="text-[9px] font-sans uppercase tracking-[0.25em] text-[#1a1918]/40 mb-3 font-bold">
-                      Project Team
+                      {project.tagsTitle || "Project Team"}
                     </h4>
                     <ul className="flex flex-col gap-1.5">
                       {project.tags.map((tag: string, index: number) => (
                         <li 
                           key={tag}
-                          className={`text-[14px] ${index === 0 ? 'font-medium text-[#1a1918]' : 'font-light text-[#1a1918]/60'}`}
+                          className="text-[14px] font-medium text-[#1a1918]"
                         >
                           {tag}
                         </li>
