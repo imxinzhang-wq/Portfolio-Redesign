@@ -11,6 +11,8 @@ import project1Cover from "@assets/Collection_Cover.png";
 import collectionCreateGif from "@assets/Collection-create_1774547429730.gif";
 import collectionGif from "@assets/Collection_1774547429731.gif";
 import creationJpg from "@assets/creation_1774547429731.jpg";
+import airbnbSol1 from "@assets/s-blob-v1-IMAGE-DuANVKTdceA_1774776952323.jpg";
+import airbnbSol2 from "@assets/s-blob-v1-IMAGE-QKfUHNi0kV8_1774776952324.jpg";
 
 const PROJECTS_DATA: Record<string, any> = {
   "1": {
@@ -206,6 +208,10 @@ const PROJECTS_DATA: Record<string, any> = {
         ]
       },
       {
+        type: "image-row",
+        images: [airbnbSol1, airbnbSol2]
+      },
+      {
         type: "metrics",
         heading: "Impact",
         metrics: [
@@ -354,6 +360,22 @@ export default function CaseStudy() {
                       {section.caption}
                     </p>
                   )}
+                </div>
+              )}
+
+              {section.type === "image-row" && (
+                <div className="w-full my-12">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
+                    {section.images.map((img: string, i: number) => (
+                      <div key={i} className="w-full overflow-hidden rounded-[24px]">
+                        <img
+                          src={img}
+                          alt={`Solution image ${i + 1}`}
+                          className="w-full h-auto object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
 
