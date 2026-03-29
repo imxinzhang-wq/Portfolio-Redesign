@@ -21,9 +21,9 @@ import airbnbVote from "@assets/Vote_1774781565815.png";
 
 const PROJECTS_DATA: Record<string, any> = {
   "1": {
-    title: "YT Shopping Collections",
+    title: "YouTube Shopping Collections",
     category: "2024 • YouTube",
-    description: "Led the vision for Shopping Collections, shifting YT Shopping from a video-centric tagging feature into a scalable curation ecosystem for viewers and creators.",
+    description: "Led the vision for Shopping Collections, shifting YouTube Shopping from a video-centric tagging feature into a scalable curation ecosystem for viewers and creators.",
     image: project1Cover,
     tagsTitle: "Project Team",
     tags: ["3 Designers", "2 Researchers", "2 PMs"],
