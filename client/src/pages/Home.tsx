@@ -364,7 +364,7 @@ function Footer() {
           </a>
         </div>
         <div className="flex gap-8 text-[10px] uppercase tracking-widest font-bold text-muted-foreground">
-          <a href="www.linkedin.com/in/imxinzhang" className="hover:text-foreground">LinkedIn</a>
+          <a href="https://www.linkedin.com/in/imxinzhang/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">LinkedIn</a>
         </div>
       </div>
     </footer>
