@@ -3,12 +3,6 @@ import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 
-import photo1 from "@assets/1BBF94CC-BA7C-432C-A0C8-C410E45FE149_4_5005_c_1772054814413.jpeg";
-import photo2 from "@assets/6C23377C-15B6-42EA-B1D5-96A84D83C61E_4_5005_c_1772054814414.jpeg";
-import photo3 from "@assets/7CC2EAF5-2C07-42BE-8AAB-1027083FD2CF_4_5005_c_1772054814414.jpeg";
-import photo4 from "@assets/81C93177-9204-4A44-8C60-4E530DEBAB95_4_5005_c_1772054814415.jpeg";
-import photo5 from "@assets/ACA80C8E-CD60-460B-A794-9B92DECF6107_4_5005_c_1772054814415.jpeg";
-import photo6 from "@assets/E7311041-CF0E-48D1-85C5-BA16849E0601_4_5005_c_1772054814415.jpeg";;
 import project1 from "@assets/Collection_Cover.png";
 import project2 from "@assets/Darmi_Cover.PNG";
 import project3 from "@assets/Airbnb_Cover.gif";
@@ -37,45 +31,6 @@ const MOCK_PROJECTS = [
   }
 ];
 
-const MOCK_VISUALS = [
-  {
-    id: 1,
-    title: "Street Life",
-    category: "Photography",
-    image: photo1
-  },
-  {
-    id: 2,
-    title: "Cherry Blossoms",
-    category: "Photography",
-    image: photo2
-  },
-  {
-    id: 3,
-    title: "Matterhorn",
-    category: "Photography",
-    image: photo3
-  },
-  {
-    id: 4,
-    title: "Dubai Creek",
-    category: "Photography",
-    image: photo4
-  },
-  {
-    id: 5,
-    title: "Spice Market",
-    category: "Photography",
-    image: photo5
-  },
-  {
-    id: 6,
-    title: "City Corner",
-    category: "Photography",
-    image: photo6
-  }
-];
-
 export default function Home() {
   return (
     <div className="bg-background min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans">
@@ -92,7 +47,6 @@ export default function Home() {
       <main className="relative z-10">
         <Hero />
         <ProjectGrid />
-        <VisualsGrid />
         <About />
       </main>
 
