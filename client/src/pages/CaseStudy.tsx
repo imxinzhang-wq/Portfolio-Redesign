@@ -134,9 +134,12 @@ const PROJECTS_DATA: Record<string, any> = {
         text: "IBS users need to identify patterns and triggers across food, lifestyle, and symptoms, but these relationships are often delayed and influenced by multiple factors.",
       },    
       {
-        type: "list",
+        type: "text",
         heading: "AI-Assisted Workflow",
         body: "This project prioritized speed and iteration over extensive upfront design, focusing on getting a functional version into users’ hands early, iterating based on usage and feedback, and using AI to reduce the cost of execution.",
+      },
+      {
+        type: "list",
         items: [
           "Research & synthesis: Used language models to summarize discussions from Reddit and App Store reviews, helping identify common pain points and gaps in existing solutions.",
           "Scoping & structure: Generated an initial PRD and information architecture to define scope and core flows. These were refined manually to ensure the product remained focused and buildable.",
@@ -163,21 +166,6 @@ const PROJECTS_DATA: Record<string, any> = {
         heading: "Reflection",
         body: "This project demonstrated that AI can significantly reduce the time required to move from idea to shipped product, especially for solo-led work. At the same time, it reinforced that AI is most effective when paired with human judgment. AI is useful for generating a baseline and accelerating iteration, but human input is still required for scope control, refinement, and final quality."
       },
-      {
-        type: "list",
-        heading: "The Evolving Role of the Designer",
-        items: [
-          "In this workflow, the designer's focus shifts toward:",
-          "Framing problems clearly",
-          "Guiding structure and direction",
-          "Making final decisions on quality and usability"
-        ]
-      },
-      {
-        type: "quote",
-        text: "This project is less about a single product, and more about testing a practical way of building—where AI supports execution, while human judgment defines the outcome.",
-        author: "Final Thought"
-      }
     ],
   },
   "3": {
