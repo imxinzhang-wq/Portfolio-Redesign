@@ -30,7 +30,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-         - name: Build static site
+      - name: Build static site
         env:
           NODE_ENV: production
           VITE_BASE_PATH: /
