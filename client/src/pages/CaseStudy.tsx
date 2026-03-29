@@ -187,14 +187,6 @@ const PROJECTS_DATA: Record<string, any> = {
         imageFirst: false,
       },
       {
-        type: "gallery",
-        images: [
-          creationJpg,
-          collectionCreateGif,
-          collectionGif
-        ]
-      },
-      {
         type: "text",
         heading: "The Solution: Designing for Local Social Contexts",
         body: "I led the design of an MVP that focused on the unique social behaviors of Chinese travelers. This meant designing for speed and connection."
@@ -205,14 +197,6 @@ const PROJECTS_DATA: Record<string, any> = {
           "Lightweight Onboarding: Built-in WeChat verification and one-click payment to eliminate registration drop-off.",
           "Social Coordination: Recognizing that group travel is dominant in China, we designed a 'Voting' feature, allowing users to share listings directly into WeChat groups for collective decision-making.",
           "Performance-First UI: A streamlined interface designed for speed, moving away from heavy imagery to a more functional, 'get-it-booked' layout."
-        ]
-      },
-      {
-        type: "gallery",
-        images: [
-          creationJpg,
-          collectionCreateGif,
-          collectionGif
         ]
       },
       {
