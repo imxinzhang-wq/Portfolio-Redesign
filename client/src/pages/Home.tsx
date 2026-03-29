@@ -358,7 +358,7 @@ function Footer() {
     <footer id="contact" className="py-20 px-6 border-t border-black/5 relative z-10">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
         <div className="text-center md:text-left">
-          <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-muted-foreground mb-2">Let's build the future together</p>
+          <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-muted-foreground mb-2">Say hello</p>
           <a href="mailto:about.dala@gmail.com" className="text-2xl font-display hover:opacity-50 transition-opacity" data-testid="link-email">
             about.dala@gmail.com
           </a>
