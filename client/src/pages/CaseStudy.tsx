@@ -186,14 +186,7 @@ const PROJECTS_DATA: Record<string, any> = {
         imageCaption: "Mapping the native ecosystem.",
         imageFirst: false,
       },
-      {
-        type: "gallery",
-        images: [
-          creationJpg,
-          collectionCreateGif,
-          collectionGif
-        ]
-      },
+  
       {
         type: "text",
         heading: "The Solution: Designing for Local Social Contexts",
@@ -207,14 +200,7 @@ const PROJECTS_DATA: Record<string, any> = {
           "Performance-First UI: A streamlined interface designed for speed, moving away from heavy imagery to a more functional, 'get-it-booked' layout."
         ]
       },
-      {
-        type: "gallery",
-        images: [
-          creationJpg,
-          collectionCreateGif,
-          collectionGif
-        ]
-      },
+    
       {
         type: "list",
         heading: "Outcomes & Strategic Pivot",
