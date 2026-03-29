@@ -273,47 +273,50 @@ export default function CaseStudy() {
         </nav>
 
         {/* Hero Section */}
-        <section className="px-6 md:px-12 pt-12 pb-24 max-w-7xl mx-auto">
-          <div className="max-w-5xl">
+        <section className="px-6 md:px-12 pt-12 pb-24 max-w-7xl mx-auto w-full">
+          <div className="w-full">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <h1 className="text-[3rem] md:text-[5rem] lg:text-[6rem] font-display font-medium tracking-tighter mb-8 leading-[1.05]">
+              <h1 className="text-[3.5rem] md:text-[6.5rem] lg:text-[8rem] font-sans font-medium tracking-[-0.05em] mb-12 lg:mb-24 leading-[0.9] text-[#1a1918]">
                 {project.title}
               </h1>
               
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-24 pt-12">
-                <div className="md:col-span-8">
-                  <p className="text-xl md:text-2xl font-light leading-relaxed text-muted-foreground">
-                    {project.description}
-                  </p>
-                </div>
-                <div className="md:col-span-4 space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-x-8 gap-y-12">
+                <div className="md:col-span-4 lg:col-span-3 flex flex-col gap-10">
                   <div>
-                    <h4 className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground mb-3">
-                      Timeline & Context
+                    <h4 className="text-[9px] font-sans uppercase tracking-[0.25em] text-[#1a1918]/40 mb-3 font-bold">
+                      Platform & Year
                     </h4>
-                    <p className="text-[15px] font-medium">
+                    <p className="text-[14px] font-medium text-[#1a1918]">
                       {project.category}
                     </p>
                   </div>
                   <div>
-                    <h4 className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground mb-3">
-                      Disciplines
+                    <h4 className="text-[9px] font-sans uppercase tracking-[0.25em] text-[#1a1918]/40 mb-3 font-bold">
+                      Project Team
                     </h4>
-                    <div className="flex flex-wrap gap-x-3 gap-y-2">
+                    <ul className="flex flex-col gap-1.5">
                       {project.tags.map((tag: string, index: number) => (
-                        <span
+                        <li 
                           key={tag}
-                          className="text-[15px] font-light text-foreground/80"
+                          className={`text-[14px] ${index === 0 ? 'font-medium text-[#1a1918]' : 'font-light text-[#1a1918]/60'}`}
                         >
-                          {tag}{index < project.tags.length - 1 ? ',' : ''}
-                        </span>
+                          {tag}
+                        </li>
                       ))}
-                    </div>
+                    </ul>
                   </div>
+                </div>
+                <div className="md:col-span-8 lg:col-span-9 lg:pl-12">
+                  <h4 className="text-[9px] font-sans uppercase tracking-[0.25em] text-[#1a1918]/40 mb-3 font-bold">
+                    Project Overview
+                  </h4>
+                  <p className="text-[1.8rem] md:text-[2.4rem] lg:text-[2.75rem] font-sans font-light leading-[1.3] text-[#1a1918] tracking-[-0.015em] max-w-[34ch]">
+                    {project.description}
+                  </p>
                 </div>
               </div>
             </motion.div>
