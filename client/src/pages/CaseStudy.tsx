@@ -317,7 +317,7 @@ export default function CaseStudy() {
                   <h4 className="text-[9px] font-sans uppercase tracking-[0.25em] text-[#1a1918]/40 mb-3 font-bold">
                     Project Overview
                   </h4>
-                  <p className="text-[1.5rem] md:text-[2rem] lg:text-[2.25rem] font-sans font-light leading-[1.35] text-[#1a1918] tracking-[-0.01em] max-w-[38ch]">
+                  <p className="text-[1.5rem] md:text-[2rem] lg:text-[2.25rem] font-sans leading-[1.35] text-[#1a1918] tracking-[-0.01em] max-w-[38ch] font-normal">
                     {project.description}
                   </p>
                 </div>
