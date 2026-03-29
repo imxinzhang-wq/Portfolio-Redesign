@@ -16,7 +16,7 @@ import project3 from "@assets/Airbnb_Cover.gif";
 const MOCK_PROJECTS = [
   {
     id: 1,
-    title: "YT Shopping Collections",
+    title: "YouTube Shopping Collections",
     category: "2024 • YouTube",
     description: "Architected Shopping Collections to replace links with a native curation format, driving creator branding and engagement.",
     image: project1,
