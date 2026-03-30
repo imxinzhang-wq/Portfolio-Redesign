@@ -388,7 +388,7 @@ function About() {
 
 function Footer() {
   return (
-    <footer id="contact" className="py-20 px-6 border-t border-black/5 relative z-10">
+    <footer id="contact" className="py-20 px-6 relative z-10">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
         <div className="text-center md:text-left">
           <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-muted-foreground mb-2">Say hello</p>
