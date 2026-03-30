@@ -78,6 +78,7 @@ export default function Home() {
 
 function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -87,43 +88,75 @@ function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const handleNavClick = (id: string) => {
+    setIsMenuOpen(false);
+    if (window.location.hash !== '#/') {
+      window.location.hash = '#/';
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) {
+          const y = el.getBoundingClientRect().top + window.scrollY - 100;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      const el = document.getElementById(id);
+      if (el) {
+        const y = el.getBoundingClientRect().top + window.scrollY - 100;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }
+  };
+
   return (
     <div className="fixed top-0 left-0 right-0 z-50 flex justify-center p-6 pointer-events-none">
       <motion.nav 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className={`pointer-events-auto flex items-center justify-between w-full max-w-7xl px-10 py-5 transition-all duration-500 rounded-full ${
-          isScrolled 
-            ? "bg-white/60 backdrop-blur-xl border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.04)]" 
+        className={`pointer-events-auto flex items-center justify-between w-full max-w-7xl px-6 md:px-10 py-5 transition-all duration-500 rounded-2xl md:rounded-full ${
+          isScrolled || isMenuOpen
+            ? "bg-white/90 md:bg-white/60 backdrop-blur-xl border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.04)]" 
             : "bg-transparent border border-transparent"
         }`}
       >
-        <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-base font-display font-bold tracking-tighter uppercase" data-testid="link-home">
+        <button 
+          onClick={() => {
+            setIsMenuOpen(false);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }} 
+          className="text-base font-display font-bold tracking-tighter uppercase relative z-20" 
+          data-testid="link-home"
+        >
           Xin Zhang
         </button>
-        <div className="flex gap-10 text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
-          <button onClick={() => {
-            const el = document.getElementById('work');
-            if (el) {
-              const y = el.getBoundingClientRect().top + window.scrollY - 100;
-              window.scrollTo({ top: y, behavior: 'smooth' });
-            }
-          }} className="hover:text-foreground transition-colors" data-testid="link-work">WORK</button>
-          <button onClick={() => {
-            const el = document.getElementById('about');
-            if (el) {
-              const y = el.getBoundingClientRect().top + window.scrollY - 100;
-              window.scrollTo({ top: y, behavior: 'smooth' });
-            }
-          }} className="hover:text-foreground transition-colors" data-testid="link-about">ABOUT</button>
-          <button onClick={() => {
-            const el = document.getElementById('contact');
-            if (el) {
-              const y = el.getBoundingClientRect().top + window.scrollY - 100;
-              window.scrollTo({ top: y, behavior: 'smooth' });
-            }
-          }} className="hover:text-foreground transition-colors" data-testid="link-contact">CONTACT</button>
+
+        {/* Mobile Hamburger Button */}
+        <button 
+          className="md:hidden relative z-20 p-2 -mr-2"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          <div className="flex flex-col gap-1.5 w-5">
+            <span className={`h-0.5 bg-foreground transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
+            <span className={`h-0.5 bg-foreground transition-all duration-300 ${isMenuOpen ? 'opacity-0' : ''}`} />
+            <span className={`h-0.5 bg-foreground transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+          </div>
+        </button>
+
+        {/* Desktop Menu */}
+        <div className="hidden md:flex gap-10 text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
+          <button onClick={() => handleNavClick('work')} className="hover:text-foreground transition-colors" data-testid="link-work">WORK</button>
+          <button onClick={() => handleNavClick('about')} className="hover:text-foreground transition-colors" data-testid="link-about">ABOUT</button>
+          <button onClick={() => handleNavClick('contact')} className="hover:text-foreground transition-colors" data-testid="link-contact">CONTACT</button>
         </div>
+
+        {/* Mobile Dropdown Menu */}
+        {isMenuOpen && (
+          <div className="absolute top-full left-0 right-0 mt-2 bg-white/90 backdrop-blur-xl border border-white/40 rounded-2xl p-6 flex flex-col gap-6 shadow-[0_8px_32px_rgba(0,0,0,0.04)] md:hidden">
+            <button onClick={() => handleNavClick('work')} className="text-sm font-bold uppercase tracking-[0.2em] text-foreground text-left" data-testid="link-work-mobile">WORK</button>
+            <button onClick={() => handleNavClick('about')} className="text-sm font-bold uppercase tracking-[0.2em] text-foreground text-left" data-testid="link-about-mobile">ABOUT</button>
+            <button onClick={() => handleNavClick('contact')} className="text-sm font-bold uppercase tracking-[0.2em] text-foreground text-left" data-testid="link-contact-mobile">CONTACT</button>
+          </div>
+        )}
       </motion.nav>
     </div>
   );
