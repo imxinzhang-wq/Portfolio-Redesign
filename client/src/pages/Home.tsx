@@ -115,7 +115,7 @@ function Navbar() {
         animate={{ opacity: 1, y: 0 }}
         className={`pointer-events-auto flex items-center justify-between w-full max-w-7xl px-6 md:px-10 py-5 transition-all duration-500 rounded-2xl md:rounded-full ${
           isScrolled || isMenuOpen
-            ? "bg-white/60 backdrop-blur-xl border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.04)]" 
+            ? "bg-white/90 md:bg-white/60 backdrop-blur-xl border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.04)]" 
             : "bg-transparent border border-transparent"
         }`}
       >
@@ -150,15 +150,13 @@ function Navbar() {
         </div>
 
         {/* Mobile Dropdown Menu */}
-        <div 
-          className={`absolute top-[calc(100%+8px)] left-0 right-0 bg-white/60 backdrop-blur-xl border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.04)] rounded-2xl p-6 flex flex-col gap-6 md:hidden transition-all duration-300 origin-top ${
-            isMenuOpen ? 'opacity-100 scale-y-100 pointer-events-auto' : 'opacity-0 scale-y-95 pointer-events-none'
-          }`}
-        >
-          <button onClick={() => handleNavClick('work')} className="text-sm font-bold uppercase tracking-[0.2em] text-foreground text-left" data-testid="link-work-mobile">WORK</button>
-          <button onClick={() => handleNavClick('about')} className="text-sm font-bold uppercase tracking-[0.2em] text-foreground text-left" data-testid="link-about-mobile">ABOUT</button>
-          <button onClick={() => handleNavClick('contact')} className="text-sm font-bold uppercase tracking-[0.2em] text-foreground text-left" data-testid="link-contact-mobile">CONTACT</button>
-        </div>
+        {isMenuOpen && (
+          <div className="absolute top-full left-0 right-0 mt-2 bg-white/90 backdrop-blur-xl border border-white/40 rounded-2xl p-6 flex flex-col gap-6 shadow-[0_8px_32px_rgba(0,0,0,0.04)] md:hidden">
+            <button onClick={() => handleNavClick('work')} className="text-sm font-bold uppercase tracking-[0.2em] text-foreground text-left" data-testid="link-work-mobile">WORK</button>
+            <button onClick={() => handleNavClick('about')} className="text-sm font-bold uppercase tracking-[0.2em] text-foreground text-left" data-testid="link-about-mobile">ABOUT</button>
+            <button onClick={() => handleNavClick('contact')} className="text-sm font-bold uppercase tracking-[0.2em] text-foreground text-left" data-testid="link-contact-mobile">CONTACT</button>
+          </div>
+        )}
       </motion.nav>
     </div>
   );
