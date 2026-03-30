@@ -639,7 +639,7 @@ export default function CaseStudy() {
               )}
 
               {section.type === "links" && (
-                <div className="w-full py-8 border-t border-border/10 mt-12">
+                <div className="w-full pt-8 pb-32 border-t border-border/10 mt-12 mb-16">
                   {section.heading && (
                     <h3 className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-6">
                       {section.heading}
