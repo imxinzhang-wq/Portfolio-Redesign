@@ -312,53 +312,58 @@ export default function CaseStudy() {
     setIsAuthenticated(false);
     setPassword("");
     setError("");
-  }, [match, params]);
+  }, [projectId]);
 
   if (!project) return <div>Project not found</div>;
 
   if (projectId === "1" && !isAuthenticated) {
     return (
-      <div className="bg-[#f5f0e6] min-h-screen flex items-center justify-center px-6 font-sans">
-        <div className="max-w-md w-full space-y-8 text-center">
-          <div className="space-y-4">
-            <h2 className="text-3xl md:text-4xl font-display font-medium tracking-tight">Protected Project</h2>
-            <p className="text-muted-foreground font-light">This case study requires a password to view.</p>
-          </div>
-          <form 
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (password === "helloworld") {
-                setIsAuthenticated(true);
-                setError("");
-              } else {
-                setError("Incorrect password");
-              }
-            }}
-            className="space-y-4"
-          >
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter password"
-              className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-black/5 transition-all text-center font-mono"
-            />
-            {error && <p className="text-red-500 text-sm">{error}</p>}
-            <button 
-              type="submit"
-              className="w-full py-3 rounded-xl bg-black text-white font-medium hover:bg-black/80 transition-colors"
-            >
-              Unlock
-            </button>
-          </form>
-          <div className="pt-8 flex justify-center">
+      <div className="bg-[#f5f0e6] min-h-screen flex flex-col relative overflow-hidden font-sans">
+        <main className="relative z-10 flex-1 flex flex-col">
+          <nav className="px-6 md:px-12 py-12 max-w-7xl mx-auto w-full">
             <Link href="/">
               <a className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest hover:opacity-60 transition-opacity">
-                <ArrowLeft className="w-4 h-4" /> Back to Home
+                <ArrowLeft className="w-4 h-4" /> Home
               </a>
             </Link>
+          </nav>
+          
+          <div className="flex-1 flex items-center justify-center px-6 pb-32">
+            <div className="max-w-md w-full space-y-8 text-center">
+              <div className="space-y-4">
+                <h2 className="text-3xl md:text-4xl font-display font-medium tracking-tight">Protected Project</h2>
+                <p className="text-muted-foreground font-light">This case study requires a password to view.</p>
+              </div>
+              <form 
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (password === "helloworld") {
+                    setIsAuthenticated(true);
+                    setError("");
+                  } else {
+                    setError("Incorrect password");
+                  }
+                }}
+                className="space-y-4 relative z-50 pointer-events-auto"
+              >
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter password"
+                  className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-black/5 transition-all text-center font-mono"
+                />
+                {error && <p className="text-red-500 text-sm">{error}</p>}
+                <button 
+                  type="submit"
+                  className="w-full py-3 rounded-xl bg-black text-white font-medium hover:bg-black/80 transition-colors"
+                >
+                  Unlock
+                </button>
+              </form>
+            </div>
           </div>
-        </div>
+        </main>
       </div>
     );
   }
