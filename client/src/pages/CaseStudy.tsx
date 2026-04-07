@@ -556,7 +556,7 @@ export default function CaseStudy() {
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, delay: 0.2 }}
-            className="w-full aspect-[2/1] overflow-hidden"
+            className="w-full aspect-[2/1] overflow-hidden rounded-lg"
           >
             <img
               src={project.image}
