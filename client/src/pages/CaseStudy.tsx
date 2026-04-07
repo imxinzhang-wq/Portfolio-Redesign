@@ -587,10 +587,10 @@ export default function CaseStudy() {
                       {section.heading}
                     </h3>
                   )}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-start">
+                  <div className="space-y-10 md:space-y-14">
                     {section.concepts.map((concept: any, i: number) => (
-                      <div key={i} className="group space-y-5">
-                        <div className="space-y-3 px-1">
+                      <div key={i} className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10 items-start">
+                        <div className="lg:col-span-5 space-y-4 pt-1">
                           <div>
                             <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-muted-foreground mb-2">
                               {concept.eyebrow}
@@ -599,7 +599,7 @@ export default function CaseStudy() {
                               {concept.title}
                             </h4>
                           </div>
-                          <div className="space-y-3 text-[15px] leading-7 text-foreground/70 font-light max-w-[34rem]">
+                          <div className="space-y-3 text-[15px] md:text-[16px] leading-7 md:leading-8 text-foreground/70 font-light max-w-[34rem]">
                             {concept.upside && (
                               <p>
                                 <span className="font-medium text-foreground">The Upside: </span>
@@ -620,7 +620,7 @@ export default function CaseStudy() {
                             )}
                           </div>
                         </div>
-                        <div className="w-full overflow-hidden rounded-[40px] border-2 border-[#d4cfc4] bg-[#ebe5da] p-2">
+                        <div className="lg:col-span-7 w-full overflow-hidden rounded-[40px] border-2 border-[#d4cfc4] bg-[#ebe5da] p-2">
                           <img
                             src={concept.image}
                             alt={concept.title}
@@ -631,7 +631,7 @@ export default function CaseStudy() {
                     ))}
                   </div>
                   {section.conclusion && (
-                    <div className="mt-10 pt-8 border-t border-black/10 max-w-4xl">
+                    <div className="mt-10 max-w-4xl">
                       <p className="text-base md:text-lg text-foreground/70 font-light leading-[1.8] text-pretty">
                         {section.conclusion}
                       </p>
