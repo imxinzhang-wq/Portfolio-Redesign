@@ -6,6 +6,7 @@ import { useRef, useEffect, useState } from "react";
 import project1 from "@assets/Collection_Cover.png";
 import project2 from "@assets/Darmi_Cover.PNG";
 import project3 from "@assets/Airbnb_Cover_1774813459702.jpg";
+import project4 from "@assets/tagging_cover_1775594426781.jpeg";
 
 const MOCK_PROJECTS = [
   {
@@ -27,7 +28,7 @@ const MOCK_PROJECTS = [
     title: "YouTube Shopping: Tagging in Description",
     category: "2024 • YouTube",
     description: "How we drove significant GMV growth by aligning monetization tools with creator muscle memory.",
-    image: project1,
+    image: project4,
   },
   {
     id: 3,

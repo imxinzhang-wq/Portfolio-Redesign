@@ -34,6 +34,7 @@ import taggingSolution1 from "@assets/s-blob-v1-IMAGE-1zvtK2jYAdI_1775589728784.
 import taggingSolution2 from "@assets/s-blob-v1-IMAGE-7igf2FntVFI_1775589728784.jpg";
 import problemImage1 from "@assets/problem-1_1775593076054.jpg";
 import problemImage2 from "@assets/problem-2_1775593076055.png";
+import taggingCover from "@assets/tagging_cover_1775594426781.jpeg";
 
 const PROJECT_ORDER = ["2", "1", "4", "3"];
 
@@ -217,7 +218,7 @@ const PROJECTS_DATA: Record<string, any> = {
     title: "Tagging in Description",
     category: "2024 • YouTube",
     description: "How we drove significant GMV growth by aligning monetization tools with creator muscle memory.",
-    image: project1Cover,
+    image: taggingCover,
     tagsTitle: "Project Team",
     tags: ["1 Designer", "1 Researcher", "1 Product Manager"],
     content: [
