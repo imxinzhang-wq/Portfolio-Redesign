@@ -30,6 +30,8 @@ import darmiAdd from "@assets/add_1774795123374.png";
 import darmiInsights from "@assets/insights_1774795123376.png";
 import directionImage1 from "@assets/direction-1_1775590476908.jpg";
 import directionImage2 from "@assets/direction-2_1775590476909.jpg";
+import taggingSolution1 from "@assets/s-blob-v1-IMAGE-1zvtK2jYAdI_1775589728784.jpg";
+import taggingSolution2 from "@assets/s-blob-v1-IMAGE-7igf2FntVFI_1775589728784.jpg";
 
 const PROJECT_ORDER = ["2", "1", "4", "3"];
 
@@ -264,6 +266,11 @@ const PROJECTS_DATA: Record<string, any> = {
           "Link parsing: Instead of forcing creators to learn our process, we parse links in the description and tag relevant products automatically, while still allowing creators to remove tags or opt out.",
           "Integrated Search Panel: Embedded a lightweight search panel directly into the description box. This removed a disruptive step, addressed the high perceived effort, and made tagging an intuitive part of the creation process to drive adoption."
         ]
+      },
+      {
+        type: "image-row",
+        fullWidth: true,
+        images: [taggingSolution1, taggingSolution2]
       },
       {
         type: "quote",
@@ -642,6 +649,22 @@ export default function CaseStudy() {
                       </p>
                     </div>
                   )}
+                </div>
+              )}
+
+              {section.type === "image-row" && (
+                <div className={`my-12 ${section.fullWidth ? 'relative left-1/2 -translate-x-1/2 w-[min(100vw-3rem,80rem)] md:w-[min(100vw-6rem,80rem)]' : 'w-full'}`}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-start">
+                    {section.images.map((img: string, i: number) => (
+                      <div key={i} className="w-full overflow-hidden rounded-[40px] border-2 border-[#d4cfc4] bg-[#ebe5da] p-2">
+                        <img
+                          src={img}
+                          alt={`Solution image ${i + 1}`}
+                          className="w-full h-auto rounded-[32px] object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
 
