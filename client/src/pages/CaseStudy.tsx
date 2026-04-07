@@ -28,8 +28,8 @@ import darmiProcess4 from "@assets/UI-2_1774794598190.png";
 import darmiHome from "@assets/home_1774795123376.png";
 import darmiAdd from "@assets/add_1774795123374.png";
 import darmiInsights from "@assets/insights_1774795123376.png";
-import taggingSolution1 from "@assets/s-blob-v1-IMAGE-1zvtK2jYAdI_1775589728784.jpg";
-import taggingSolution2 from "@assets/s-blob-v1-IMAGE-7igf2FntVFI_1775589728784.jpg";
+import directionImage1 from "@assets/direction-1_1775590476908.jpg";
+import directionImage2 from "@assets/direction-2_1775590476909.jpg";
 
 const PROJECT_ORDER = ["2", "1", "4", "3"];
 
@@ -236,11 +236,19 @@ const PROJECTS_DATA: Record<string, any> = {
         text: "The objective was to align tagging with the creator's natural muscle memory: writing descriptions.",
       },
       {
-        type: "list",
+        type: "concept-pair",
         heading: "Design Iterations",
-        items: [
-          "Direction 1 — Product Chips: Replaced URLs with clean, modern product chips within the text. Creators appreciated the aesthetics and the ability to verify trust, but there were concerns about how viewers would interpret the chips and a lack of obvious feedback when tagging occurred.",
-          "Direction 2 — Product Thumbnails: Automatically parsed links in the description to populate a separate, lightweight tagged product section below the text. This became the strongest direction because creators noticed the product count immediately and described the flow as clean and easy, without disruptive pop-up windows."
+        concepts: [
+          {
+            eyebrow: "Direction 1",
+            title: "Product Chips",
+            image: directionImage1
+          },
+          {
+            eyebrow: "Direction 2",
+            title: "Product Thumbnails",
+            image: directionImage2
+          }
         ]
       },
       {
@@ -251,10 +259,6 @@ const PROJECTS_DATA: Record<string, any> = {
           "Link parsing: Instead of forcing creators to learn our process, we parse links in the description and tag relevant products automatically, while still allowing creators to remove tags or opt out.",
           "Integrated Search Panel: Embedded a lightweight search panel directly into the description box. This removed a disruptive step, addressed the high perceived effort, and made tagging an intuitive part of the creation process to drive adoption."
         ]
-      },
-      {
-        type: "image-row",
-        images: [taggingSolution1, taggingSolution2]
       },
       {
         type: "list",
@@ -571,16 +575,33 @@ export default function CaseStudy() {
                 </div>
               )}
 
-              {section.type === "image-row" && (
+              {section.type === "concept-pair" && (
                 <div className="w-full my-12">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-start">
-                    {section.images.map((img: string, i: number) => (
-                      <div key={i} className="w-full overflow-hidden rounded-[40px] border-2 border-[#d4cfc4] bg-[#ebe5da] p-2">
-                        <img
-                          src={img}
-                          alt={`Solution image ${i + 1}`}
-                          className="w-full h-auto rounded-[32px] object-cover"
-                        />
+                  {section.heading && (
+                    <h3 className="text-3xl md:text-4xl lg:text-5xl font-display font-medium tracking-tight mb-8 md:mb-12 leading-[1.15] text-balance">
+                      {section.heading}
+                    </h3>
+                  )}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-start">
+                    {section.concepts.map((concept: any, i: number) => (
+                      <div key={i} className="group space-y-4">
+                        <div className="flex items-baseline justify-between gap-4 px-1">
+                          <div>
+                            <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-muted-foreground mb-2">
+                              {concept.eyebrow}
+                            </p>
+                            <h4 className="text-2xl md:text-[2rem] font-display font-medium tracking-tight text-foreground">
+                              {concept.title}
+                            </h4>
+                          </div>
+                        </div>
+                        <div className="w-full overflow-hidden rounded-[40px] border-2 border-[#d4cfc4] bg-[#ebe5da] p-2">
+                          <img
+                            src={concept.image}
+                            alt={concept.title}
+                            className="w-full h-auto rounded-[32px] object-cover"
+                          />
+                        </div>
                       </div>
                     ))}
                   </div>
