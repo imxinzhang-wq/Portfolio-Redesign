@@ -236,7 +236,7 @@ const PROJECTS_DATA: Record<string, any> = {
             title: "Forced Search vs. Direct Links",
             image: problemImage1,
             body: "While creators naturally use direct product links, our tool forced them to manually search for items they already had links for. 42% of creators cited high perceived effort as the reason they didn't tag.",
-            imageClassName: "rounded-[40px]"
+            imageClassName: "rounded-[16px]"
           },
           {
             eyebrow: "Problem 2",
