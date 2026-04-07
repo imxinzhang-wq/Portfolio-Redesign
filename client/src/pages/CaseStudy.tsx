@@ -217,7 +217,7 @@ const PROJECTS_DATA: Record<string, any> = {
   "4": {
     title: "Tagging in Description",
     category: "2024 • YouTube",
-    description: "How we drove significant GMV growth by aligning monetization tools with creator muscle memory.",
+    description: "How we drove significant GMV growth by aligning product tagging tools with creator muscle memory.",
     image: taggingCover,
     tagsTitle: "Project Team",
     tags: ["1 Designer", "1 Researcher", "1 Product Manager"],
