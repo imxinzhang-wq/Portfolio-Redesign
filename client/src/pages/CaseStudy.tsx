@@ -270,7 +270,7 @@ const PROJECTS_DATA: Record<string, any> = {
       {
         type: "image-row",
         fullWidth: true,
-        images: [taggingSolution1, taggingSolution2]
+        images: [taggingSolution2, taggingSolution1]
       },
       {
         type: "quote",
