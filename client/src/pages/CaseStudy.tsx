@@ -214,7 +214,7 @@ const PROJECTS_DATA: Record<string, any> = {
     ],
   },
   "4": {
-    title: "YouTube Shopping: Tagging in Description",
+    title: "Tagging in Description",
     category: "2024 • YouTube",
     description: "How we drove significant GMV growth by aligning monetization tools with creator muscle memory.",
     image: project1Cover,
@@ -434,7 +434,7 @@ export default function CaseStudy() {
 
   if (!project) return <div>Project not found</div>;
 
-  if (projectId === "1" && !isAuthenticated) {
+  if ((projectId === "1" || projectId === "4") && !isAuthenticated) {
     return (
       <div className="bg-[#f5f0e6] min-h-screen flex flex-col relative overflow-hidden font-sans">
         <main className="relative z-10 flex-1 flex flex-col">
