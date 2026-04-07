@@ -32,6 +32,8 @@ import directionImage1 from "@assets/direction-1_1775590476908.jpg";
 import directionImage2 from "@assets/direction-2_1775590476909.jpg";
 import taggingSolution1 from "@assets/s-blob-v1-IMAGE-1zvtK2jYAdI_1775589728784.jpg";
 import taggingSolution2 from "@assets/s-blob-v1-IMAGE-7igf2FntVFI_1775589728784.jpg";
+import problemImage1 from "@assets/problem-1_1775593076054.jpg";
+import problemImage2 from "@assets/problem-2_1775593076055.png";
 
 const PROJECT_ORDER = ["2", "1", "4", "3"];
 
@@ -225,11 +227,24 @@ const PROJECTS_DATA: Record<string, any> = {
         body: "I led the design strategy for Tagging in Description, a workflow-integrated solution that transformed how YouTube creators tag products. By moving the entry point directly into the description box and implementing automated link parsing, we shifted the experience from a high-friction manual task to an intuitive part of the creation process. The final solution now drives 7% of daily GMV.",
       },
       {
-        type: "list",
+        type: "concept-pair",
         heading: "The Problem: Workflow Disconnect",
-        items: [
-          "Forced Search vs. Direct Links: While creators naturally use direct product links, our tool forced them to manually search for items they already had links for. 42% of creators cited high perceived effort as the reason they didn't tag.",
-          "Out of Sight, Out of Mind: The tagging tool was buried outside the primary metadata workflow. 48% of creators reported simply forgetting the tool existed because it wasn't visible while they were writing their video descriptions."
+        borderless: true,
+        concepts: [
+          {
+            eyebrow: "Problem 1",
+            title: "Forced Search vs. Direct Links",
+            image: problemImage1,
+            upside: "While creators naturally use direct product links, our tool forced them to manually search for items they already had links for.",
+            constraint: "42% of creators cited high perceived effort as the reason they didn't tag."
+          },
+          {
+            eyebrow: "Problem 2",
+            title: "Out of Sight, Out of Mind",
+            image: problemImage2,
+            upside: "The tagging tool was buried outside the primary metadata workflow.",
+            constraint: "48% of creators reported simply forgetting the tool existed because it wasn't visible while they were writing their video descriptions."
+          }
         ]
       },
       {
@@ -632,11 +647,11 @@ export default function CaseStudy() {
                             )}
                           </div>
                         </div>
-                        <div className="lg:col-span-7 w-full overflow-hidden rounded-[40px] border-2 border-[#d4cfc4] bg-[#ebe5da] p-2">
+                        <div className={`lg:col-span-7 w-full overflow-hidden ${section.borderless ? '' : 'rounded-[40px] border-2 border-[#d4cfc4] bg-[#ebe5da] p-2'}`}>
                           <img
                             src={concept.image}
                             alt={concept.title}
-                            className="w-full h-auto rounded-[32px] object-cover"
+                            className={`w-full h-auto object-cover ${section.borderless ? '' : 'rounded-[32px]'}`}
                           />
                         </div>
                       </div>
