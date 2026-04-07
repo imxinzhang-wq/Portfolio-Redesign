@@ -785,12 +785,12 @@ export default function CaseStudy() {
               )}
 
               {section.type === "quote" && (
-                <div className="max-w-5xl mx-auto text-center space-y-10 py-16 md:py-24">
-                  <p className="text-4xl md:text-6xl font-display font-medium leading-[1.1] tracking-tight text-foreground/90">
+                <div className="max-w-4xl py-10 md:py-16">
+                  <p className="text-2xl md:text-3xl lg:text-4xl font-display font-medium leading-[1.25] tracking-tight text-foreground text-balance">
                     "{section.text}"
                   </p>
                   {section.author && (
-                    <p className="text-xs md:text-sm font-mono text-muted-foreground uppercase tracking-[0.3em]">
+                    <p className="text-xs md:text-sm font-mono text-muted-foreground uppercase tracking-[0.3em] mt-6 md:mt-8">
                       — {section.author}
                     </p>
                   )}
