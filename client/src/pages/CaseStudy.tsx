@@ -213,35 +213,66 @@ const PROJECTS_DATA: Record<string, any> = {
     description: "How we drove significant GMV growth by aligning monetization tools with creator muscle memory.",
     image: project1Cover,
     tagsTitle: "Project Team",
-    tags: ["YouTube Shopping", "Creator Tools", "Monetization"],
+    tags: ["1 Designer", "1 Researcher", "1 Product Manager"],
     content: [
       {
         type: "text",
         heading: "Overview",
-        body: "This work focused on a deceptively simple behavior: when creators talk about products, they naturally reference them in the video description. Instead of asking creators to learn a separate merchandising workflow, we explored how tagging could meet them inside an existing habit and turn that moment into a higher-converting commerce entry point.",
-      },
-      {
-        type: "statement",
-        heading: "Core Idea",
-        text: "Align monetization with creator muscle memory instead of asking creators to adopt a brand-new behavior.",
+        body: "I led the design strategy for Tagging in Description, a workflow-integrated solution that transformed how YouTube creators tag products. By moving the entry point directly into the description box and implementing automated link parsing, we shifted the experience from a high-friction manual task to an intuitive part of the creation process. The final solution now drives 7% of daily GMV.",
       },
       {
         type: "list",
-        heading: "Design Moves",
+        heading: "The Problem: Workflow Disconnect",
         items: [
-          "Lower-friction tagging flow: Reduced the steps between writing a description and attaching products, so creators could complete the action while already in publishing mode.",
-          "Contextual product placement: Positioned tagging where creators were already naming and linking items, making the feature feel like a natural extension of the description workflow.",
-          "Clearer authoring feedback: Helped creators understand which products were attached and how the experience would appear to viewers before publishing.",
-          "Monetization without interruption: Preserved the speed of publishing so the tool supported momentum instead of slowing down content creation."
+          "Forced Search vs. Direct Links: While creators naturally use direct product links, our tool forced them to manually search for items they already had links for. 42% of creators cited high perceived effort as the reason they didn't tag.",
+          "Out of Sight, Out of Mind: The tagging tool was buried outside the primary metadata workflow. 48% of creators reported simply forgetting the tool existed because it wasn't visible while they were writing their video descriptions."
         ]
       },
       {
-        type: "text",
-        heading: "Outcome",
-        body: "By designing around a familiar creator behavior, the feature made commerce participation feel intuitive rather than operational. The result was stronger adoption of tagging in descriptions and meaningful GMV growth, while reinforcing a broader product principle for YouTube Shopping: monetization tools work best when they fit naturally into the way creators already create.",
+        type: "statement",
+        heading: "Strategic Approach",
+        text: "The objective was to align tagging with the creator's natural muscle memory: writing descriptions.",
+      },
+      {
+        type: "list",
+        heading: "Design Iterations",
+        items: [
+          "Direction 1 — Product Chips: Replaced URLs with clean, modern product chips within the text. Creators appreciated the aesthetics and the ability to verify trust, but there were concerns about how viewers would interpret the chips and a lack of obvious feedback when tagging occurred.",
+          "Direction 2 — Product Thumbnails: Automatically parsed links in the description to populate a separate, lightweight tagged product section below the text. This became the strongest direction because creators noticed the product count immediately and described the flow as clean and easy, without disruptive pop-up windows."
+        ]
+      },
+      {
+        type: "list",
+        heading: "Leadership & Execution",
+        items: [
+          "Bridging the PM Gap: I stepped in to lead product direction and milestones during the Product Manager's leave, working directly with engineering to ensure feasible delivery.",
+          "Negotiating High-Traffic UI: I convinced the YouTube Studio team to allow a new entry point in the description box, one of the most mature and high-traffic areas of the platform, by showing how the pattern could scale to other features like auto-chapters and location tags.",
+          "Navigating Constraints: I led the team through severe UI and engineering constraints by iterating on a mini-search panel that could exist within the established Studio architecture without requiring a full redesign."
+        ]
+      },
+      {
+        type: "metrics",
+        heading: "Impact & Looking Forward",
+        metrics: [
+          {
+            value: "7%",
+            label: "Daily GMV",
+            description: "The toolbar, excluding the manual picker, now drives a significant share of daily GMV."
+          },
+          {
+            value: "Positive",
+            label: "Creator Validation",
+            description: "Creators described the feature as much more convenient and discoverable than previous tagging areas."
+          },
+          {
+            value: "Scalable",
+            label: "Future Pattern",
+            description: "The integrated entry point created a blueprint for future AI-driven features such as automated timestamps and text styling."
+          }
+        ]
       }
     ],
-  },
+  }
   "3": {
     title: "Airbnb WeChat Mini-App",
     category: "2018 • Airbnb",
