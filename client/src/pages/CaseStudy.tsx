@@ -254,7 +254,7 @@ const PROJECTS_DATA: Record<string, any> = {
       },
       {
         type: "image-row",
-        images: [taggingSolution1, taggingSolution2]
+        images: [taggingSolution2, taggingSolution1]
       },
       {
         type: "list",
@@ -572,8 +572,8 @@ export default function CaseStudy() {
               )}
 
               {section.type === "image-row" && (
-                <div className="w-full my-12">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-start">
+                <div className="w-full my-12 md:-mx-10 lg:-mx-20">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-start">
                     {section.images.map((img: string, i: number) => (
                       <div key={i} className="w-full overflow-hidden rounded-[40px] border-2 border-[#d4cfc4] bg-[#ebe5da] p-2">
                         <img
