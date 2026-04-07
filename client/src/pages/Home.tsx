@@ -377,9 +377,7 @@ function About() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-12">
             <div className="space-y-4">
               <h4 className="text-[10px] uppercase tracking-widest font-bold">Outside of work</h4>
-              <p className="text-muted-foreground leading-relaxed text-lg font-light">
-                I’m often traveling — 40+ countries and counting — or shooting film and painting.
-              </p>
+              <p className="text-muted-foreground leading-relaxed text-lg font-light">I’m a global explorer (40+ countries), film photographer, and painter. As a creator, I’m passionate about visual storytelling through video and editing—an obsession that shapes how I see the creator journey.</p>
             </div>
             <div className="space-y-4">
               <h4 className="text-[10px] uppercase tracking-widest font-bold">Fun Fact</h4>
