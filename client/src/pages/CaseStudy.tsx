@@ -266,6 +266,11 @@ const PROJECTS_DATA: Record<string, any> = {
         ]
       },
       {
+        type: "quote",
+        text: "I like it. It's something that lives more obviously in this page because usually I would then have to go to the right hand side scroll down. There's a pop-up. It seems a bit arduous compared to this which is just the icon that's there in the description box……It seems very easy. It's all happening within the same page. Like there's no pop-ups and things like that. So I kind of like how clean it is.",
+        author: "User Research Participant"
+      },
+      {
         type: "list",
         heading: "Leadership & Execution",
         items: [
