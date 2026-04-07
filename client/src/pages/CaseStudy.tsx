@@ -272,7 +272,7 @@ const PROJECTS_DATA: Record<string, any> = {
         ]
       }
     ],
-  }
+  },
   "3": {
     title: "Airbnb WeChat Mini-App",
     category: "2018 • Airbnb",
