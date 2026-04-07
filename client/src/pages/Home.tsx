@@ -9,6 +9,13 @@ import project3 from "@assets/Airbnb_Cover_1774813459702.jpg";
 
 const MOCK_PROJECTS = [
   {
+    id: 2,
+    title: "Darmi IBS food diary",
+    category: "2026 • Personal Project",
+    description: "An exploration of Vibe Coding and end-to-end AI workflows—now live on the App Store.",
+    image: project2,
+  },
+  {
     id: 1,
     title: "YouTube Shopping Collections",
     category: "2024 • YouTube",
@@ -16,11 +23,11 @@ const MOCK_PROJECTS = [
     image: project1,
   },
   {
-    id: 2,
-    title: "Darmi IBS food diary",
-    category: "2026 • Personal Project",
-    description: "An exploration of Vibe Coding and end-to-end AI workflows—now live on the App Store.",
-    image: project2,
+    id: 4,
+    title: "YouTube Shopping: Tagging in Description",
+    category: "2024 • YouTube",
+    description: "How we drove significant GMV growth by aligning monetization tools with creator muscle memory.",
+    image: project1,
   },
   {
     id: 3,

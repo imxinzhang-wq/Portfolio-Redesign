@@ -29,6 +29,8 @@ import darmiHome from "@assets/home_1774795123376.png";
 import darmiAdd from "@assets/add_1774795123374.png";
 import darmiInsights from "@assets/insights_1774795123376.png";
 
+const PROJECT_ORDER = ["2", "1", "4", "3"];
+
 const PROJECTS_DATA: Record<string, any> = {
   "1": {
     title: "YouTube Shopping Collections",
@@ -205,6 +207,41 @@ const PROJECTS_DATA: Record<string, any> = {
       }
     ],
   },
+  "4": {
+    title: "YouTube Shopping: Tagging in Description",
+    category: "2024 • YouTube",
+    description: "How we drove significant GMV growth by aligning monetization tools with creator muscle memory.",
+    image: project1Cover,
+    tagsTitle: "Project Team",
+    tags: ["YouTube Shopping", "Creator Tools", "Monetization"],
+    content: [
+      {
+        type: "text",
+        heading: "Overview",
+        body: "This work focused on a deceptively simple behavior: when creators talk about products, they naturally reference them in the video description. Instead of asking creators to learn a separate merchandising workflow, we explored how tagging could meet them inside an existing habit and turn that moment into a higher-converting commerce entry point.",
+      },
+      {
+        type: "statement",
+        heading: "Core Idea",
+        text: "Align monetization with creator muscle memory instead of asking creators to adopt a brand-new behavior.",
+      },
+      {
+        type: "list",
+        heading: "Design Moves",
+        items: [
+          "Lower-friction tagging flow: Reduced the steps between writing a description and attaching products, so creators could complete the action while already in publishing mode.",
+          "Contextual product placement: Positioned tagging where creators were already naming and linking items, making the feature feel like a natural extension of the description workflow.",
+          "Clearer authoring feedback: Helped creators understand which products were attached and how the experience would appear to viewers before publishing.",
+          "Monetization without interruption: Preserved the speed of publishing so the tool supported momentum instead of slowing down content creation."
+        ]
+      },
+      {
+        type: "text",
+        heading: "Outcome",
+        body: "By designing around a familiar creator behavior, the feature made commerce participation feel intuitive rather than operational. The result was stronger adoption of tagging in descriptions and meaningful GMV growth, while reinforcing a broader product principle for YouTube Shopping: monetization tools work best when they fit naturally into the way creators already create.",
+      }
+    ],
+  },
   "3": {
     title: "Airbnb WeChat Mini-App",
     category: "2018 • Airbnb",
@@ -301,7 +338,7 @@ export default function CaseStudy() {
   const [error, setError] = useState("");
 
   // Calculate next project
-  const projectIds = Object.keys(PROJECTS_DATA);
+  const projectIds = PROJECT_ORDER.filter((id) => PROJECTS_DATA[id]);
   const currentIndex = projectIds.indexOf(projectId || "");
   const nextIndex = (currentIndex + 1) % projectIds.length;
   const nextProjectId = projectIds[nextIndex];
