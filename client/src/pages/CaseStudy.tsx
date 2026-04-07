@@ -242,14 +242,19 @@ const PROJECTS_DATA: Record<string, any> = {
           {
             eyebrow: "Direction 1",
             title: "Product Chips",
-            image: directionImage1
+            image: directionImage1,
+            upside: "Favored for its modern aesthetic and the ability to verify link trust directly within the editor.",
+            constraint: "Research showed potential viewer confusion. More importantly, it was technically unfeasible due to severe engineering constraints within the legacy Studio environment."
           },
           {
             eyebrow: "Direction 2",
             title: "Product Thumbnails",
-            image: directionImage2
+            image: directionImage2,
+            upside: "The preferred model for visual confirmation. Surfacing product images and counts provided immediate proof that link parsing was successful.",
+            gap: "The initial feedback loop felt delayed, as status updates weren't obvious until the user manually interacted with the toolbar."
           }
-        ]
+        ],
+        conclusion: "While Direction 1 was visually compelling, technical blockers and viewer-side ambiguity led me to prioritize Direction 2. I moved forward with a hybrid approach—leveraging the clear visual feedback of thumbnails while refining the real-time synchronization for a feasible launch."
       },
       {
         type: "list",
@@ -582,10 +587,10 @@ export default function CaseStudy() {
                       {section.heading}
                     </h3>
                   )}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-start">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-start">
                     {section.concepts.map((concept: any, i: number) => (
-                      <div key={i} className="group space-y-4">
-                        <div className="flex items-baseline justify-between gap-4 px-1">
+                      <div key={i} className="group space-y-5">
+                        <div className="space-y-3 px-1">
                           <div>
                             <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-muted-foreground mb-2">
                               {concept.eyebrow}
@@ -593,6 +598,26 @@ export default function CaseStudy() {
                             <h4 className="text-2xl md:text-[2rem] font-display font-medium tracking-tight text-foreground">
                               {concept.title}
                             </h4>
+                          </div>
+                          <div className="space-y-3 text-[15px] leading-7 text-foreground/70 font-light max-w-[34rem]">
+                            {concept.upside && (
+                              <p>
+                                <span className="font-medium text-foreground">The Upside: </span>
+                                {concept.upside}
+                              </p>
+                            )}
+                            {concept.constraint && (
+                              <p>
+                                <span className="font-medium text-foreground">The Constraint: </span>
+                                {concept.constraint}
+                              </p>
+                            )}
+                            {concept.gap && (
+                              <p>
+                                <span className="font-medium text-foreground">The Gap: </span>
+                                {concept.gap}
+                              </p>
+                            )}
                           </div>
                         </div>
                         <div className="w-full overflow-hidden rounded-[40px] border-2 border-[#d4cfc4] bg-[#ebe5da] p-2">
@@ -605,6 +630,13 @@ export default function CaseStudy() {
                       </div>
                     ))}
                   </div>
+                  {section.conclusion && (
+                    <div className="mt-10 pt-8 border-t border-black/10 max-w-4xl">
+                      <p className="text-base md:text-lg text-foreground/70 font-light leading-[1.8] text-pretty">
+                        {section.conclusion}
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
 
