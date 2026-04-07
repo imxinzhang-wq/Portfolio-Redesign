@@ -235,15 +235,14 @@ const PROJECTS_DATA: Record<string, any> = {
             eyebrow: "Problem 1",
             title: "Forced Search vs. Direct Links",
             image: problemImage1,
-            upside: "While creators naturally use direct product links, our tool forced them to manually search for items they already had links for.",
-            constraint: "42% of creators cited high perceived effort as the reason they didn't tag."
+            body: "While creators naturally use direct product links, our tool forced them to manually search for items they already had links for. 42% of creators cited high perceived effort as the reason they didn't tag.",
+            imageClassName: "rounded-[40px]"
           },
           {
             eyebrow: "Problem 2",
             title: "Out of Sight, Out of Mind",
             image: problemImage2,
-            upside: "The tagging tool was buried outside the primary metadata workflow.",
-            constraint: "48% of creators reported simply forgetting the tool existed because it wasn't visible while they were writing their video descriptions."
+            body: "The tagging tool was buried outside the primary metadata workflow. 48% of creators reported simply forgetting the tool existed because it wasn't visible while they were writing their video descriptions."
           }
         ]
       },
@@ -627,23 +626,29 @@ export default function CaseStudy() {
                             </h4>
                           </div>
                           <div className="space-y-3 text-[15px] md:text-[16px] leading-7 md:leading-8 text-foreground/70 font-light max-w-[34rem]">
-                            {concept.upside && (
-                              <p>
-                                <span className="font-medium text-foreground">The Upside: </span>
-                                {concept.upside}
-                              </p>
-                            )}
-                            {concept.constraint && (
-                              <p>
-                                <span className="font-medium text-foreground">The Constraint: </span>
-                                {concept.constraint}
-                              </p>
-                            )}
-                            {concept.gap && (
-                              <p>
-                                <span className="font-medium text-foreground">The Gap: </span>
-                                {concept.gap}
-                              </p>
+                            {concept.body ? (
+                              <p>{concept.body}</p>
+                            ) : (
+                              <>
+                                {concept.upside && (
+                                  <p>
+                                    <span className="font-medium text-foreground">The Upside: </span>
+                                    {concept.upside}
+                                  </p>
+                                )}
+                                {concept.constraint && (
+                                  <p>
+                                    <span className="font-medium text-foreground">The Constraint: </span>
+                                    {concept.constraint}
+                                  </p>
+                                )}
+                                {concept.gap && (
+                                  <p>
+                                    <span className="font-medium text-foreground">The Gap: </span>
+                                    {concept.gap}
+                                  </p>
+                                )}
+                              </>
                             )}
                           </div>
                         </div>
@@ -651,7 +656,7 @@ export default function CaseStudy() {
                           <img
                             src={concept.image}
                             alt={concept.title}
-                            className={`w-full h-auto object-cover ${section.borderless ? '' : 'rounded-[32px]'}`}
+                            className={`w-full h-auto object-cover ${section.borderless ? '' : 'rounded-[32px]'} ${concept.imageClassName || ''}`}
                           />
                         </div>
                       </div>
