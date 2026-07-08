@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 // Import user uploaded image
 import darmiImg1 from "@assets/image_1774537420038.png";
 // If you want to use the actual Darmi cover from Home, you can import it:
-import project2Cover from "@assets/Darmi_Cover.png"; 
+import project2Cover from "@assets/Darmi_Cover.PNG"; 
 import project1Cover from "@assets/Collection_Cover.png"; 
 import project3Cover from "@assets/Airbnb_Cover_1774813459702.jpg";
 import collectionCreateGif from "@assets/Collection-create_1774547429730.gif";
@@ -25,9 +25,9 @@ import darmiProcess1 from "@assets/competiitor_1774794598190.png";
 import darmiProcess2 from "@assets/PRD_1774794598191.jpg";
 import darmiProcess3 from "@assets/Proto_1774794598191.jpg";
 import darmiProcess4 from "@assets/UI-2_1774794598190.png";
-import darmiHome from "@assets/1_1783502164309.png";
-import darmiAdd from "@assets/2_1783502164310.png";
-import darmiInsights from "@assets/3_1783502164310.png";
+import darmiHome from "@assets/home_1774795123376.png";
+import darmiAdd from "@assets/add_1774795123374.png";
+import darmiInsights from "@assets/insights_1774795123376.png";
 import directionImage1 from "@assets/direction-1_1775590476908.jpg";
 import directionImage2 from "@assets/direction-2_1775590476909.jpg";
 import taggingSolution1 from "@assets/s-blob-v1-IMAGE-1zvtK2jYAdI_1775589728784.jpg";
