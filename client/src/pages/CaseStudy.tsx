@@ -503,8 +503,8 @@ export default function CaseStudy() {
         <section className="px-6 md:px-12 pt-12 pb-24 max-w-7xl mx-auto w-full">
           <div className="w-full">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               transition={{ duration: 0.8 }}
             >
               <h1 className="text-[3.5rem] md:text-[6.5rem] lg:text-[8rem] font-sans font-medium tracking-[-0.05em] mb-12 lg:mb-24 leading-[0.9] text-[#1a1918]">
@@ -553,8 +553,8 @@ export default function CaseStudy() {
         {/* Featured Image */}
         <section className="px-6 md:px-12 mb-32 max-w-7xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: 1.2, delay: 0.2 }}
             className="w-full aspect-[2/1] overflow-hidden rounded-lg"
           >
@@ -571,8 +571,8 @@ export default function CaseStudy() {
           {project.content.map((section: any, idx: number) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.8 }}
               className="w-full"
@@ -796,8 +796,8 @@ export default function CaseStudy() {
                     {section.metrics.map((metric: any, i: number) => (
                       <div key={i} className="flex flex-col border-t border-border/10 pt-8 overflow-hidden">
                         <motion.div
-                          initial={{ y: 40, opacity: 0, rotateX: 45 }}
-                          whileInView={{ y: 0, opacity: 1, rotateX: 0 }}
+                          initial={{ opacity: 0 }}
+                          whileInView={{ opacity: 1 }}
                           viewport={{ once: true, margin: "-50px" }}
                           transition={{ 
                             duration: 0.8, 
