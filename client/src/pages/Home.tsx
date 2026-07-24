@@ -1,5 +1,6 @@
 import { Link } from "wouter";
-import { motion, useScroll, useSpring } from "framer-motion";
+import { motion, useSpring } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 
 import project1 from "@assets/Collection_Cover.png";
@@ -370,16 +371,8 @@ function ProjectGrid() {
 }
 
 function About() {
-  const targetRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: targetRef,
-    offset: ["start end", "start center"],
-  });
-  // scrollYProgress retained for future use; suppress unused-variable lint
-  void scrollYProgress;
-
   return (
-    <section id="about" data-bg-color="#1a1a1a" ref={targetRef} className="py-40 px-6">
+    <section id="about" data-bg-color="#1a1a1a" className="py-40 px-6">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0 }}
