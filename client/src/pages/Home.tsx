@@ -181,7 +181,7 @@ function Hero() {
           className="text-center"
         >
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-medium tracking-tight leading-[1.15] text-balance">
-            I'm Xin, a Product Designer at <span className="text-primary/60 transition-colors hover:text-primary cursor-default">YouTube</span> with over 10 years of experience designing products for global audiences. Previously, I was one of the founding designers at <span className="text-primary/60 transition-colors hover:text-primary cursor-default">Airbnb China</span>.
+            I'm Xin, a Product Designer at <span className="text-primary/60 transition-colors hover:text-primary cursor-default">YouTube</span> with 10+ years of experience. Previously a founding designer at <span className="text-primary/60 transition-colors hover:text-primary cursor-default">Airbnb China</span>.
           </h1>
         </motion.div>
       </div>
