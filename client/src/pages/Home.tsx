@@ -29,6 +29,7 @@ const MOCK_PROJECTS = [
     category: "2024 • YouTube",
     description: "How we drove significant GMV growth by aligning monetization tools with creator muscle memory.",
     image: project4,
+    hidden: true,
   },
   {
     id: 3,
@@ -210,7 +211,7 @@ function ProjectGrid() {
   return (
     <section id="work" ref={targetRef} className="py-24 px-6 md:px-12 max-w-6xl mx-auto">
       <div className="flex flex-col gap-32">
-        {MOCK_PROJECTS.map((project, i) => (
+        {MOCK_PROJECTS.filter(p => !p.hidden).map((project, i) => (
           <div key={project.id} className="group cursor-pointer">
             <Link href={`/project/${project.id}`}>
               <a className="block">
