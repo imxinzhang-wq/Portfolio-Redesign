@@ -267,6 +267,12 @@ function ProjectGrid() {
   const activeProject = visibleProjects.find(p => p.id === activeId) ?? visibleProjects[0];
   const sectionRef = useRef<HTMLElement>(null);
 
+  // panelVisible: true only while at least one project image sits in the
+  // viewport centre band — keeps the left text in sync with the right images
+  // on both entry and exit.
+  const [panelVisible, setPanelVisible] = useState(false);
+  const intersectingIds = useRef(new Set<number>());
+
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
@@ -277,9 +283,14 @@ function ProjectGrid() {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
+          const id = Number((entry.target as HTMLElement).dataset.projectId);
           if (entry.isIntersecting) {
-            const id = Number((entry.target as HTMLElement).dataset.projectId);
+            intersectingIds.current.add(id);
             setActiveId(id);
+            setPanelVisible(true);
+          } else {
+            intersectingIds.current.delete(id);
+            if (intersectingIds.current.size === 0) setPanelVisible(false);
           }
         });
       },
@@ -322,7 +333,10 @@ function ProjectGrid() {
 
         {/* Left sticky panel — 42% wide, text overlaps image edge */}
         <div className="w-[42%] shrink-0 relative z-10">
-          <div className="sticky top-[38vh] pl-12 pr-4">
+          <div
+            className="sticky top-[38vh] pl-12 pr-4"
+            style={{ opacity: panelVisible ? 1 : 0, transition: 'opacity 0.4s ease' }}
+          >
             {/* Mask container: clips the sliding text so it wipes in/out cleanly */}
             <AnimatePresence mode="wait">
               <motion.div
