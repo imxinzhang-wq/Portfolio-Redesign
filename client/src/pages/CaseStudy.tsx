@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowUpRight, Check } from "lucide-react";
 import { Link, useRoute } from "wouter";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // Import user uploaded image
 import darmiImg1 from "@assets/image_1774537420038.png";
@@ -410,6 +410,63 @@ const PROJECTS_DATA: Record<string, any> = {
   },
 };
 
+// Split-panel title effect for YouTube Shopping Collections (project "1")
+function SplitTitleHero({ project }: { project: any }) {
+  const leftRef = useRef<HTMLDivElement>(null);
+  const [leftWidth, setLeftWidth] = useState(0);
+
+  useEffect(() => {
+    const measure = () => {
+      if (leftRef.current) setLeftWidth(leftRef.current.offsetWidth);
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+
+  const titleClass =
+    "whitespace-nowrap text-[3.5rem] md:text-[6.5rem] lg:text-[8rem] font-sans font-medium tracking-[-0.05em] leading-[0.9]";
+
+  return (
+    <div
+      className="w-full flex mb-12 lg:mb-24 overflow-hidden rounded-lg"
+      style={{ isolation: "isolate" }}
+    >
+      {/* Left: plain background — dark title */}
+      <div
+        ref={leftRef}
+        className="shrink-0 overflow-hidden bg-[#f5f0e6] px-6 md:px-12 py-8"
+        style={{ width: "42%" }}
+      >
+        <h1 className={`${titleClass} text-[#1a1918]`}>{project.title}</h1>
+      </div>
+
+      {/* Right: cover image — title continues in difference mode */}
+      <div className="flex-1 relative overflow-hidden" style={{ isolation: "isolate" }}>
+        <img
+          src={project.image}
+          alt={project.title}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {/* Overlay title, shifted left by leftWidth so both halves align */}
+        <div className="relative px-6 md:px-12 py-8 overflow-hidden">
+          <h1
+            className={titleClass}
+            style={{
+              color: "white",
+              mixBlendMode: "difference",
+              transform: leftWidth ? `translateX(-${leftWidth}px)` : "none",
+              willChange: "transform",
+            }}
+          >
+            {project.title}
+          </h1>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function CaseStudy() {
   const [match, params] = useRoute("/project/:id");
   const projectId = params?.id;
@@ -507,9 +564,13 @@ export default function CaseStudy() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8 }}
             >
-              <h1 className="text-[3.5rem] md:text-[6.5rem] lg:text-[8rem] font-sans font-medium tracking-[-0.05em] mb-12 lg:mb-24 leading-[0.9] text-[#1a1918]">
-                {project.title}
-              </h1>
+              {projectId === "1" ? (
+                <SplitTitleHero project={project} />
+              ) : (
+                <h1 className="text-[3.5rem] md:text-[6.5rem] lg:text-[8rem] font-sans font-medium tracking-[-0.05em] mb-12 lg:mb-24 leading-[0.9] text-[#1a1918]">
+                  {project.title}
+                </h1>
+              )}
               
               <div className="grid grid-cols-1 md:grid-cols-12 gap-x-8 gap-y-12">
                 <div className="md:col-span-4 lg:col-span-3 flex flex-col gap-10">
