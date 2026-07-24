@@ -175,13 +175,23 @@ export default function Home() {
 }
 
 function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const DARK_COLORS = new Set(['#1a1a1a', '#111111']);
+    const handleScroll = () => {
+      const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-bg-color]'));
+      const midpoint = window.innerHeight * 0.5;
+      let active = sections[0];
+      for (const s of sections) {
+        if (s.getBoundingClientRect().top <= midpoint) active = s;
+      }
+      setIsDark(DARK_COLORS.has(active?.dataset.bgColor ?? ''));
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const handleNavClick = (id: string) => {
@@ -198,16 +208,21 @@ function Navbar() {
     }
   };
 
+  const logoColor    = isDark ? 'text-white'      : 'text-foreground';
+  const linkColor    = isDark ? 'text-white/60'   : 'text-muted-foreground';
+  const linkHover    = isDark ? 'hover:text-white' : 'hover:text-foreground';
+  const barColor     = isDark ? 'bg-white'         : 'bg-foreground';
+
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 flex justify-center p-6 pointer-events-none">
+    <div className="fixed top-0 left-0 right-0 z-50 flex justify-center px-8 py-6 pointer-events-none">
       <motion.nav
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="pointer-events-auto flex items-center justify-between w-full max-w-7xl px-6 md:px-10 py-5 rounded-2xl md:rounded-full"
+        className="pointer-events-auto flex items-center justify-between w-full py-5"
       >
         <button
           onClick={() => { setIsMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-          className="text-base font-display font-bold tracking-tighter uppercase relative z-20"
+          className={`text-base font-display font-bold tracking-tighter uppercase relative z-20 transition-colors duration-500 ${logoColor}`}
           data-testid="link-home"
         >
           Xin Zhang
@@ -215,16 +230,16 @@ function Navbar() {
 
         <button className="md:hidden relative z-20 p-2 -mr-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
           <div className="flex flex-col gap-1.5 w-5">
-            <span className={`h-0.5 bg-foreground transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
-            <span className={`h-0.5 bg-foreground transition-all duration-300 ${isMenuOpen ? 'opacity-0' : ''}`} />
-            <span className={`h-0.5 bg-foreground transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+            <span className={`h-0.5 transition-all duration-300 ${barColor} ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
+            <span className={`h-0.5 transition-all duration-300 ${barColor} ${isMenuOpen ? 'opacity-0' : ''}`} />
+            <span className={`h-0.5 transition-all duration-300 ${barColor} ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
           </div>
         </button>
 
-        <div className="hidden md:flex gap-10 text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
-          <button onClick={() => handleNavClick('work')} className="hover:text-foreground transition-colors" data-testid="link-work">WORK</button>
-          <button onClick={() => handleNavClick('about')} className="hover:text-foreground transition-colors" data-testid="link-about">ABOUT</button>
-          <button onClick={() => handleNavClick('contact')} className="hover:text-foreground transition-colors" data-testid="link-contact">CONTACT</button>
+        <div className={`hidden md:flex gap-10 text-xs font-bold uppercase tracking-[0.2em] transition-colors duration-500 ${linkColor}`}>
+          <button onClick={() => handleNavClick('work')} className={`transition-colors duration-300 ${linkHover}`} data-testid="link-work">WORK</button>
+          <button onClick={() => handleNavClick('about')} className={`transition-colors duration-300 ${linkHover}`} data-testid="link-about">ABOUT</button>
+          <button onClick={() => handleNavClick('contact')} className={`transition-colors duration-300 ${linkHover}`} data-testid="link-contact">CONTACT</button>
         </div>
 
         {isMenuOpen && (
