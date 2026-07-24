@@ -286,7 +286,7 @@ function ProjectGrid() {
   }, []);
 
   return (
-    <section id="work" data-bg-color="#e0e0e0" ref={sectionRef}>
+    <section id="work" data-bg-color="#e8e4dc" ref={sectionRef}>
 
       {/* ── Mobile: simple stacked layout ── */}
       <div className="md:hidden px-6 py-20 flex flex-col gap-20">
