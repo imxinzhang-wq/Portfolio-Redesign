@@ -155,7 +155,7 @@ export default function Home() {
     <div
       ref={wrapperRef}
       className="min-h-screen relative text-foreground selection:bg-accent selection:text-accent-foreground font-sans cursor-none"
-      style={{ backgroundColor: '#e8e4dc', transition: 'background-color 0.6s ease' }}
+      style={{ backgroundColor: '#f5f0e6', transition: 'background-color 0.6s ease' }}
     >
       <CustomCursor />
       <Navbar />
@@ -236,7 +236,7 @@ function Navbar() {
 
 function Hero() {
   return (
-    <section data-bg-color="#e8e4dc" className="min-h-screen flex items-center justify-center px-6 pt-20">
+    <section data-bg-color="#f5f0e6" className="min-h-screen flex items-center justify-center px-6 pt-20">
       <div className="max-w-6xl w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -286,7 +286,7 @@ function ProjectGrid() {
   }, []);
 
   return (
-    <section id="work" data-bg-color="#e8e4dc" ref={sectionRef}>
+    <section id="work" data-bg-color="#f5f0e6" ref={sectionRef}>
 
       {/* ── Mobile: simple stacked layout ── */}
       <div className="md:hidden px-6 py-20 flex flex-col gap-20">
