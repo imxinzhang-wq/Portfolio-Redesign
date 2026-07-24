@@ -1,6 +1,5 @@
 import { Link } from "wouter";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { motion, useScroll, useSpring } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 
 import project1 from "@assets/Collection_Cover.png";
@@ -77,7 +76,6 @@ function CustomCursor() {
 
   return (
     <>
-      {/* Outer ring */}
       <motion.div
         className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full border border-foreground/30 mix-blend-multiply"
         style={{
@@ -91,7 +89,6 @@ function CustomCursor() {
           transition: "width 0.3s ease, height 0.3s ease, translate 0.3s ease, opacity 0.3s ease",
         }}
       />
-      {/* Inner dot */}
       <motion.div
         className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full bg-foreground mix-blend-multiply"
         style={{
@@ -113,21 +110,16 @@ export default function Home() {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Handle hash navigation on mount and hash change
     const handleHash = () => {
       const hash = window.location.hash;
-      // We only care about root hashes like #work, not route hashes like #/project
       if (hash && !hash.startsWith('#/')) {
         const id = hash.replace('#', '');
         setTimeout(() => {
           const element = document.getElementById(id);
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-          }
+          if (element) element.scrollIntoView({ behavior: 'smooth' });
         }, 100);
       }
     };
-    
     handleHash();
     window.addEventListener('hashchange', handleHash);
     return () => window.removeEventListener('hashchange', handleHash);
@@ -147,9 +139,7 @@ export default function Home() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const color = (entry.target as HTMLElement).dataset.bgColor;
-            if (color && wrapper) {
-              wrapper.style.backgroundColor = color;
-            }
+            if (color && wrapper) wrapper.style.backgroundColor = color;
           }
         });
       },
@@ -167,16 +157,12 @@ export default function Home() {
       style={{ backgroundColor: '#e8e4dc', transition: 'background-color 0.6s ease' }}
     >
       <CustomCursor />
-
-
       <Navbar />
-      
       <main className="relative z-10">
         <Hero />
         <ProjectGrid />
         <About />
       </main>
-
       <Footer />
     </div>
   );
@@ -187,9 +173,7 @@ function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -200,47 +184,34 @@ function Navbar() {
       window.location.hash = '#/';
       setTimeout(() => {
         const el = document.getElementById(id);
-        if (el) {
-          const y = el.getBoundingClientRect().top + window.scrollY - 100;
-          window.scrollTo({ top: y, behavior: 'smooth' });
-        }
+        if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 100, behavior: 'smooth' });
       }, 100);
     } else {
       const el = document.getElementById(id);
-      if (el) {
-        const y = el.getBoundingClientRect().top + window.scrollY - 100;
-        window.scrollTo({ top: y, behavior: 'smooth' });
-      }
+      if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 100, behavior: 'smooth' });
     }
   };
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 flex justify-center p-6 pointer-events-none">
-      <motion.nav 
+      <motion.nav
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         className={`pointer-events-auto flex items-center justify-between w-full max-w-7xl px-6 md:px-10 py-5 transition-all duration-500 rounded-2xl md:rounded-full ${
           isScrolled || isMenuOpen
-            ? "bg-white/90 md:bg-white/60 backdrop-blur-xl border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.04)]" 
+            ? "bg-white/90 md:bg-white/60 backdrop-blur-xl border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.04)]"
             : "bg-transparent border border-transparent"
         }`}
       >
-        <button 
-          onClick={() => {
-            setIsMenuOpen(false);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }} 
-          className="text-base font-display font-bold tracking-tighter uppercase relative z-20" 
+        <button
+          onClick={() => { setIsMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+          className="text-base font-display font-bold tracking-tighter uppercase relative z-20"
           data-testid="link-home"
         >
           Xin Zhang
         </button>
 
-        {/* Mobile Hamburger Button */}
-        <button 
-          className="md:hidden relative z-20 p-2 -mr-2"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
+        <button className="md:hidden relative z-20 p-2 -mr-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
           <div className="flex flex-col gap-1.5 w-5">
             <span className={`h-0.5 bg-foreground transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
             <span className={`h-0.5 bg-foreground transition-all duration-300 ${isMenuOpen ? 'opacity-0' : ''}`} />
@@ -248,14 +219,12 @@ function Navbar() {
           </div>
         </button>
 
-        {/* Desktop Menu */}
         <div className="hidden md:flex gap-10 text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
           <button onClick={() => handleNavClick('work')} className="hover:text-foreground transition-colors" data-testid="link-work">WORK</button>
           <button onClick={() => handleNavClick('about')} className="hover:text-foreground transition-colors" data-testid="link-about">ABOUT</button>
           <button onClick={() => handleNavClick('contact')} className="hover:text-foreground transition-colors" data-testid="link-contact">CONTACT</button>
         </div>
 
-        {/* Mobile Dropdown Menu */}
         {isMenuOpen && (
           <div className="absolute top-full left-0 right-0 mt-2 bg-white/90 backdrop-blur-xl border border-white/40 rounded-2xl p-6 flex flex-col gap-6 shadow-[0_8px_32px_rgba(0,0,0,0.04)] md:hidden">
             <button onClick={() => handleNavClick('work')} className="text-sm font-bold uppercase tracking-[0.2em] text-foreground text-left" data-testid="link-work-mobile">WORK</button>
@@ -279,7 +248,10 @@ function Hero() {
           className="text-center"
         >
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-medium tracking-tight leading-[1.15] text-balance">
-            I'm Xin, a Product Designer at <span className="text-primary/60 transition-colors hover:text-primary cursor-default">YouTube</span>. Previously a founding designer at <span className="text-primary/60 transition-colors hover:text-primary cursor-default">Airbnb China</span>.
+            I'm Xin, a Product Designer at{" "}
+            <span className="text-primary/60 transition-colors hover:text-primary cursor-default">YouTube</span>.{" "}
+            Previously a founding designer at{" "}
+            <span className="text-primary/60 transition-colors hover:text-primary cursor-default">Airbnb China</span>.
           </h1>
         </motion.div>
       </div>
@@ -288,172 +260,123 @@ function Hero() {
 }
 
 function ProjectGrid() {
-  const targetRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: targetRef,
-    offset: ["start end", "start center"]
-  });
-
-  const bgOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.15]);
+  const visibleProjects = MOCK_PROJECTS.filter(p => !p.hidden);
+  const [activeId, setActiveId] = useState<number>(visibleProjects[0]?.id ?? 0);
+  const activeProject = visibleProjects.find(p => p.id === activeId) ?? visibleProjects[0];
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const bg = document.getElementById('main-bg-overlay');
-    const unsubscribe = bgOpacity.on("change", (latest) => {
-      if (bg) bg.style.backdropFilter = `blur(${80 + (1 - latest) * 40}px)`;
-      if (bg) bg.style.backgroundColor = `rgba(255, 255, 255, ${0.2 + (1 - latest) * 0.6})`;
-    });
-    return () => unsubscribe();
-  }, [bgOpacity]);
+    const section = sectionRef.current;
+    if (!section) return;
+
+    // rootMargin creates a thin band at the viewport centre; whichever image
+    // enters that band becomes the active project in the sticky left panel.
+    const imageEls = section.querySelectorAll<HTMLElement>('[data-project-id]');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = Number((entry.target as HTMLElement).dataset.projectId);
+            setActiveId(id);
+          }
+        });
+      },
+      { rootMargin: '-45% 0px -45% 0px', threshold: 0 }
+    );
+
+    imageEls.forEach(el => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <section id="work" data-bg-color="#e0e0e0" ref={targetRef} className="py-24 px-6 md:px-12 max-w-6xl mx-auto">
-      <div className="flex flex-col gap-32">
-        {MOCK_PROJECTS.filter(p => !p.hidden).map((project, i) => (
-          <div key={project.id} className="group cursor-pointer">
-            <Link href={`/project/${project.id}`}>
-              <a className="block">
-                <div className="mb-10 flex flex-col items-start">
-                  <h3 className="text-[2.5rem] md:text-[3.5rem] font-display font-medium tracking-tighter transition-colors duration-300 group-hover:text-black/70 mb-4">
-                    {project.title}
-                  </h3>
-                  
-                  <p className="text-[11px] md:text-xs font-mono text-muted-foreground uppercase tracking-[0.3em] mb-8">
-                    {project.category}
-                  </p>
-                  
-                  <p className="text-[16px] md:text-xl text-muted-foreground font-light leading-relaxed max-w-xl">
-                    {project.description}
-                  </p>
-                </div>
-                
-                <div className="w-full aspect-[18/9] overflow-hidden bg-black/5 rounded-lg">
-                  <img 
-                    src={project.image} 
-                    alt={project.title}
-                    className="w-full h-full object-cover object-center transform transition-transform duration-1000 group-hover:scale-[1.03]"
-                  />
-                </div>
-              </a>
-            </Link>
-          </div>
+    <section id="work" data-bg-color="#e0e0e0" ref={sectionRef}>
+
+      {/* ── Mobile: simple stacked layout ── */}
+      <div className="md:hidden px-6 py-20 flex flex-col gap-20">
+        {visibleProjects.map((project) => (
+          <Link key={project.id} href={`/project/${project.id}`} className="block group">
+            <p className="text-[11px] font-mono text-muted-foreground uppercase tracking-[0.3em] mb-3">
+              {project.category}
+            </p>
+            <h3 className="text-[2rem] font-display font-medium tracking-tighter mb-4 group-hover:opacity-70 transition-opacity">
+              {project.title}
+            </h3>
+            <p className="text-base text-muted-foreground font-light leading-relaxed mb-8">
+              {project.description}
+            </p>
+            <div className="w-full aspect-[4/3] overflow-hidden rounded-xl bg-black/5">
+              <img
+                src={project.image}
+                alt={project.title}
+                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-[1.03]"
+              />
+            </div>
+          </Link>
         ))}
       </div>
-    </section>
-  );
-}
 
-function ProjectCard({ project, index }: { project: any, index: number }) {
-  const isOffset = index % 2 !== 0;
+      {/* ── Desktop: sticky left text + scrolling right images ── */}
+      <div className="hidden md:flex max-w-[1400px] mx-auto">
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      className={`flex flex-col group md:col-span-1 ${isOffset ? 'md:mt-24' : ''}`}
-      data-testid={`card-project-${project.id}`}
-    >
-      <Link href={`/project/${project.id}`}>
-        <a className="block relative aspect-[4/3] overflow-hidden rounded-[24px] bg-white/60 backdrop-blur-md border border-white/30 transition-all duration-700 mb-8">
-          {project.bgImage && (
-            <img 
-              src={project.bgImage} 
-              alt=""
-              className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-1000"
-            />
-          )}
-          <img 
-            src={project.image} 
-            alt={project.title}
-            className={`absolute inset-0 w-full h-full ${project.bgImage ? 'object-contain p-8 group-hover:opacity-100' : 'object-cover group-hover:opacity-40'} transition-all duration-1000 ease-out`}
-          />
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            <div className="bg-white/95 backdrop-blur-md px-6 py-3 rounded-full flex items-center gap-2 text-xs font-bold uppercase tracking-widest shadow-xl">
-              View Case Study <ArrowUpRight className="w-4 h-4" />
-            </div>
+        {/* Left sticky panel — 42% wide, text overlaps image edge */}
+        <div className="w-[42%] shrink-0 relative z-10">
+          <div className="sticky top-[38vh] pl-12 pr-4">
+            <Link href={`/project/${activeProject.id}`} className="block group">
+              <motion.div
+                key={activeId}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+              >
+                <p className="text-[11px] font-mono text-muted-foreground uppercase tracking-[0.3em] mb-5">
+                  {activeProject.category}
+                </p>
+                <h3 className="text-[2.6rem] lg:text-[3.2rem] font-display font-medium tracking-tighter leading-[1.1] mb-6 group-hover:opacity-70 transition-opacity duration-300">
+                  {activeProject.title}
+                </h3>
+                <p className="text-lg text-muted-foreground font-light leading-relaxed max-w-xs">
+                  {activeProject.description}
+                </p>
+              </motion.div>
+            </Link>
           </div>
-        </a>
-      </Link>
-      
-      <div className="space-y-4">
-        <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground/60">0{index + 1} / {project.category}</span>
-        <h3 className="text-3xl font-display font-medium group-hover:opacity-60 transition-opacity mt-2 mb-4">{project.title}</h3>
-        <p className="text-muted-foreground leading-relaxed font-light line-clamp-3 text-lg">
-          {project.description}
-        </p>
-        <div className="flex gap-3 pt-4">
-          {project.tags?.slice(0, 3).map((tag: string) => (
-            <span key={tag} className="text-[8px] uppercase tracking-widest px-2 py-0.5 border border-black/5 rounded-full text-muted-foreground">
-              {tag}
-            </span>
-          ))}
         </div>
-      </div>
-    </motion.div>
-  );
-}
 
-function VisualsGrid() {
-  return (
-    <section className="py-32 px-6">
-      <div className="max-w-5xl mx-auto">
-        <div className="flex justify-between items-end mb-20">
-          <div>
-            <h2 className="text-xs uppercase tracking-[0.3em] font-bold text-muted-foreground mb-4">Visual Artifacts</h2>
-            <div className="h-px w-24 bg-black/10" />
-          </div>
-          <a 
-            href="#/photography" 
-            className="group flex items-center gap-2 text-xs font-bold uppercase tracking-widest hover:opacity-60 transition-opacity"
-            data-testid="link-view-all-photography"
-          >
-            View All <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </a>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {MOCK_VISUALS.slice(0, 3).map((item, i) => (
-            <motion.div
-              key={item.id}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.8 }}
-              className="group relative aspect-[4/5] overflow-hidden rounded-[4px] bg-white/60 backdrop-blur-md border border-white/30"
+        {/* Right scrolling images — pulled left 7% so text overlaps the image edge */}
+        <div className="flex-1 flex flex-col gap-16 py-[28vh] pr-12 -ml-[7%]">
+          {visibleProjects.map((project) => (
+            <div
+              key={project.id}
+              data-project-id={project.id}
+              className="group cursor-pointer"
             >
-              <img 
-                src={item.image} 
-                alt={item.title}
-                className="w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-80"
-              />
-              <div className="absolute inset-0 flex flex-col justify-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-t from-black/20 to-transparent">
-                <p className="text-[10px] uppercase tracking-widest font-bold text-white/80 mb-1">{item.category}</p>
-                <h4 className="text-white font-medium text-sm">{item.title}</h4>
-              </div>
-            </motion.div>
+              <Link
+                href={`/project/${project.id}`}
+                className="block w-full aspect-[16/10] overflow-hidden rounded-xl bg-black/5"
+              >
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-[1.03]"
+                />
+              </Link>
+            </div>
           ))}
         </div>
+
       </div>
     </section>
   );
 }
 
 function About() {
-  const targetRef = useRef(null);
+  const targetRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: targetRef,
-    offset: ["start end", "start center"]
+    offset: ["start end", "start center"],
   });
-
-  useEffect(() => {
-    const bg = document.getElementById('main-bg-overlay');
-    const unsubscribe = scrollYProgress.on("change", (latest) => {
-      if (bg && latest > 0) {
-        bg.style.backgroundColor = `rgba(255, 255, 255, ${0.8 - latest * 0.6})`;
-        bg.style.backdropFilter = `blur(${120 - latest * 40}px)`;
-      }
-    });
-    return () => unsubscribe();
-  }, [scrollYProgress]);
+  // scrollYProgress retained for future use; suppress unused-variable lint
+  void scrollYProgress;
 
   return (
     <section id="about" data-bg-color="#1a1a1a" ref={targetRef} className="py-40 px-6">
@@ -471,16 +394,20 @@ function About() {
               </p>
             </div>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-12">
             <div className="space-y-4">
               <h4 className="text-[10px] uppercase tracking-widest font-bold">Outside of work</h4>
-              <p className="text-muted-foreground leading-relaxed text-lg font-light">I’m a global explorer (40+ countries), film photographer, and painter. <a href="https://xhslink.com/m/gXhYLsbMVt" target="_blank" rel="noopener noreferrer" className="underline decoration-current underline-offset-4 hover:opacity-70 transition-opacity" data-testid="link-creator-story">As a creator,</a> I’m passionate about visual storytelling through video and editing—an obsession that shapes how I see the creator journey.</p>
+              <p className="text-muted-foreground leading-relaxed text-lg font-light">
+                I'm a global explorer (40+ countries), film photographer, and painter.{" "}
+                <a href="https://xhslink.com/m/gXhYLsbMVt" target="_blank" rel="noopener noreferrer" className="underline decoration-current underline-offset-4 hover:opacity-70 transition-opacity" data-testid="link-creator-story">As a creator,</a>{" "}
+                I'm passionate about visual storytelling through video and editing—an obsession that shapes how I see the creator journey.
+              </p>
             </div>
             <div className="space-y-4">
               <h4 className="text-[10px] uppercase tracking-widest font-bold">Fun Fact</h4>
               <p className="text-muted-foreground leading-relaxed text-lg font-light">
-                I hold a Bachelor’s degree in Applied Mathematics and was recognized as a Meritorious Winner in the 2013 Mathematical Contest in Modeling.
+                I hold a Bachelor's degree in Applied Mathematics and was recognized as a Meritorious Winner in the 2013 Mathematical Contest in Modeling.
               </p>
             </div>
           </div>
