@@ -1,6 +1,5 @@
 import { Link } from "wouter";
 import { motion, useSpring } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 
 import project1 from "@assets/Collection_Cover.png";
@@ -154,7 +153,7 @@ export default function Home() {
   return (
     <div
       ref={wrapperRef}
-      className="min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans cursor-none"
+      className="min-h-screen relative overflow-x-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans cursor-none"
       style={{ backgroundColor: '#e8e4dc', transition: 'background-color 0.6s ease' }}
     >
       <CustomCursor />
