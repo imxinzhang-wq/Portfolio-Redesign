@@ -319,54 +319,60 @@ function ProjectGrid() {
         <div className="w-[42%] shrink-0 relative z-10">
           <div className="sticky top-[38vh] pl-12 pr-4">
             {/* Mask container: clips the sliding text so it wipes in/out cleanly */}
-            <div style={{ overflow: 'hidden', minHeight: '320px' }}>
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeId}
-                  variants={{
-                    initial: {},
-                    animate: { transition: { staggerChildren: 0.08 } },
-                    exit:    { transition: { staggerChildren: 0.04, staggerDirection: -1 } },
-                  }}
-                  initial="initial"
-                  animate="animate"
-                  exit="exit"
-                >
-                  <Link href={`/project/${activeProject.id}`} className="block group">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeId}
+                variants={{
+                  initial: {},
+                  animate: { transition: { staggerChildren: 0.1 } },
+                  exit:    { transition: { staggerChildren: 0.05, staggerDirection: -1 } },
+                }}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+              >
+                <Link href={`/project/${activeProject.id}`} className="block group">
+                  <div className="overflow-hidden mb-5">
                     <motion.p
                       variants={{
                         initial: { opacity: 0, y: 40 },
-                        animate: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
-                        exit:    { opacity: 0, y: -40, transition: { duration: 0.35, ease: [0.7, 0, 0.84, 0] } },
+                        animate: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
+                        exit:    { opacity: 0, y: -40, transition: { duration: 0.4, ease: [0.7, 0, 0.84, 0] } },
                       }}
-                      className="text-[11px] font-mono text-muted-foreground uppercase tracking-[0.3em] mb-5"
+                      className="text-[11px] font-mono text-muted-foreground uppercase tracking-[0.3em]"
                     >
                       {activeProject.category}
                     </motion.p>
+                  </div>
+
+                  <div className="overflow-hidden mb-6">
                     <motion.h3
                       variants={{
                         initial: { opacity: 0, y: 40 },
-                        animate: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
-                        exit:    { opacity: 0, y: -40, transition: { duration: 0.35, ease: [0.7, 0, 0.84, 0] } },
+                        animate: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
+                        exit:    { opacity: 0, y: -40, transition: { duration: 0.4, ease: [0.7, 0, 0.84, 0] } },
                       }}
-                      className="text-[2.6rem] lg:text-[3.2rem] font-display font-medium tracking-tighter leading-[1.1] mb-6 group-hover:opacity-70 transition-opacity duration-300"
+                      className="text-[2.6rem] lg:text-[3.2rem] font-display font-medium tracking-tighter leading-[1.1] group-hover:opacity-70 transition-opacity duration-300"
                     >
                       {activeProject.title}
                     </motion.h3>
+                  </div>
+
+                  <div className="overflow-hidden">
                     <motion.p
                       variants={{
                         initial: { opacity: 0, y: 40 },
-                        animate: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
-                        exit:    { opacity: 0, y: -40, transition: { duration: 0.35, ease: [0.7, 0, 0.84, 0] } },
+                        animate: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
+                        exit:    { opacity: 0, y: -40, transition: { duration: 0.4, ease: [0.7, 0, 0.84, 0] } },
                       }}
                       className="text-lg text-muted-foreground font-light leading-relaxed max-w-xs"
                     >
                       {activeProject.description}
                     </motion.p>
-                  </Link>
-                </motion.div>
-              </AnimatePresence>
-            </div>
+                  </div>
+                </Link>
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
 
