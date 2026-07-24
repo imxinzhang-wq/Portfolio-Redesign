@@ -324,32 +324,45 @@ function ProjectGrid() {
                 <motion.div
                   key={activeId}
                   variants={{
-                    enter: { opacity: 0, y: 60 },
-                    center: {
-                      opacity: 1,
-                      y: 0,
-                      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
-                    },
-                    exit: {
-                      opacity: 0,
-                      y: -60,
-                      transition: { duration: 0.5, ease: [0.7, 0, 0.84, 0] },
-                    },
+                    initial: {},
+                    animate: { transition: { staggerChildren: 0.08 } },
+                    exit:    { transition: { staggerChildren: 0.04, staggerDirection: -1 } },
                   }}
-                  initial="enter"
-                  animate="center"
+                  initial="initial"
+                  animate="animate"
                   exit="exit"
                 >
                   <Link href={`/project/${activeProject.id}`} className="block group">
-                    <p className="text-[11px] font-mono text-muted-foreground uppercase tracking-[0.3em] mb-5">
+                    <motion.p
+                      variants={{
+                        initial: { opacity: 0, y: 40 },
+                        animate: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
+                        exit:    { opacity: 0, y: -40, transition: { duration: 0.35, ease: [0.7, 0, 0.84, 0] } },
+                      }}
+                      className="text-[11px] font-mono text-muted-foreground uppercase tracking-[0.3em] mb-5"
+                    >
                       {activeProject.category}
-                    </p>
-                    <h3 className="text-[2.6rem] lg:text-[3.2rem] font-display font-medium tracking-tighter leading-[1.1] mb-6 group-hover:opacity-70 transition-opacity duration-300">
+                    </motion.p>
+                    <motion.h3
+                      variants={{
+                        initial: { opacity: 0, y: 40 },
+                        animate: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
+                        exit:    { opacity: 0, y: -40, transition: { duration: 0.35, ease: [0.7, 0, 0.84, 0] } },
+                      }}
+                      className="text-[2.6rem] lg:text-[3.2rem] font-display font-medium tracking-tighter leading-[1.1] mb-6 group-hover:opacity-70 transition-opacity duration-300"
+                    >
                       {activeProject.title}
-                    </h3>
-                    <p className="text-lg text-muted-foreground font-light leading-relaxed max-w-xs">
+                    </motion.h3>
+                    <motion.p
+                      variants={{
+                        initial: { opacity: 0, y: 40 },
+                        animate: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
+                        exit:    { opacity: 0, y: -40, transition: { duration: 0.35, ease: [0.7, 0, 0.84, 0] } },
+                      }}
+                      className="text-lg text-muted-foreground font-light leading-relaxed max-w-xs"
+                    >
                       {activeProject.description}
-                    </p>
+                    </motion.p>
                   </Link>
                 </motion.div>
               </AnimatePresence>
