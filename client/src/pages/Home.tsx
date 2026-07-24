@@ -352,7 +352,6 @@ function ProjectGrid() {
             <AnimatePresence mode="wait">
               {panelVisible && <motion.div
                 key={activeId}
-                style={{ mixBlendMode: 'difference' }}
                 variants={{
                   initial: {},
                   animate: { transition: { staggerChildren: 0.1 } },
@@ -370,7 +369,7 @@ function ProjectGrid() {
                         animate: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
                         exit:    { opacity: 0, y: -40, transition: { duration: 0.4, ease: [0.7, 0, 0.84, 0] } },
                       }}
-                      className="text-[11px] font-mono text-white uppercase tracking-[0.3em]"
+                      className="text-[11px] font-mono text-muted-foreground uppercase tracking-[0.3em]"
                     >
                       {activeProject.category}
                     </motion.p>
@@ -382,7 +381,7 @@ function ProjectGrid() {
                         animate: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
                         exit:    { opacity: 0, y: -40, transition: { duration: 0.4, ease: [0.7, 0, 0.84, 0] } },
                       }}
-                      className="text-[2.6rem] lg:text-[3.2rem] font-display font-medium tracking-tighter leading-[1.1] text-white"
+                      className="text-[2.6rem] lg:text-[3.2rem] font-display font-medium tracking-tighter leading-[1.1] group-hover:opacity-70 transition-opacity duration-300"
                     >
                       {activeProject.title}
                     </motion.h3>
@@ -394,7 +393,7 @@ function ProjectGrid() {
                         animate: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
                         exit:    { opacity: 0, y: -40, transition: { duration: 0.4, ease: [0.7, 0, 0.84, 0] } },
                       }}
-                      className="text-lg text-white font-light leading-relaxed max-w-xs"
+                      className="text-lg text-muted-foreground font-light leading-relaxed max-w-xs"
                     >
                       {activeProject.description}
                     </motion.p>
