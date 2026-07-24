@@ -1,7 +1,7 @@
 import { Link } from "wouter";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useState } from "react";
 
 import project1 from "@assets/Collection_Cover.png";
 import project2 from "@assets/Darmi_Cover.PNG";
@@ -40,29 +40,76 @@ const MOCK_PROJECTS = [
   }
 ];
 
-function useMouseSpotlight() {
-  const [pos, setPos] = useState({ x: -999, y: -999 });
+function CustomCursor() {
+  const mouseX = useSpring(-100, { stiffness: 200, damping: 28, mass: 0.5 });
+  const mouseY = useSpring(-100, { stiffness: 200, damping: 28, mass: 0.5 });
+  const dotX = useSpring(-100, { stiffness: 500, damping: 35, mass: 0.2 });
+  const dotY = useSpring(-100, { stiffness: 500, damping: 35, mass: 0.2 });
+  const [hovering, setHovering] = useState(false);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const handleMove = (e: MouseEvent) => {
-      setPos({ x: e.clientX, y: e.clientY });
+    const move = (e: MouseEvent) => {
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
+      dotX.set(e.clientX);
+      dotY.set(e.clientY);
       setVisible(true);
     };
-    const handleLeave = () => setVisible(false);
-    window.addEventListener("mousemove", handleMove);
-    document.documentElement.addEventListener("mouseleave", handleLeave);
-    return () => {
-      window.removeEventListener("mousemove", handleMove);
-      document.documentElement.removeEventListener("mouseleave", handleLeave);
-    };
-  }, []);
+    const leave = () => setVisible(false);
 
-  return { pos, visible };
+    const checkHover = (e: MouseEvent) => {
+      const el = e.target as HTMLElement;
+      setHovering(
+        !!(el.closest("a, button, [role='button'], .group"))
+      );
+    };
+
+    window.addEventListener("mousemove", move);
+    window.addEventListener("mousemove", checkHover);
+    document.documentElement.addEventListener("mouseleave", leave);
+    return () => {
+      window.removeEventListener("mousemove", move);
+      window.removeEventListener("mousemove", checkHover);
+      document.documentElement.removeEventListener("mouseleave", leave);
+    };
+  }, [mouseX, mouseY, dotX, dotY]);
+
+  return (
+    <>
+      {/* Outer ring */}
+      <motion.div
+        className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full border border-foreground/30 mix-blend-multiply"
+        style={{
+          width: hovering ? 56 : 36,
+          height: hovering ? 56 : 36,
+          x: mouseX,
+          y: mouseY,
+          translateX: hovering ? "-28px" : "-18px",
+          translateY: hovering ? "-28px" : "-18px",
+          opacity: visible ? 1 : 0,
+          transition: "width 0.3s ease, height 0.3s ease, translate 0.3s ease, opacity 0.3s ease",
+        }}
+      />
+      {/* Inner dot */}
+      <motion.div
+        className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full bg-foreground mix-blend-multiply"
+        style={{
+          width: hovering ? 6 : 5,
+          height: hovering ? 6 : 5,
+          x: dotX,
+          y: dotY,
+          translateX: "-50%",
+          translateY: "-50%",
+          opacity: visible ? 0.7 : 0,
+          transition: "width 0.2s ease, height 0.2s ease, opacity 0.3s ease",
+        }}
+      />
+    </>
+  );
 }
 
 export default function Home() {
-  const { pos, visible } = useMouseSpotlight();
 
   useEffect(() => {
     // Handle hash navigation on mount and hash change
@@ -86,15 +133,8 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="bg-background min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans">
-      {/* Mouse Spotlight */}
-      <div
-        className="fixed inset-0 pointer-events-none z-[1] transition-opacity duration-500"
-        style={{
-          opacity: visible ? 1 : 0,
-          background: `radial-gradient(600px circle at ${pos.x}px ${pos.y}px, rgba(255,255,255,0.12) 0%, rgba(0,0,0,0.18) 100%)`,
-        }}
-      />
+    <div className="bg-background min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans cursor-none">
+      <CustomCursor />
 
       {/* Background Elements */}
       <div className="fixed inset-0 pointer-events-none z-0">
