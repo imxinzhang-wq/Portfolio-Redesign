@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { motion, useScroll, useSpring } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 
@@ -288,82 +288,55 @@ function Hero() {
 }
 
 function ProjectGrid() {
-  const projects = MOCK_PROJECTS.filter(p => !p.hidden);
+  const targetRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: targetRef,
+    offset: ["start end", "start center"]
+  });
+
+  const bgOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.15]);
+
+  useEffect(() => {
+    const bg = document.getElementById('main-bg-overlay');
+    const unsubscribe = bgOpacity.on("change", (latest) => {
+      if (bg) bg.style.backdropFilter = `blur(${80 + (1 - latest) * 40}px)`;
+      if (bg) bg.style.backgroundColor = `rgba(255, 255, 255, ${0.2 + (1 - latest) * 0.6})`;
+    });
+    return () => unsubscribe();
+  }, [bgOpacity]);
 
   return (
-    <section
-      id="work"
-      data-bg-color="#f0ede8"
-      className="relative py-24 px-6 md:px-16 max-w-7xl mx-auto overflow-visible"
-    >
-      {/* Giant decorative "Projects" watermark — split-panel color */}
-      <div
-        className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0 overflow-hidden"
-        aria-hidden="true"
-      >
-        <div
-          className="relative font-display font-semibold tracking-tight leading-none"
-          style={{ fontSize: 'clamp(72px, 11vw, 150px)' }}
-        >
-          {/* Left half — dark */}
-          <span
-            className="absolute inset-0 text-foreground/75"
-            style={{ clipPath: 'inset(0 50% 0 0)' }}
-          >
-            Projects
-          </span>
-          {/* Right half — muted/light (acts as base layer) */}
-          <span className="text-foreground/10">Projects</span>
-        </div>
-      </div>
-
-      {/* Staggered two-column grid */}
-      <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-x-20">
-        {projects.map((project, i) => {
-          const isRight = i % 2 === 1;
-          return (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 0.9, ease: [0.23, 1, 0.32, 1] }}
-              className={`group mb-24 md:mb-0 ${isRight ? 'md:mt-[300px]' : ''}`}
-            >
-              <Link href={`/project/${project.id}`}>
-                <a
-                  className={`block flex flex-col ${
-                    isRight ? 'items-end text-right' : 'items-start text-left'
-                  }`}
-                >
-                  {/* 3:4 portrait image */}
-                  <div className="w-full aspect-[3/4] overflow-hidden rounded-2xl bg-black/5 mb-7">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      className="w-full h-full object-cover object-center transform transition-transform duration-1000 group-hover:scale-[1.04]"
-                    />
-                  </div>
-
-                  {/* Category */}
-                  <p className="text-[11px] font-mono text-muted-foreground uppercase tracking-[0.3em] mb-3">
-                    {project.category}
-                  </p>
-
-                  {/* Title */}
-                  <h3 className="text-2xl md:text-[1.75rem] font-display font-medium tracking-tight mb-4 transition-opacity duration-300 group-hover:opacity-50 max-w-sm">
+    <section id="work" data-bg-color="#e0e0e0" ref={targetRef} className="py-24 px-6 md:px-12 max-w-6xl mx-auto">
+      <div className="flex flex-col gap-32">
+        {MOCK_PROJECTS.filter(p => !p.hidden).map((project, i) => (
+          <div key={project.id} className="group cursor-pointer">
+            <Link href={`/project/${project.id}`}>
+              <a className="block">
+                <div className="mb-10 flex flex-col items-start">
+                  <h3 className="text-[2.5rem] md:text-[3.5rem] font-display font-medium tracking-tighter transition-colors duration-300 group-hover:text-black/70 mb-4">
                     {project.title}
                   </h3>
-
-                  {/* Description */}
-                  <p className="text-base text-muted-foreground font-light leading-relaxed max-w-xs">
+                  
+                  <p className="text-[11px] md:text-xs font-mono text-muted-foreground uppercase tracking-[0.3em] mb-8">
+                    {project.category}
+                  </p>
+                  
+                  <p className="text-[16px] md:text-xl text-muted-foreground font-light leading-relaxed max-w-xl">
                     {project.description}
                   </p>
-                </a>
-              </Link>
-            </motion.div>
-          );
-        })}
+                </div>
+                
+                <div className="w-full aspect-[18/9] overflow-hidden bg-black/5 rounded-lg">
+                  <img 
+                    src={project.image} 
+                    alt={project.title}
+                    className="w-full h-full object-cover object-center transform transition-transform duration-1000 group-hover:scale-[1.03]"
+                  />
+                </div>
+              </a>
+            </Link>
+          </div>
+        ))}
       </div>
     </section>
   );
