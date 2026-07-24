@@ -241,7 +241,7 @@ function Navbar() {
 
 function Hero() {
   return (
-    <section data-bg-color="#f5f0e6" className="min-h-screen flex items-center justify-center px-6 pt-20">
+    <section data-bg-color="#f5f0e6" className="min-h-[115vh] flex items-center justify-center px-6 pt-20">
       <div className="max-w-6xl w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -390,7 +390,7 @@ function ProjectGrid() {
         </div>
 
         {/* Right scrolling images — pulled left 7% so text overlaps the image edge */}
-        <div className="flex-1 flex flex-col gap-[55vh] py-[45vh] pr-12 -ml-[7%]">
+        <div className="flex-1 flex flex-col gap-[55vh] py-[60vh] pr-12 -ml-[7%]">
           {visibleProjects.map((project) => (
             <div
               key={project.id}
@@ -418,7 +418,7 @@ function ProjectGrid() {
 
 function About() {
   return (
-    <section id="about" data-bg-color="#1a1a1a" className="py-40 px-6">
+    <section id="about" data-bg-color="#1a1a1a" className="py-60 px-6">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0 }}
@@ -458,7 +458,7 @@ function About() {
 
 function Footer() {
   return (
-    <footer id="contact" data-bg-color="#111111" className="py-20 px-6 relative z-10">
+    <footer id="contact" data-bg-color="#111111" className="py-40 px-6 relative z-10">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
         <div className="text-center md:text-left">
           <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/50 mb-2">Say hello</p>
