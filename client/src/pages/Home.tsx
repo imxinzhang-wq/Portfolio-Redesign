@@ -125,29 +125,30 @@ export default function Home() {
     return () => window.removeEventListener('hashchange', handleHash);
   }, []);
 
-  // Scroll-triggered background color via IntersectionObserver
+  // Scroll-triggered background color — scroll listener picks the last section
+  // whose top edge is above the viewport midpoint, so it works correctly in
+  // both scroll directions.
   useEffect(() => {
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
 
-    const sections = Array.from(
-      document.querySelectorAll<HTMLElement>('[data-bg-color]')
-    );
+    const getSections = () =>
+      Array.from(document.querySelectorAll<HTMLElement>('[data-bg-color]'));
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const color = (entry.target as HTMLElement).dataset.bgColor;
-            if (color && wrapper) wrapper.style.backgroundColor = color;
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
+    const handleScroll = () => {
+      const sections = getSections();
+      const midpoint = window.innerHeight * 0.5;
+      let active = sections[0];
+      for (const section of sections) {
+        if (section.getBoundingClientRect().top <= midpoint) active = section;
+      }
+      const color = active?.dataset.bgColor;
+      if (color && wrapper) wrapper.style.backgroundColor = color;
+    };
 
-    sections.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
@@ -375,8 +376,8 @@ function About() {
           className="space-y-16"
         >
           <div className="space-y-12">
-            <h2 className="text-xs uppercase tracking-[0.3em] font-bold text-muted-foreground">About Me</h2>
-            <div className="text-3xl md:text-5xl font-display leading-[1.3] font-medium tracking-tight space-y-10">
+            <h2 className="text-xs uppercase tracking-[0.3em] font-bold text-white/50">About Me</h2>
+            <div className="text-3xl md:text-5xl font-display leading-[1.3] font-medium tracking-tight space-y-10 text-white">
               <p>
                 I moved to the U.S. in 2014 to study Human-Computer Interaction at the University of Michigan. Since then, my work has taken me from California to Switzerland.
               </p>
@@ -385,16 +386,16 @@ function About() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-12">
             <div className="space-y-4">
-              <h4 className="text-[10px] uppercase tracking-widest font-bold">Outside of work</h4>
-              <p className="text-muted-foreground leading-relaxed text-lg font-light">
+              <h4 className="text-[10px] uppercase tracking-widest font-bold text-white">Outside of work</h4>
+              <p className="text-white/60 leading-relaxed text-lg font-light">
                 I'm a global explorer (40+ countries), film photographer, and painter.{" "}
                 <a href="https://xhslink.com/m/gXhYLsbMVt" target="_blank" rel="noopener noreferrer" className="underline decoration-current underline-offset-4 hover:opacity-70 transition-opacity" data-testid="link-creator-story">As a creator,</a>{" "}
                 I'm passionate about visual storytelling through video and editing—an obsession that shapes how I see the creator journey.
               </p>
             </div>
             <div className="space-y-4">
-              <h4 className="text-[10px] uppercase tracking-widest font-bold">Fun Fact</h4>
-              <p className="text-muted-foreground leading-relaxed text-lg font-light">
+              <h4 className="text-[10px] uppercase tracking-widest font-bold text-white">Fun Fact</h4>
+              <p className="text-white/60 leading-relaxed text-lg font-light">
                 I hold a Bachelor's degree in Applied Mathematics and was recognized as a Meritorious Winner in the 2013 Mathematical Contest in Modeling.
               </p>
             </div>
@@ -410,13 +411,13 @@ function Footer() {
     <footer id="contact" data-bg-color="#111111" className="py-20 px-6 relative z-10">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
         <div className="text-center md:text-left">
-          <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-muted-foreground mb-2">Say hello</p>
-          <a href="mailto:about.dala@gmail.com" className="text-2xl font-display hover:opacity-50 transition-opacity" data-testid="link-email">
+          <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/50 mb-2">Say hello</p>
+          <a href="mailto:about.dala@gmail.com" className="text-2xl font-display text-white hover:opacity-50 transition-opacity" data-testid="link-email">
             about.dala@gmail.com
           </a>
         </div>
-        <div className="flex gap-8 text-[10px] uppercase tracking-widest font-bold text-muted-foreground">
-          <a href="https://www.linkedin.com/in/imxinzhang/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">LinkedIn</a>
+        <div className="flex gap-8 text-[10px] uppercase tracking-widest font-bold text-white/50">
+          <a href="https://www.linkedin.com/in/imxinzhang/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">LinkedIn</a>
         </div>
       </div>
     </footer>
