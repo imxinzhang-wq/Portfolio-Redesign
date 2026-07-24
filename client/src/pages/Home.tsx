@@ -333,13 +333,9 @@ function ProjectGrid() {
 
         {/* Left sticky panel — 42% wide, text overlaps image edge */}
         <div className="w-[42%] shrink-0 relative z-10">
-          <div
-            className="sticky top-[38vh] pl-12 pr-4"
-            style={{ opacity: panelVisible ? 1 : 0, transition: 'opacity 0.4s ease' }}
-          >
-            {/* Mask container: clips the sliding text so it wipes in/out cleanly */}
+          <div className="sticky top-[38vh] pl-12 pr-4">
             <AnimatePresence mode="wait">
-              <motion.div
+              {panelVisible && <motion.div
                 key={activeId}
                 variants={{
                   initial: {},
@@ -363,7 +359,6 @@ function ProjectGrid() {
                       {activeProject.category}
                     </motion.p>
                   </div>
-
                   <div className="overflow-hidden mb-6">
                     <motion.h3
                       variants={{
@@ -376,7 +371,6 @@ function ProjectGrid() {
                       {activeProject.title}
                     </motion.h3>
                   </div>
-
                   <div className="overflow-hidden">
                     <motion.p
                       variants={{
@@ -390,7 +384,7 @@ function ProjectGrid() {
                     </motion.p>
                   </div>
                 </Link>
-              </motion.div>
+              </motion.div>}
             </AnimatePresence>
           </div>
         </div>
