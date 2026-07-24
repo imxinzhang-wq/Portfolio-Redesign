@@ -1,7 +1,7 @@
 import { Link } from "wouter";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 
 import project1 from "@assets/Collection_Cover.png";
 import project2 from "@assets/Darmi_Cover.PNG";
@@ -40,7 +40,30 @@ const MOCK_PROJECTS = [
   }
 ];
 
+function useMouseSpotlight() {
+  const [pos, setPos] = useState({ x: -999, y: -999 });
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const handleMove = (e: MouseEvent) => {
+      setPos({ x: e.clientX, y: e.clientY });
+      setVisible(true);
+    };
+    const handleLeave = () => setVisible(false);
+    window.addEventListener("mousemove", handleMove);
+    document.documentElement.addEventListener("mouseleave", handleLeave);
+    return () => {
+      window.removeEventListener("mousemove", handleMove);
+      document.documentElement.removeEventListener("mouseleave", handleLeave);
+    };
+  }, []);
+
+  return { pos, visible };
+}
+
 export default function Home() {
+  const { pos, visible } = useMouseSpotlight();
+
   useEffect(() => {
     // Handle hash navigation on mount and hash change
     const handleHash = () => {
@@ -64,6 +87,15 @@ export default function Home() {
 
   return (
     <div className="bg-background min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans">
+      {/* Mouse Spotlight */}
+      <div
+        className="fixed inset-0 pointer-events-none z-[1] transition-opacity duration-500"
+        style={{
+          opacity: visible ? 1 : 0,
+          background: `radial-gradient(600px circle at ${pos.x}px ${pos.y}px, rgba(255,255,255,0.12) 0%, rgba(0,0,0,0.18) 100%)`,
+        }}
+      />
+
       {/* Background Elements */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-[5%] left-[5%] w-[40%] h-[40%] bg-[#fbd1a2] morphing-blob" />
