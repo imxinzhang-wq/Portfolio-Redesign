@@ -344,10 +344,41 @@ function ProjectGrid() {
       </div>
 
       {/* ── Desktop: sticky left text + scrolling right images ── */}
+      {/*
+        DOM order: right column FIRST (paints behind), left panel SECOND (paints on top).
+        CSS flex `order` reverses the visual order so left panel appears on the left.
+        This means the left panel needs no z-index — DOM order handles layering.
+        No z-index on the left panel div or its sticky child → no stacking contexts →
+        mix-blend-mode on the h3 composites against the ROOT backdrop, which includes
+        the image visible through the transparent left panel at the overlap zone.
+      */}
       <div className="hidden md:flex max-w-[1400px] mx-auto">
 
-        {/* Left sticky panel — 42% wide, text overlaps image edge */}
-        <div className="w-[42%] shrink-0 relative z-10">
+        {/* Right scrolling images — FIRST in DOM (painted behind), visual order 2 */}
+        <div className="flex-1 flex flex-col gap-[55vh] py-[60vh] pr-12 -ml-[7%] order-2">
+          {visibleProjects.map((project) => (
+            <div
+              key={project.id}
+              data-project-id={project.id}
+              className="group cursor-pointer"
+            >
+              <Link
+                href={`/project/${project.id}`}
+                className="block w-full aspect-[16/10] overflow-hidden rounded-xl bg-black/5"
+              >
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-full object-cover"
+                />
+              </Link>
+            </div>
+          ))}
+        </div>
+
+        {/* Left sticky panel — SECOND in DOM (paints on top), visual order 1, no z-index */}
+        <div className="w-[42%] shrink-0 relative order-1">
+          {/* No z-index on sticky → no stacking context → h3 blend reaches root backdrop */}
           <div className="sticky top-[38vh] pl-12 pr-4">
             <AnimatePresence mode="wait">
               {panelVisible && <motion.div
@@ -374,14 +405,24 @@ function ProjectGrid() {
                       {activeProject.category}
                     </motion.p>
                   </div>
-                  <div className="overflow-hidden mb-6">
+                  {/*
+                    Title: whitespace-nowrap so it extends past the left panel boundary
+                    into the image zone. mix-blend-mode:difference + color:white gives:
+                      - on beige bg (#f5f0e6): |255-245,255-240,255-230| ≈ near-black ✓
+                      - on image pixels:       |255-r,255-g,255-b| = inverted colours ✓
+                    Opacity-only animation (no y/transform) so Framer Motion doesn't
+                    leave a transform:translateY(0) that would create a stacking context
+                    and break the blend mode at rest.
+                  */}
+                  <div className="mb-8">
                     <motion.h3
                       variants={{
-                        initial: { opacity: 0, y: 40 },
-                        animate: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
-                        exit:    { opacity: 0, y: -40, transition: { duration: 0.4, ease: [0.7, 0, 0.84, 0] } },
+                        initial: { opacity: 0 },
+                        animate: { opacity: 1, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
+                        exit:    { opacity: 0,  transition: { duration: 0.4, ease: [0.7, 0, 0.84, 0] } },
                       }}
-                      className="text-[2.6rem] lg:text-[3.2rem] font-display font-medium tracking-tighter leading-[1.1] group-hover:opacity-70 transition-opacity duration-300"
+                      className="text-[2.6rem] lg:text-[3.2rem] font-display font-medium tracking-tighter leading-[1.1] whitespace-nowrap"
+                      style={{ color: "white", mixBlendMode: "difference" }}
                     >
                       {activeProject.title}
                     </motion.h3>
@@ -402,28 +443,6 @@ function ProjectGrid() {
               </motion.div>}
             </AnimatePresence>
           </div>
-        </div>
-
-        {/* Right scrolling images — pulled left 7% so text overlaps the image edge */}
-        <div className="flex-1 flex flex-col gap-[55vh] py-[60vh] pr-12 -ml-[7%]">
-          {visibleProjects.map((project) => (
-            <div
-              key={project.id}
-              data-project-id={project.id}
-              className="group cursor-pointer"
-            >
-              <Link
-                href={`/project/${project.id}`}
-                className="block w-full aspect-[16/10] overflow-hidden rounded-xl bg-black/5"
-              >
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-full object-cover"
-                />
-              </Link>
-            </div>
-          ))}
         </div>
 
       </div>
