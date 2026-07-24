@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { motion, useSpring } from "framer-motion";
+import { motion, useSpring, AnimatePresence } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 
 import project1 from "@assets/Collection_Cover.png";
@@ -318,24 +318,42 @@ function ProjectGrid() {
         {/* Left sticky panel — 42% wide, text overlaps image edge */}
         <div className="w-[42%] shrink-0 relative z-10">
           <div className="sticky top-[38vh] pl-12 pr-4">
-            <Link href={`/project/${activeProject.id}`} className="block group">
-              <motion.div
-                key={activeId}
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
-              >
-                <p className="text-[11px] font-mono text-muted-foreground uppercase tracking-[0.3em] mb-5">
-                  {activeProject.category}
-                </p>
-                <h3 className="text-[2.6rem] lg:text-[3.2rem] font-display font-medium tracking-tighter leading-[1.1] mb-6 group-hover:opacity-70 transition-opacity duration-300">
-                  {activeProject.title}
-                </h3>
-                <p className="text-lg text-muted-foreground font-light leading-relaxed max-w-xs">
-                  {activeProject.description}
-                </p>
-              </motion.div>
-            </Link>
+            {/* Mask container: clips the sliding text so it wipes in/out cleanly */}
+            <div style={{ overflow: 'hidden', minHeight: '320px' }}>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeId}
+                  variants={{
+                    enter: { opacity: 0, y: 60 },
+                    center: {
+                      opacity: 1,
+                      y: 0,
+                      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+                    },
+                    exit: {
+                      opacity: 0,
+                      y: -60,
+                      transition: { duration: 0.5, ease: [0.7, 0, 0.84, 0] },
+                    },
+                  }}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                >
+                  <Link href={`/project/${activeProject.id}`} className="block group">
+                    <p className="text-[11px] font-mono text-muted-foreground uppercase tracking-[0.3em] mb-5">
+                      {activeProject.category}
+                    </p>
+                    <h3 className="text-[2.6rem] lg:text-[3.2rem] font-display font-medium tracking-tighter leading-[1.1] mb-6 group-hover:opacity-70 transition-opacity duration-300">
+                      {activeProject.title}
+                    </h3>
+                    <p className="text-lg text-muted-foreground font-light leading-relaxed max-w-xs">
+                      {activeProject.description}
+                    </p>
+                  </Link>
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </div>
         </div>
 
