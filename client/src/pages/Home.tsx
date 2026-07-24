@@ -343,7 +343,7 @@ function ProjectGrid() {
         </div>
 
         {/* Right scrolling images — pulled left 7% so text overlaps the image edge */}
-        <div className="flex-1 flex flex-col gap-16 py-[28vh] pr-12 -ml-[7%]">
+        <div className="flex-1 flex flex-col gap-[55vh] py-[45vh] pr-12 -ml-[7%]">
           {visibleProjects.map((project) => (
             <div
               key={project.id}
