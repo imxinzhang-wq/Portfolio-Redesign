@@ -197,11 +197,7 @@ function Navbar() {
       <motion.nav
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className={`pointer-events-auto flex items-center justify-between w-full max-w-7xl px-6 md:px-10 py-5 transition-all duration-500 rounded-2xl md:rounded-full ${
-          isScrolled || isMenuOpen
-            ? "bg-white/90 md:bg-white/60 backdrop-blur-xl border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.04)]"
-            : "bg-transparent border border-transparent"
-        }`}
+        className="pointer-events-auto flex items-center justify-between w-full max-w-7xl px-6 md:px-10 py-5 rounded-2xl md:rounded-full"
       >
         <button
           onClick={() => { setIsMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
@@ -308,7 +304,7 @@ function ProjectGrid() {
               <img
                 src={project.image}
                 alt={project.title}
-                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-[1.03]"
+                className="w-full h-full object-cover"
               />
             </div>
           </Link>
@@ -357,7 +353,7 @@ function ProjectGrid() {
                 <img
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-[1.03]"
+                  className="w-full h-full object-cover"
                 />
               </Link>
             </div>
