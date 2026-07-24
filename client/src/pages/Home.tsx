@@ -110,6 +110,7 @@ function CustomCursor() {
 }
 
 export default function Home() {
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Handle hash navigation on mount and hash change
@@ -132,8 +133,39 @@ export default function Home() {
     return () => window.removeEventListener('hashchange', handleHash);
   }, []);
 
+  // Scroll-triggered background color via IntersectionObserver
+  useEffect(() => {
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+
+    const sections = Array.from(
+      document.querySelectorAll<HTMLElement>('[data-bg-color]')
+    );
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const color = (entry.target as HTMLElement).dataset.bgColor;
+            if (color && wrapper) {
+              wrapper.style.backgroundColor = color;
+            }
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    sections.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="bg-background min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans cursor-none">
+    <div
+      ref={wrapperRef}
+      className="min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans cursor-none"
+      style={{ backgroundColor: '#e8e4dc', transition: 'background-color 0.6s ease' }}
+    >
       <CustomCursor />
 
       {/* Background Elements */}
@@ -245,7 +277,7 @@ function Navbar() {
 
 function Hero() {
   return (
-    <section className="min-h-screen flex items-center justify-center px-6 pt-20">
+    <section data-bg-color="#e8e4dc" className="min-h-screen flex items-center justify-center px-6 pt-20">
       <div className="max-w-6xl w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -281,7 +313,7 @@ function ProjectGrid() {
   }, [bgOpacity]);
 
   return (
-    <section id="work" ref={targetRef} className="py-24 px-6 md:px-12 max-w-6xl mx-auto">
+    <section id="work" data-bg-color="#e0e0e0" ref={targetRef} className="py-24 px-6 md:px-12 max-w-6xl mx-auto">
       <div className="flex flex-col gap-32">
         {MOCK_PROJECTS.filter(p => !p.hidden).map((project, i) => (
           <div key={project.id} className="group cursor-pointer">
@@ -431,7 +463,7 @@ function About() {
   }, [scrollYProgress]);
 
   return (
-    <section id="about" ref={targetRef} className="py-40 px-6">
+    <section id="about" data-bg-color="#1a1a1a" ref={targetRef} className="py-40 px-6">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0 }}
@@ -467,7 +499,7 @@ function About() {
 
 function Footer() {
   return (
-    <footer id="contact" className="py-20 px-6 relative z-10">
+    <footer id="contact" data-bg-color="#111111" className="py-20 px-6 relative z-10">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
         <div className="text-center md:text-left">
           <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-muted-foreground mb-2">Say hello</p>
