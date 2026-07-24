@@ -143,7 +143,12 @@ export default function Home() {
         if (section.getBoundingClientRect().top <= midpoint) active = section;
       }
       const color = active?.dataset.bgColor;
-      if (color && wrapper) wrapper.style.backgroundColor = color;
+      if (color && wrapper) {
+        wrapper.style.backgroundColor = color;
+        // Keep html background in sync so macOS overscroll bounce shows the
+        // correct colour instead of the browser default white.
+        document.documentElement.style.backgroundColor = color;
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
