@@ -396,6 +396,16 @@ const maskedWord = {
     y: "0%",
     transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as const },
   },
+  /*
+    Leaving is upward, not a rewind of the entrance: the outgoing copy keeps
+    travelling the same direction it came in and exits through the top of its
+    own line mask, so a swap reads as one continuous roll rather than a bounce.
+    Faster than the entrance so the rail is not empty for long.
+  */
+  exit: {
+    y: "-115%",
+    transition: { duration: 0.55, ease: [0.7, 0, 0.84, 0] as const },
+  },
 };
 
 function MaskedText({
@@ -433,6 +443,8 @@ function MaskedText({
         visible: {
           transition: { staggerChildren: stagger, delayChildren: delay },
         },
+        // Same word order on the way out, tighter, and no lead-in delay.
+        exit: { transition: { staggerChildren: stagger * 0.6 } },
       }}
     >
       {words.map((word, i) => (
@@ -609,16 +621,16 @@ function ProjectGrid() {
           <div className="hidden md:block">
             <div className="sticky top-[36vh]">
               {/*
-                mode="wait" so the outgoing copy rolls back down behind its line
-                masks before the incoming copy rolls up — the two never overlap
-                mid-swap. Keying on the id is what restarts the stagger.
+                mode="wait" so the outgoing copy clears the top of its masks
+                before the incoming copy rolls up from the bottom — the two
+                never overlap mid-swap. Keying on the id restarts the stagger.
               */}
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeProject.id}
                   initial="hidden"
                   animate="visible"
-                  exit="hidden"
+                  exit="exit"
                 >
                   <ProjectCopy project={activeProject} />
                 </motion.div>
