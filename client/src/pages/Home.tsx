@@ -282,7 +282,7 @@ function Navbar() {
         </button>
 
         <div
-          className={`hidden md:flex gap-10 eyebrow font-bold transition-colors duration-500 ${linkColor}`}
+          className={`hidden md:flex gap-10 eyebrow font-display font-bold transition-colors duration-500 ${linkColor}`}
         >
           <button
             onClick={() => handleNavClick("work")}
@@ -311,21 +311,21 @@ function Navbar() {
           <div className="absolute top-full left-0 right-0 mt-2 bg-card/90 backdrop-blur-xl border border-border rounded-2xl p-6 flex flex-col gap-6 shadow-[0_8px_32px_rgba(0,0,0,0.04)] md:hidden">
             <button
               onClick={() => handleNavClick("work")}
-              className="text-sm font-bold uppercase tracking-[0.25em] text-foreground text-left"
+              className="text-sm font-display font-bold uppercase tracking-[0.25em] text-foreground text-left"
               data-testid="link-work-mobile"
             >
               WORK
             </button>
             <button
               onClick={() => handleNavClick("about")}
-              className="text-sm font-bold uppercase tracking-[0.25em] text-foreground text-left"
+              className="text-sm font-display font-bold uppercase tracking-[0.25em] text-foreground text-left"
               data-testid="link-about-mobile"
             >
               ABOUT
             </button>
             <button
               onClick={() => handleNavClick("contact")}
-              className="text-sm font-bold uppercase tracking-[0.25em] text-foreground text-left"
+              className="text-sm font-display font-bold uppercase tracking-[0.25em] text-foreground text-left"
               data-testid="link-contact-mobile"
             >
               CONTACT
