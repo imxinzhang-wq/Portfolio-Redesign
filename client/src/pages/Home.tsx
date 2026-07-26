@@ -355,23 +355,23 @@ function Hero() {
       */}
       <div className="h-screen flex items-center justify-center">
         <div className="max-w-6xl w-full">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1] }}
-          className="text-center"
-        >
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-medium tracking-tight leading-[1.15] text-balance">
-            I'm Xin, a Product Designer at{" "}
-            <span className="text-primary/60 transition-colors hover:text-primary cursor-default">
-              YouTube
-            </span>
-            . Previously a founding designer at{" "}
-            <span className="text-primary/60 transition-colors hover:text-primary cursor-default">
-              Airbnb China
-            </span>
-            .
-          </h1>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1] }}
+            className="text-center"
+          >
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-medium tracking-tight leading-[1.15] text-balance">
+              I'm Xin, a Product Designer at{" "}
+              <span className="text-primary/60 transition-colors hover:text-primary cursor-default">
+                YouTube
+              </span>
+              . Previously a founding designer at{" "}
+              <span className="text-primary/60 transition-colors hover:text-primary cursor-default">
+                Airbnb China
+              </span>
+              .
+            </h1>
           </motion.div>
         </div>
       </div>
@@ -612,7 +612,7 @@ function ProjectGrid() {
           Projects
         </h2>
 
-        <div className="grid md:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] md:gap-x-12 lg:gap-x-20">
+        <div className="grid md:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] lg:grid-cols-[minmax(0,28rem)_minmax(0,1fr)] md:gap-x-12 lg:gap-x-20">
           {/*
             The pinned copy rail. Sticky against the whole column, which spans
             every image, so the text holds one position for the entire section
