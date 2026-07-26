@@ -339,11 +339,16 @@ function Navbar() {
 
 function Hero() {
   return (
-    <section
-      data-bg-color={SECTION_BG.canvas}
-      className="min-h-[115vh] flex items-center justify-center px-6 pt-20"
-    >
-      <div className="max-w-6xl w-full">
+    <section data-bg-color={SECTION_BG.canvas} className="min-h-[115vh] px-6">
+      {/*
+        Centring happens inside a viewport-tall box, not against the section.
+        The section is deliberately taller than the screen (the extra 15vh is
+        what makes the page start scrolling before Projects appears), so
+        centring against the section itself put the headline ~100px below the
+        centre of the first screen.
+      */}
+      <div className="h-screen flex items-center justify-center">
+        <div className="max-w-6xl w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -361,7 +366,8 @@ function Hero() {
             </span>
             .
           </h1>
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );
@@ -457,7 +463,7 @@ function About() {
     <section
       id="about"
       data-bg-color={SECTION_BG.canvas}
-      className="py-60 px-6"
+      className="pt-60 pb-16 px-6"
     >
       <div className="max-w-4xl mx-auto">
         <motion.div
@@ -517,7 +523,7 @@ function Footer() {
     <footer
       id="contact"
       data-bg-color={SECTION_BG.canvas}
-      className="py-40 px-6 relative"
+      className="py-16 px-6 relative"
     >
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
         <div className="text-center md:text-left">
