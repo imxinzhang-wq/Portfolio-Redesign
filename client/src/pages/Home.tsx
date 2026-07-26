@@ -175,7 +175,13 @@ export default function Home() {
     >
       <CustomCursor />
       <Navbar />
-      <main className="relative z-10">
+      {/*
+        No z-index here on purpose. z-index would make <main> a stacking
+        context, which would cut the Projects wordmark's difference blend off
+        from the wrapper's animated background colour and leave it rendering
+        flat white. Layering inside main is handled by DOM order.
+      */}
+      <main className="relative">
         <Hero />
         <ProjectGrid />
         <About />
@@ -291,27 +297,29 @@ function ProjectGrid() {
   const visibleProjects = MOCK_PROJECTS.filter(p => !p.hidden);
 
   return (
-    <section id="work" data-bg-color={SECTION_BG.canvas} className="relative bg-background">
+    <section id="work" data-bg-color={SECTION_BG.ink} className="relative">
       {/*
         Layering, and why the DOM order matters:
 
         The cards come FIRST so the sticky "Projects" wordmark below them paints
         ON TOP. That is what makes its difference blend invert against whatever
         it overlaps — white over an image inverts the pixels, white over the
-        beige canvas resolves to near-black (|255-245,255-240,255-230|).
+        dark canvas resolves to light grey (|255-26| = 229).
 
         The blend lives on the sticky element itself, not on the <h2> inside it:
         `position: sticky` establishes a stacking context, so a blend on a
         descendant would only ever composite against that container's own
         (transparent) backdrop and render plain white. Blending the sticky box
-        as a group reaches the section background and the images behind it.
+        as a group reaches the page background and the images behind it.
 
-        The section therefore needs a real painted background (bg-background) —
-        the page background lives on an ancestor outside <main>'s stacking
-        context and is not part of the backdrop.
+        The section deliberately paints NO background of its own. The scrolling
+        colour change lives on the page wrapper, and a background here would
+        show as a hard edge sliding up the screen instead of a crossfade. For
+        the wrapper's colour to count as backdrop it has to be in the same
+        stacking context, which is why <main> carries no z-index.
       */}
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-24 md:py-[28vh] flex flex-col gap-24 md:gap-[24vh]">
-        <h2 className="text-4xl font-display font-medium tracking-tighter md:hidden">
+        <h2 className="text-4xl font-display font-medium tracking-tighter text-white md:hidden">
           Projects
         </h2>
 
@@ -327,20 +335,20 @@ function ProjectGrid() {
               className={`w-full md:w-[48%] ${alignRight ? 'md:ml-auto md:text-right md:-mt-[12vh]' : ''}`}
             >
               <Link href={`/project/${project.id}`} className="block group">
-                <div className="w-full aspect-square overflow-hidden rounded-[32px] bg-foreground/5 mb-10">
+                <div className="w-full aspect-square overflow-hidden rounded-[32px] bg-white/5 mb-10">
                   <img
                     src={project.image}
                     alt={project.title}
                     className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.04]"
                   />
                 </div>
-                <p className="eyebrow font-mono text-muted-foreground mb-3">
+                <p className="eyebrow font-mono text-white/50 mb-3">
                   {project.category}
                 </p>
-                <h3 className="text-3xl font-display font-medium tracking-tighter mb-4 group-hover:opacity-70 transition-opacity">
+                <h3 className="text-3xl font-display font-medium tracking-tighter text-white mb-4 group-hover:opacity-70 transition-opacity">
                   {project.title}
                 </h3>
-                <p className={`text-base text-muted-foreground font-light leading-[1.7] max-w-md ${alignRight ? 'md:ml-auto' : ''}`}>
+                <p className={`text-base text-white/70 font-light leading-[1.7] max-w-md ${alignRight ? 'md:ml-auto' : ''}`}>
                   {project.description}
                 </p>
               </Link>
@@ -370,7 +378,7 @@ function ProjectGrid() {
 
 function About() {
   return (
-    <section id="about" data-bg-color={SECTION_BG.ink} className="py-60 px-6">
+    <section id="about" data-bg-color={SECTION_BG.canvas} className="py-60 px-6">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0 }}
@@ -378,8 +386,8 @@ function About() {
           className="space-y-16"
         >
           <div className="space-y-12">
-            <h2 className="eyebrow font-bold text-white/50">About Me</h2>
-            <div className="text-3xl md:text-5xl font-display leading-[1.3] font-medium tracking-tight space-y-10 text-white">
+            <h2 className="eyebrow font-bold text-foreground/40">About Me</h2>
+            <div className="text-3xl md:text-5xl font-display leading-[1.3] font-medium tracking-tight space-y-10 text-foreground">
               <p>
                 I moved to the U.S. in 2014 to study Human-Computer Interaction at the University of Michigan. Since then, my work has taken me from California to Switzerland.
               </p>
@@ -388,16 +396,16 @@ function About() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-12">
             <div className="space-y-4">
-              <h3 className="eyebrow font-bold text-white/50">Outside of work</h3>
-              <p className="text-white/70 leading-[1.7] text-lg font-light">
+              <h3 className="eyebrow font-bold text-foreground/40">Outside of work</h3>
+              <p className="text-foreground/70 leading-[1.7] text-lg font-light">
                 I'm a global explorer (40+ countries), film photographer, and painter.{" "}
                 <a href="https://xhslink.com/m/gXhYLsbMVt" target="_blank" rel="noopener noreferrer" className="underline decoration-current underline-offset-4 hover:opacity-70 transition-opacity" data-testid="link-creator-story">As a creator,</a>{" "}
                 I'm passionate about visual storytelling through video and editing—an obsession that shapes how I see the creator journey.
               </p>
             </div>
             <div className="space-y-4">
-              <h3 className="eyebrow font-bold text-white/50">Fun Fact</h3>
-              <p className="text-white/70 leading-[1.7] text-lg font-light">
+              <h3 className="eyebrow font-bold text-foreground/40">Fun Fact</h3>
+              <p className="text-foreground/70 leading-[1.7] text-lg font-light">
                 I hold a Bachelor's degree in Applied Mathematics and was recognized as a Meritorious Winner in the 2013 Mathematical Contest in Modeling.
               </p>
             </div>
@@ -410,16 +418,16 @@ function About() {
 
 function Footer() {
   return (
-    <footer id="contact" data-bg-color={SECTION_BG.ink} className="py-40 px-6 relative z-10">
+    <footer id="contact" data-bg-color={SECTION_BG.canvas} className="py-40 px-6 relative">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
         <div className="text-center md:text-left">
-          <p className="eyebrow font-bold text-white/50 mb-2">Say hello</p>
-          <a href="mailto:about.dala@gmail.com" className="text-2xl font-display text-white hover:opacity-50 transition-opacity" data-testid="link-email">
+          <p className="eyebrow font-bold text-foreground/40 mb-2">Say hello</p>
+          <a href="mailto:about.dala@gmail.com" className="text-2xl font-display text-foreground hover:opacity-50 transition-opacity" data-testid="link-email">
             about.dala@gmail.com
           </a>
         </div>
-        <div className="flex gap-8 eyebrow font-bold text-white/50">
-          <a href="https://www.linkedin.com/in/imxinzhang/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">LinkedIn</a>
+        <div className="flex gap-8 eyebrow font-bold text-foreground/40">
+          <a href="https://www.linkedin.com/in/imxinzhang/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">LinkedIn</a>
         </div>
       </div>
     </footer>
