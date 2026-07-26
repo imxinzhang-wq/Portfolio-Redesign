@@ -327,7 +327,7 @@ function ProjectGrid() {
               className={`w-full md:w-[42%] ${alignRight ? 'md:ml-auto md:text-right md:-mt-[12vh]' : ''}`}
             >
               <Link href={`/project/${project.id}`} className="block group">
-                <div className="w-full aspect-square overflow-hidden rounded-[32px] bg-foreground/5 mb-6">
+                <div className="w-full aspect-square overflow-hidden rounded-[32px] bg-foreground/5 mb-10">
                   <img
                     src={project.image}
                     alt={project.title}
@@ -359,7 +359,7 @@ function ProjectGrid() {
           className="sticky top-0 h-screen flex items-center justify-center"
           style={{ color: "white", mixBlendMode: "difference" }}
         >
-          <h2 className="text-7xl lg:text-8xl font-display font-medium tracking-tighter">
+          <h2 className="text-6xl lg:text-7xl font-display font-medium tracking-tighter">
             Projects
           </h2>
         </div>
