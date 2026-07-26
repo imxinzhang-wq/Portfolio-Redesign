@@ -527,7 +527,7 @@ function ProjectFrame({
   // hidden by overflow. Panning ±8% of the image height (≈10.4% of the frame)
   // stays well inside the ±15% the centring leaves on each edge, so the frame
   // is always fully covered — no gaps creep in at the extremes of the scroll.
-  const y = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"]);
+  const y = useTransform(scrollYProgress, [0, 1], ["-12%", "12%"]);
 
   return (
     <Link href={`/project/${project.id}`} className="group block">
