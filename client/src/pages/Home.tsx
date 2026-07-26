@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { motion, useSpring, AnimatePresence } from "framer-motion";
+import { motion, useSpring } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 
 import project1 from "@assets/Collection_Cover.png";
@@ -289,173 +289,80 @@ function Hero() {
 
 function ProjectGrid() {
   const visibleProjects = MOCK_PROJECTS.filter(p => !p.hidden);
-  const [activeId, setActiveId] = useState<number>(visibleProjects[0]?.id ?? 0);
-  const activeProject = visibleProjects.find(p => p.id === activeId) ?? visibleProjects[0];
-  const sectionRef = useRef<HTMLElement>(null);
-
-  // panelVisible: true only while at least one project image sits in the
-  // viewport centre band — keeps the left text in sync with the right images
-  // on both entry and exit.
-  const [panelVisible, setPanelVisible] = useState(false);
-  const intersectingIds = useRef(new Set<number>());
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    // rootMargin creates a thin band at the viewport centre; whichever image
-    // enters that band becomes the active project in the sticky left panel.
-    const imageEls = section.querySelectorAll<HTMLElement>('[data-project-id]');
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const id = Number((entry.target as HTMLElement).dataset.projectId);
-          if (entry.isIntersecting) {
-            intersectingIds.current.add(id);
-            setActiveId(id);
-            setPanelVisible(true);
-          } else {
-            intersectingIds.current.delete(id);
-            if (intersectingIds.current.size === 0) setPanelVisible(false);
-          }
-        });
-      },
-      { rootMargin: '-45% 0px -45% 0px', threshold: 0 }
-    );
-
-    imageEls.forEach(el => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
 
   return (
-    <section id="work" data-bg-color={SECTION_BG.canvas} ref={sectionRef}>
+    <section id="work" data-bg-color={SECTION_BG.canvas} className="relative bg-background">
+      {/*
+        Layering, and why the DOM order matters:
 
-      {/* ── Mobile: simple stacked layout ── */}
-      <div className="md:hidden px-6 py-20 flex flex-col gap-20">
-        {visibleProjects.map((project) => (
-          <Link key={project.id} href={`/project/${project.id}`} className="block group">
-            <p className="eyebrow font-mono text-muted-foreground mb-3">
-              {project.category}
-            </p>
-            <h2 className="text-3xl font-display font-medium tracking-tighter mb-4 group-hover:opacity-70 transition-opacity">
-              {project.title}
-            </h2>
-            <p className="text-base text-muted-foreground font-light leading-[1.7] mb-8">
-              {project.description}
-            </p>
-            <div className="w-full aspect-[4/3] overflow-hidden rounded-xl bg-foreground/5">
-              <img
-                src={project.image}
-                alt={project.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </Link>
-        ))}
+        The cards come FIRST so the sticky "Projects" wordmark below them paints
+        ON TOP. That is what makes its difference blend invert against whatever
+        it overlaps — white over an image inverts the pixels, white over the
+        beige canvas resolves to near-black (|255-245,255-240,255-230|).
+
+        The blend lives on the sticky element itself, not on the <h2> inside it:
+        `position: sticky` establishes a stacking context, so a blend on a
+        descendant would only ever composite against that container's own
+        (transparent) backdrop and render plain white. Blending the sticky box
+        as a group reaches the section background and the images behind it.
+
+        The section therefore needs a real painted background (bg-background) —
+        the page background lives on an ancestor outside <main>'s stacking
+        context and is not part of the backdrop.
+      */}
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-24 md:py-[28vh] flex flex-col gap-24 md:gap-[24vh]">
+        <h2 className="text-4xl font-display font-medium tracking-tighter md:hidden">
+          Projects
+        </h2>
+
+        {visibleProjects.map((project, i) => {
+          const alignRight = i % 2 === 1;
+          return (
+            <motion.div
+              key={project.id}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-120px" }}
+              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+              className={`w-full md:w-[42%] ${alignRight ? 'md:ml-auto md:text-right md:-mt-[12vh]' : ''}`}
+            >
+              <Link href={`/project/${project.id}`} className="block group">
+                <div className="w-full aspect-square overflow-hidden rounded-[32px] bg-foreground/5 mb-6">
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.04]"
+                  />
+                </div>
+                <p className="eyebrow font-mono text-muted-foreground mb-3">
+                  {project.category}
+                </p>
+                <h3 className="text-3xl font-display font-medium tracking-tighter mb-4 group-hover:opacity-70 transition-opacity">
+                  {project.title}
+                </h3>
+                <p className={`text-base text-muted-foreground font-light leading-[1.7] max-w-md ${alignRight ? 'md:ml-auto' : ''}`}>
+                  {project.description}
+                </p>
+              </Link>
+            </motion.div>
+          );
+        })}
       </div>
 
-      {/* ── Desktop: sticky left text + scrolling right images ── */}
       {/*
-        DOM order: right column FIRST (paints behind), left panel SECOND (paints on top).
-        CSS flex `order` reverses the visual order so left panel appears on the left.
-        This means the left panel needs no z-index — DOM order handles layering.
-        No z-index on the left panel div or its sticky child → no stacking contexts →
-        mix-blend-mode on the h3 composites against the ROOT backdrop, which includes
-        the image visible through the transparent left panel at the overlap zone.
+        Sticky wordmark — absolutely positioned so it takes no layout space and
+        the cards scroll straight through it. pointer-events-none keeps the
+        cards clickable underneath.
       */}
-      <div className="hidden md:flex max-w-[1400px] mx-auto">
-
-        {/* Right scrolling images — FIRST in DOM (painted behind), visual order 2 */}
-        <div className="flex-1 flex flex-col gap-[55vh] py-[60vh] pr-12 -ml-[7%] order-2">
-          {visibleProjects.map((project) => (
-            <div
-              key={project.id}
-              data-project-id={project.id}
-              className="group cursor-pointer"
-            >
-              <Link
-                href={`/project/${project.id}`}
-                className="block w-full aspect-[16/10] overflow-hidden rounded-xl bg-foreground/5"
-              >
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-full object-cover"
-                />
-              </Link>
-            </div>
-          ))}
+      <div className="absolute inset-0 pointer-events-none hidden md:block">
+        <div
+          className="sticky top-0 h-screen flex items-center justify-center"
+          style={{ color: "white", mixBlendMode: "difference" }}
+        >
+          <h2 className="text-7xl lg:text-8xl font-display font-medium tracking-tighter">
+            Projects
+          </h2>
         </div>
-
-        {/* Left sticky panel — SECOND in DOM (paints on top), visual order 1, no z-index */}
-        <div className="w-[42%] shrink-0 relative order-1">
-          {/* No z-index on sticky → no stacking context → h3 blend reaches root backdrop */}
-          <div className="sticky top-[38vh] pl-12 pr-4">
-            <AnimatePresence mode="wait">
-              {panelVisible && <motion.div
-                key={activeId}
-                variants={{
-                  initial: {},
-                  animate: { transition: { staggerChildren: 0.1 } },
-                  exit:    { transition: { staggerChildren: 0.05, staggerDirection: -1 } },
-                }}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-              >
-                <Link href={`/project/${activeProject.id}`} className="block group">
-                  <div className="overflow-hidden mb-5">
-                    <motion.p
-                      variants={{
-                        initial: { opacity: 0, y: 40 },
-                        animate: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
-                        exit:    { opacity: 0, y: -40, transition: { duration: 0.4, ease: [0.7, 0, 0.84, 0] } },
-                      }}
-                      className="eyebrow font-mono text-muted-foreground"
-                    >
-                      {activeProject.category}
-                    </motion.p>
-                  </div>
-                  {/*
-                    Title: whitespace-nowrap so it extends past the left panel boundary
-                    into the image zone. mix-blend-mode:difference + color:white gives:
-                      - on beige bg (#f5f0e6): |255-245,255-240,255-230| ≈ near-black ✓
-                      - on image pixels:       |255-r,255-g,255-b| = inverted colours ✓
-                    Opacity-only animation (no y/transform) so Framer Motion doesn't
-                    leave a transform:translateY(0) that would create a stacking context
-                    and break the blend mode at rest.
-                  */}
-                  <div className="mb-8">
-                    <motion.h2
-                      variants={{
-                        initial: { opacity: 0 },
-                        animate: { opacity: 1, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
-                        exit:    { opacity: 0,  transition: { duration: 0.4, ease: [0.7, 0, 0.84, 0] } },
-                      }}
-                      className="text-4xl lg:text-5xl font-display font-medium tracking-tighter leading-[1.1] whitespace-nowrap"
-                      style={{ color: "white", mixBlendMode: "difference" }}
-                    >
-                      {activeProject.title}
-                    </motion.h2>
-                  </div>
-                  <div className="overflow-hidden">
-                    <motion.p
-                      variants={{
-                        initial: { opacity: 0, y: 40 },
-                        animate: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
-                        exit:    { opacity: 0, y: -40, transition: { duration: 0.4, ease: [0.7, 0, 0.84, 0] } },
-                      }}
-                      className="text-lg text-muted-foreground font-light leading-[1.7] max-w-xs"
-                    >
-                      {activeProject.description}
-                    </motion.p>
-                  </div>
-                </Link>
-              </motion.div>}
-            </AnimatePresence>
-          </div>
-        </div>
-
       </div>
     </section>
   );
