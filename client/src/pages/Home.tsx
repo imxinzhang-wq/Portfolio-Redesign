@@ -1,5 +1,11 @@
 import { Link } from "wouter";
-import { motion, useSpring, useScroll, useTransform } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useSpring,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import { Fragment, useRef, useEffect, useState } from "react";
 
 import project1 from "@assets/Collection_Cover.png";
@@ -397,20 +403,31 @@ function MaskedText({
   className,
   stagger = 0.045,
   delay = 0,
+  inView = false,
 }: {
   text: string;
   className?: string;
   stagger?: number;
   delay?: number;
+  /*
+    Off by default: the copy rail drives hidden/visible from its parent, so the
+    words must inherit that state rather than run their own viewport trigger.
+    Turn it on for the standalone (mobile) blocks that animate on scroll-in.
+  */
+  inView?: boolean;
 }) {
   const words = text.split(" ");
 
   return (
     <motion.span
       className={className}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: false, margin: "-12% 0px -12% 0px" }}
+      {...(inView
+        ? {
+            initial: "hidden" as const,
+            whileInView: "visible" as const,
+            viewport: { once: false, margin: "-12% 0px -12% 0px" },
+          }
+        : {})}
       variants={{
         hidden: {},
         visible: {
@@ -438,7 +455,53 @@ function MaskedText({
   );
 }
 
-function ProjectCard({ project }: { project: Project }) {
+// The year is its own column, so it is split off the category label; the
+// company half ("Personal Project", "Airbnb") is deliberately dropped.
+const yearOf = (project: Project) => project.category.split("•")[0].trim();
+
+/*
+  The copy for one project: year in its own column, then title and description.
+  Used both by the pinned desktop rail (state driven from the parent) and by the
+  per-image blocks on mobile, where there is no room for a rail.
+*/
+function ProjectCopy({
+  project,
+  inView = false,
+}: {
+  project: Project;
+  inView?: boolean;
+}) {
+  return (
+    <div className="flex items-start gap-6 md:gap-10">
+      <span className="shrink-0 pt-[0.45em] eyebrow font-mono text-white/50 tabular-nums">
+        <MaskedText text={yearOf(project)} inView={inView} />
+      </span>
+
+      <div className="min-w-0">
+        <h3 className="text-[2rem] md:text-[2.5rem] lg:text-[2.75rem] font-display font-medium tracking-tighter leading-[1.1] text-white">
+          <MaskedText text={project.title} stagger={0.06} inView={inView} />
+        </h3>
+
+        <p className="mt-6 md:mt-8 text-base text-white/70 font-normal leading-[1.7]">
+          <MaskedText
+            text={project.description}
+            stagger={0.018}
+            delay={0.12}
+            inView={inView}
+          />
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function ProjectFrame({
+  project,
+  onActivate,
+}: {
+  project: Project;
+  onActivate: (el: HTMLDivElement | null) => void;
+}) {
   const frameRef = useRef<HTMLDivElement>(null);
 
   // Scroll-linked parallax: track the frame from the moment it enters the
@@ -454,43 +517,14 @@ function ProjectCard({ project }: { project: Project }) {
   // is always fully covered — no gaps creep in at the extremes of the scroll.
   const y = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"]);
 
-  // The year is its own column, so it is split off the category label here;
-  // the company half ("Personal Project", "Airbnb") is deliberately dropped.
-  const year = project.category.split("•")[0].trim();
-
   return (
-    <Link
-      href={`/project/${project.id}`}
-      className="group grid md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] gap-y-8 md:gap-x-16 lg:gap-x-24"
-    >
-      {/*
-        Left column: year + copy. The inner block is sticky so the text holds
-        its position while its own project image scrolls past it, then releases
-        and hands over to the next project.
-      */}
-      <div className="md:h-full">
-        <div className="md:sticky md:top-[38vh] flex items-start gap-6 md:gap-10">
-          <span className="shrink-0 pt-[0.45em] eyebrow font-mono text-white/50 tabular-nums">
-            {year}
-          </span>
-
-          <div className="min-w-0">
-            <h3 className="text-[2rem] md:text-[2.75rem] lg:text-5xl font-display font-medium tracking-tighter leading-[1.1] text-white">
-              <MaskedText text={project.title} stagger={0.06} />
-            </h3>
-
-            <p className="mt-6 md:mt-8 text-base text-white/70 font-normal leading-[1.7] max-w-sm">
-              <MaskedText
-                text={project.description}
-                stagger={0.018}
-                delay={0.12}
-              />
-            </p>
-          </div>
-        </div>
+    <Link href={`/project/${project.id}`} className="group block">
+      {/* Mobile only: the rail cannot be pinned on a narrow screen, so each
+          image carries its own copy above it. */}
+      <div className="md:hidden mb-8">
+        <ProjectCopy project={project} inView />
       </div>
 
-      {/* Right column: the image, with the parallax pan inside its frame. */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -498,8 +532,11 @@ function ProjectCard({ project }: { project: Project }) {
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
       >
         <div
-          ref={frameRef}
-          className="relative w-full aspect-[5/4] overflow-hidden rounded-[32px] bg-white/5"
+          ref={(el) => {
+            (frameRef as { current: HTMLDivElement | null }).current = el;
+            onActivate(el);
+          }}
+          className="relative w-full aspect-[3/2] overflow-hidden rounded-[32px] bg-white/5"
         >
           <motion.img
             src={project.image}
@@ -515,52 +552,91 @@ function ProjectCard({ project }: { project: Project }) {
 
 function ProjectGrid() {
   const visibleProjects = MOCK_PROJECTS.filter((p) => !p.hidden);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const frames = useRef<(HTMLDivElement | null)[]>([]);
+
+  /*
+    Which project the rail is showing. The rail itself never moves, so the only
+    thing scroll decides is whose copy belongs in it: the frame whose centre is
+    closest to the viewport centre wins. Reading positions on scroll (rather
+    than an IntersectionObserver) keeps the answer correct in both directions
+    and while the images are still settling in.
+  */
+  useEffect(() => {
+    const handleScroll = () => {
+      const middle = window.innerHeight / 2;
+      let closest = 0;
+      let smallest = Infinity;
+
+      frames.current.forEach((el, i) => {
+        if (!el) return;
+        const box = el.getBoundingClientRect();
+        const distance = Math.abs(box.top + box.height / 2 - middle);
+        if (distance < smallest) {
+          smallest = distance;
+          closest = i;
+        }
+      });
+
+      setActiveIndex(closest);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const activeProject = visibleProjects[activeIndex] ?? visibleProjects[0];
 
   return (
+    /*
+      The section deliberately paints NO background of its own. The scrolling
+      colour change lives on the page wrapper, and a background here would show
+      as a hard edge sliding up the screen instead of a crossfade.
+    */
     <section id="work" data-bg-color={SECTION_BG.ink} className="relative">
-      {/*
-        Layering, and why the DOM order matters:
-
-        The cards come FIRST so the sticky "Projects" wordmark below them paints
-        ON TOP. That is what makes its difference blend invert against whatever
-        it overlaps — white over an image inverts the pixels, white over the
-        dark canvas resolves to light grey (|255-26| = 229).
-
-        The blend lives on the sticky element itself, not on the <h2> inside it:
-        `position: sticky` establishes a stacking context, so a blend on a
-        descendant would only ever composite against that container's own
-        (transparent) backdrop and render plain white. Blending the sticky box
-        as a group reaches the page background and the images behind it.
-
-        The section deliberately paints NO background of its own. The scrolling
-        colour change lives on the page wrapper, and a background here would
-        show as a hard edge sliding up the screen instead of a crossfade. For
-        the wrapper's colour to count as backdrop it has to be in the same
-        stacking context, which is why <main> carries no z-index.
-      */}
-      <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-24 md:py-[28vh] flex flex-col gap-24 md:gap-[24vh]">
-        <h2 className="text-4xl font-display font-medium tracking-tighter text-white md:hidden">
+      <div className="max-w-[1600px] mx-auto px-6 md:px-10 py-24 md:py-[28vh]">
+        <h2 className="text-4xl font-display font-medium tracking-tighter text-white mb-16 md:hidden">
           Projects
         </h2>
 
-        {visibleProjects.map((project) => (
-          <ProjectCard key={project.id} project={project} />
-        ))}
-      </div>
+        <div className="grid md:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] md:gap-x-12 lg:gap-x-20">
+          {/*
+            The pinned copy rail. Sticky against the whole column, which spans
+            every image, so the text holds one position for the entire section
+            and only its content changes as projects go by.
+          */}
+          <div className="hidden md:block">
+            <div className="sticky top-[36vh]">
+              {/*
+                mode="wait" so the outgoing copy rolls back down behind its line
+                masks before the incoming copy rolls up — the two never overlap
+                mid-swap. Keying on the id is what restarts the stagger.
+              */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeProject.id}
+                  initial="hidden"
+                  animate="visible"
+                  exit="hidden"
+                >
+                  <ProjectCopy project={activeProject} />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
 
-      {/*
-        Sticky wordmark — absolutely positioned so it takes no layout space and
-        the cards scroll straight through it. pointer-events-none keeps the
-        cards clickable underneath.
-      */}
-      <div className="absolute inset-0 pointer-events-none hidden md:block">
-        <div
-          className="sticky top-0 h-screen flex items-center justify-center"
-          style={{ color: "white", mixBlendMode: "difference" }}
-        >
-          <h2 className="text-6xl lg:text-7xl font-display font-medium tracking-tighter">
-            Projects
-          </h2>
+          <div className="flex flex-col gap-24 md:gap-[22vh]">
+            {visibleProjects.map((project, i) => (
+              <ProjectFrame
+                key={project.id}
+                project={project}
+                onActivate={(el) => {
+                  frames.current[i] = el;
+                }}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>
