@@ -7,6 +7,17 @@ import project2 from "@assets/Darmi_Cover.PNG";
 import project3 from "@assets/Airbnb_Cover_1774813459702.jpg";
 import project4 from "@assets/tagging_cover_1775594426781.jpeg";
 
+/*
+  Section background colours. These drive the scroll-linked background swap and
+  are read back out of the DOM by both the wrapper and the navbar, so they live
+  here as the single source of truth rather than as repeated hex literals.
+  Mirrors --background and --ink-dark in index.css.
+*/
+const SECTION_BG = {
+  canvas: "#f5f0e6",
+  ink: "#1a1a1a",
+} as const;
+
 const MOCK_PROJECTS = [
   {
     id: 2,
@@ -160,7 +171,7 @@ export default function Home() {
     <div
       ref={wrapperRef}
       className="min-h-screen relative text-foreground selection:bg-accent selection:text-accent-foreground font-sans cursor-none"
-      style={{ backgroundColor: '#f5f0e6', transition: 'background-color 0.6s ease' }}
+      style={{ backgroundColor: SECTION_BG.canvas, transition: 'background-color 0.6s ease' }}
     >
       <CustomCursor />
       <Navbar />
@@ -179,7 +190,7 @@ function Navbar() {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    const DARK_COLORS = new Set(['#1a1a1a', '#111111']);
+    const DARK_COLORS = new Set<string>([SECTION_BG.ink]);
     const handleScroll = () => {
       const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-bg-color]'));
       const midpoint = window.innerHeight * 0.5;
@@ -236,17 +247,17 @@ function Navbar() {
           </div>
         </button>
 
-        <div className={`hidden md:flex gap-10 text-xs font-bold uppercase tracking-[0.2em] transition-colors duration-500 ${linkColor}`}>
+        <div className={`hidden md:flex gap-10 eyebrow font-bold transition-colors duration-500 ${linkColor}`}>
           <button onClick={() => handleNavClick('work')} className={`transition-colors duration-300 ${linkHover}`} data-testid="link-work">WORK</button>
           <button onClick={() => handleNavClick('about')} className={`transition-colors duration-300 ${linkHover}`} data-testid="link-about">ABOUT</button>
           <button onClick={() => handleNavClick('contact')} className={`transition-colors duration-300 ${linkHover}`} data-testid="link-contact">CONTACT</button>
         </div>
 
         {isMenuOpen && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-white/90 backdrop-blur-xl border border-white/40 rounded-2xl p-6 flex flex-col gap-6 shadow-[0_8px_32px_rgba(0,0,0,0.04)] md:hidden">
-            <button onClick={() => handleNavClick('work')} className="text-sm font-bold uppercase tracking-[0.2em] text-foreground text-left" data-testid="link-work-mobile">WORK</button>
-            <button onClick={() => handleNavClick('about')} className="text-sm font-bold uppercase tracking-[0.2em] text-foreground text-left" data-testid="link-about-mobile">ABOUT</button>
-            <button onClick={() => handleNavClick('contact')} className="text-sm font-bold uppercase tracking-[0.2em] text-foreground text-left" data-testid="link-contact-mobile">CONTACT</button>
+          <div className="absolute top-full left-0 right-0 mt-2 bg-card/90 backdrop-blur-xl border border-border rounded-2xl p-6 flex flex-col gap-6 shadow-[0_8px_32px_rgba(0,0,0,0.04)] md:hidden">
+            <button onClick={() => handleNavClick('work')} className="text-sm font-bold uppercase tracking-[0.25em] text-foreground text-left" data-testid="link-work-mobile">WORK</button>
+            <button onClick={() => handleNavClick('about')} className="text-sm font-bold uppercase tracking-[0.25em] text-foreground text-left" data-testid="link-about-mobile">ABOUT</button>
+            <button onClick={() => handleNavClick('contact')} className="text-sm font-bold uppercase tracking-[0.25em] text-foreground text-left" data-testid="link-contact-mobile">CONTACT</button>
           </div>
         )}
       </motion.nav>
@@ -256,7 +267,7 @@ function Navbar() {
 
 function Hero() {
   return (
-    <section data-bg-color="#f5f0e6" className="min-h-[115vh] flex items-center justify-center px-6 pt-20">
+    <section data-bg-color={SECTION_BG.canvas} className="min-h-[115vh] flex items-center justify-center px-6 pt-20">
       <div className="max-w-6xl w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -317,22 +328,22 @@ function ProjectGrid() {
   }, []);
 
   return (
-    <section id="work" data-bg-color="#f5f0e6" ref={sectionRef}>
+    <section id="work" data-bg-color={SECTION_BG.canvas} ref={sectionRef}>
 
       {/* ── Mobile: simple stacked layout ── */}
       <div className="md:hidden px-6 py-20 flex flex-col gap-20">
         {visibleProjects.map((project) => (
           <Link key={project.id} href={`/project/${project.id}`} className="block group">
-            <p className="text-[11px] font-mono text-muted-foreground uppercase tracking-[0.3em] mb-3">
+            <p className="eyebrow font-mono text-muted-foreground mb-3">
               {project.category}
             </p>
-            <h3 className="text-[2rem] font-display font-medium tracking-tighter mb-4 group-hover:opacity-70 transition-opacity">
+            <h2 className="text-3xl font-display font-medium tracking-tighter mb-4 group-hover:opacity-70 transition-opacity">
               {project.title}
-            </h3>
-            <p className="text-base text-muted-foreground font-light leading-relaxed mb-8">
+            </h2>
+            <p className="text-base text-muted-foreground font-light leading-[1.7] mb-8">
               {project.description}
             </p>
-            <div className="w-full aspect-[4/3] overflow-hidden rounded-xl bg-black/5">
+            <div className="w-full aspect-[4/3] overflow-hidden rounded-xl bg-foreground/5">
               <img
                 src={project.image}
                 alt={project.title}
@@ -364,7 +375,7 @@ function ProjectGrid() {
             >
               <Link
                 href={`/project/${project.id}`}
-                className="block w-full aspect-[16/10] overflow-hidden rounded-xl bg-black/5"
+                className="block w-full aspect-[16/10] overflow-hidden rounded-xl bg-foreground/5"
               >
                 <img
                   src={project.image}
@@ -400,7 +411,7 @@ function ProjectGrid() {
                         animate: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
                         exit:    { opacity: 0, y: -40, transition: { duration: 0.4, ease: [0.7, 0, 0.84, 0] } },
                       }}
-                      className="text-[11px] font-mono text-muted-foreground uppercase tracking-[0.3em]"
+                      className="eyebrow font-mono text-muted-foreground"
                     >
                       {activeProject.category}
                     </motion.p>
@@ -415,17 +426,17 @@ function ProjectGrid() {
                     and break the blend mode at rest.
                   */}
                   <div className="mb-8">
-                    <motion.h3
+                    <motion.h2
                       variants={{
                         initial: { opacity: 0 },
                         animate: { opacity: 1, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
                         exit:    { opacity: 0,  transition: { duration: 0.4, ease: [0.7, 0, 0.84, 0] } },
                       }}
-                      className="text-[2.6rem] lg:text-[3.2rem] font-display font-medium tracking-tighter leading-[1.1] whitespace-nowrap"
+                      className="text-4xl lg:text-5xl font-display font-medium tracking-tighter leading-[1.1] whitespace-nowrap"
                       style={{ color: "white", mixBlendMode: "difference" }}
                     >
                       {activeProject.title}
-                    </motion.h3>
+                    </motion.h2>
                   </div>
                   <div className="overflow-hidden">
                     <motion.p
@@ -434,7 +445,7 @@ function ProjectGrid() {
                         animate: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
                         exit:    { opacity: 0, y: -40, transition: { duration: 0.4, ease: [0.7, 0, 0.84, 0] } },
                       }}
-                      className="text-lg text-muted-foreground font-light leading-relaxed max-w-xs"
+                      className="text-lg text-muted-foreground font-light leading-[1.7] max-w-xs"
                     >
                       {activeProject.description}
                     </motion.p>
@@ -452,7 +463,7 @@ function ProjectGrid() {
 
 function About() {
   return (
-    <section id="about" data-bg-color="#1a1a1a" className="py-60 px-6">
+    <section id="about" data-bg-color={SECTION_BG.ink} className="py-60 px-6">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0 }}
@@ -460,7 +471,7 @@ function About() {
           className="space-y-16"
         >
           <div className="space-y-12">
-            <h2 className="text-xs uppercase tracking-[0.3em] font-bold text-white/50">About Me</h2>
+            <h2 className="eyebrow font-bold text-white/50">About Me</h2>
             <div className="text-3xl md:text-5xl font-display leading-[1.3] font-medium tracking-tight space-y-10 text-white">
               <p>
                 I moved to the U.S. in 2014 to study Human-Computer Interaction at the University of Michigan. Since then, my work has taken me from California to Switzerland.
@@ -470,16 +481,16 @@ function About() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-12">
             <div className="space-y-4">
-              <h4 className="text-[10px] uppercase tracking-widest font-bold text-white">Outside of work</h4>
-              <p className="text-white/60 leading-relaxed text-lg font-light">
+              <h3 className="eyebrow font-bold text-white/50">Outside of work</h3>
+              <p className="text-white/70 leading-[1.7] text-lg font-light">
                 I'm a global explorer (40+ countries), film photographer, and painter.{" "}
                 <a href="https://xhslink.com/m/gXhYLsbMVt" target="_blank" rel="noopener noreferrer" className="underline decoration-current underline-offset-4 hover:opacity-70 transition-opacity" data-testid="link-creator-story">As a creator,</a>{" "}
                 I'm passionate about visual storytelling through video and editing—an obsession that shapes how I see the creator journey.
               </p>
             </div>
             <div className="space-y-4">
-              <h4 className="text-[10px] uppercase tracking-widest font-bold text-white">Fun Fact</h4>
-              <p className="text-white/60 leading-relaxed text-lg font-light">
+              <h3 className="eyebrow font-bold text-white/50">Fun Fact</h3>
+              <p className="text-white/70 leading-[1.7] text-lg font-light">
                 I hold a Bachelor's degree in Applied Mathematics and was recognized as a Meritorious Winner in the 2013 Mathematical Contest in Modeling.
               </p>
             </div>
@@ -492,15 +503,15 @@ function About() {
 
 function Footer() {
   return (
-    <footer id="contact" data-bg-color="#111111" className="py-40 px-6 relative z-10">
+    <footer id="contact" data-bg-color={SECTION_BG.ink} className="py-40 px-6 relative z-10">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
         <div className="text-center md:text-left">
-          <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/50 mb-2">Say hello</p>
+          <p className="eyebrow font-bold text-white/50 mb-2">Say hello</p>
           <a href="mailto:about.dala@gmail.com" className="text-2xl font-display text-white hover:opacity-50 transition-opacity" data-testid="link-email">
             about.dala@gmail.com
           </a>
         </div>
-        <div className="flex gap-8 text-[10px] uppercase tracking-widest font-bold text-white/50">
+        <div className="flex gap-8 eyebrow font-bold text-white/50">
           <a href="https://www.linkedin.com/in/imxinzhang/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">LinkedIn</a>
         </div>
       </div>

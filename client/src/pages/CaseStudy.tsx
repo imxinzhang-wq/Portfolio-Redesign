@@ -1,12 +1,9 @@
 import { motion } from "framer-motion";
-import { ArrowLeft, ArrowUpRight, Check } from "lucide-react";
+import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { useEffect, useState } from "react";
 
-// Import user uploaded image
-import darmiImg1 from "@assets/image_1774537420038.png";
-// If you want to use the actual Darmi cover from Home, you can import it:
-import project2Cover from "@assets/Darmi_Cover.PNG"; 
+import project2Cover from "@assets/Darmi_Cover.PNG";
 import project1Cover from "@assets/Collection_Cover.png"; 
 import project3Cover from "@assets/Airbnb_Cover_1774813459702.jpg";
 import collectionCreateGif from "@assets/Collection-create_1774547429730.gif";
@@ -437,11 +434,11 @@ export default function CaseStudy() {
 
   if ((projectId === "1" || projectId === "4") && !isAuthenticated) {
     return (
-      <div className="bg-[#f5f0e6] min-h-screen flex flex-col relative overflow-hidden font-sans">
+      <div className="bg-background min-h-screen flex flex-col relative overflow-hidden font-sans">
         <main className="relative z-10 flex-1 flex flex-col">
           <nav className="px-6 md:px-12 py-12 max-w-7xl mx-auto w-full">
             <Link href="/">
-              <a className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest hover:opacity-60 transition-opacity">
+              <a className="inline-flex items-center gap-2 eyebrow font-mono hover:opacity-60 transition-opacity">
                 <ArrowLeft className="w-4 h-4" /> Home
               </a>
             </Link>
@@ -450,7 +447,7 @@ export default function CaseStudy() {
           <div className="flex-1 flex items-center justify-center px-6 pb-32">
             <div className="max-w-md w-full space-y-8 text-center">
               <div className="space-y-4">
-                <h2 className="text-3xl md:text-4xl font-display font-medium tracking-tight">Protected Project</h2>
+                <h1 className="text-3xl md:text-4xl font-display font-medium tracking-tight">Protected Project</h1>
                 <p className="text-muted-foreground font-light">This case study requires a password to view.</p>
               </div>
               <form 
@@ -470,12 +467,12 @@ export default function CaseStudy() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter password"
-                  className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-black/5 transition-all text-center font-mono"
+                  className="w-full px-4 py-3 rounded-xl border border-foreground/10 bg-card/60 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-foreground/5 transition-all text-center font-mono"
                 />
-                {error && <p className="text-red-500 text-sm">{error}</p>}
-                <button 
+                {error && <p className="text-destructive text-sm">{error}</p>}
+                <button
                   type="submit"
-                  className="w-full py-3 rounded-xl bg-black text-white font-medium hover:bg-black/80 transition-colors"
+                  className="w-full py-3 rounded-xl bg-foreground text-background font-medium hover:bg-foreground/80 transition-colors"
                 >
                   Unlock
                 </button>
@@ -488,12 +485,12 @@ export default function CaseStudy() {
   }
 
   return (
-    <div className="bg-[#f5f0e6] min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans">
+    <div className="bg-background min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans">
       <main className="relative z-10 pb-12">
         {/* Navigation */}
         <nav className="px-6 md:px-12 py-12 max-w-7xl mx-auto flex items-center justify-between">
           <Link href="/">
-            <a className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest hover:opacity-60 transition-opacity">
+            <a className="inline-flex items-center gap-2 eyebrow font-mono hover:opacity-60 transition-opacity">
               <ArrowLeft className="w-4 h-4" /> Home
             </a>
           </Link>
@@ -507,29 +504,29 @@ export default function CaseStudy() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8 }}
             >
-              <h1 className="text-[3.5rem] md:text-[6.5rem] lg:text-[8rem] font-sans font-medium tracking-[-0.05em] mb-12 lg:mb-24 leading-[0.9] text-[#1a1918]">
+              <h1 className="text-6xl md:text-8xl lg:text-9xl font-display font-medium tracking-tighter mb-12 lg:mb-24 leading-[0.9] text-foreground">
                 {project.title}
               </h1>
               
               <div className="grid grid-cols-1 md:grid-cols-12 gap-x-8 gap-y-12">
                 <div className="md:col-span-4 lg:col-span-3 flex flex-col gap-10">
                   <div>
-                    <h4 className="text-[9px] font-sans uppercase tracking-[0.25em] text-[#1a1918]/40 mb-3 font-bold">
-                      Platform & Year
-                    </h4>
-                    <p className="text-[14px] font-medium text-[#1a1918]">
+                    <p className="eyebrow text-foreground/40 mb-3 font-bold">
+                      Platform &amp; Year
+                    </p>
+                    <p className="text-sm font-medium text-foreground">
                       {project.category}
                     </p>
                   </div>
                   <div>
-                    <h4 className="text-[9px] font-sans uppercase tracking-[0.25em] text-[#1a1918]/40 mb-3 font-bold">
+                    <p className="eyebrow text-foreground/40 mb-3 font-bold">
                       {project.tagsTitle || "Project Team"}
-                    </h4>
+                    </p>
                     <ul className="flex flex-col gap-1.5">
-                      {project.tags.map((tag: string, index: number) => (
-                        <li 
+                      {project.tags.map((tag: string) => (
+                        <li
                           key={tag}
-                          className="text-[14px] font-medium text-[#1a1918]"
+                          className="text-sm font-medium text-foreground"
                         >
                           {tag}
                         </li>
@@ -538,10 +535,10 @@ export default function CaseStudy() {
                   </div>
                 </div>
                 <div className="md:col-span-8 lg:col-span-9 lg:pl-12">
-                  <h4 className="text-[9px] font-sans uppercase tracking-[0.25em] text-[#1a1918]/40 mb-3 font-bold">
+                  <p className="eyebrow text-foreground/40 mb-3 font-bold">
                     Project Overview
-                  </h4>
-                  <p className="text-[1.5rem] md:text-[2rem] lg:text-[2.25rem] font-sans leading-[1.35] text-[#1a1918] tracking-[-0.01em] max-w-[38ch] font-normal">
+                  </p>
+                  <p className="text-2xl md:text-3xl lg:text-4xl leading-[1.35] text-foreground max-w-[38ch] font-normal">
                     {project.description}
                   </p>
                 </div>
@@ -580,9 +577,9 @@ export default function CaseStudy() {
               {section.type === "text" && (
                 <div className="max-w-4xl space-y-6">
                   {section.heading && (
-                    <h3 className="text-3xl md:text-4xl lg:text-5xl font-display font-medium tracking-tight mb-6 md:mb-8 leading-[1.15] text-balance">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-medium tracking-tight mb-6 md:mb-8 leading-[1.15] text-balance">
                       {section.heading}
-                    </h3>
+                    </h2>
                   )}
                   <p className="text-base md:text-lg text-foreground/70 font-light leading-[1.7] md:leading-[1.8] text-pretty max-w-3xl">
                     {section.body}
@@ -600,7 +597,7 @@ export default function CaseStudy() {
                     />
                   </div>
                   {section.caption && (
-                    <p className="text-[11px] text-muted-foreground font-mono uppercase tracking-widest">
+                    <p className="eyebrow font-mono text-muted-foreground">
                       {section.caption}
                     </p>
                   )}
@@ -610,23 +607,23 @@ export default function CaseStudy() {
               {section.type === "concept-pair" && (
                 <div className="w-full my-12">
                   {section.heading && (
-                    <h3 className="text-3xl md:text-4xl lg:text-5xl font-display font-medium tracking-tight mb-8 md:mb-12 leading-[1.15] text-balance">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-medium tracking-tight mb-8 md:mb-12 leading-[1.15] text-balance">
                       {section.heading}
-                    </h3>
+                    </h2>
                   )}
                   <div className="space-y-10 md:space-y-14">
                     {section.concepts.map((concept: any, i: number) => (
                       <div key={i} className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10 items-start">
                         <div className="lg:col-span-5 space-y-4 pt-1">
                           <div>
-                            <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-muted-foreground mb-2">
+                            <p className="eyebrow font-mono text-muted-foreground mb-2">
                               {concept.eyebrow}
                             </p>
-                            <h4 className="text-2xl md:text-[2rem] font-display font-medium tracking-tight text-foreground">
+                            <h3 className="text-2xl md:text-3xl font-display font-medium tracking-tight text-foreground">
                               {concept.title}
-                            </h4>
+                            </h3>
                           </div>
-                          <div className="space-y-3 text-[15px] md:text-[16px] leading-7 md:leading-8 text-foreground/70 font-light max-w-[34rem]">
+                          <div className="space-y-3 text-base leading-[1.7] md:leading-[1.8] text-foreground/70 font-light max-w-[34rem]">
                             {concept.body ? (
                               <p>{concept.body}</p>
                             ) : (
@@ -653,7 +650,7 @@ export default function CaseStudy() {
                             )}
                           </div>
                         </div>
-                        <div className={`lg:col-span-7 w-full overflow-hidden ${section.borderless ? '' : 'rounded-[40px] border-2 border-[#d4cfc4] bg-[#ebe5da] p-2'}`}>
+                        <div className={`lg:col-span-7 w-full overflow-hidden ${section.borderless ? '' : 'rounded-[40px] border-2 border-line bg-surface p-2'}`}>
                           <img
                             src={concept.image}
                             alt={concept.title}
@@ -665,7 +662,7 @@ export default function CaseStudy() {
                   </div>
                   {section.conclusion && (
                     <div className="mt-10 max-w-4xl">
-                      <p className="text-base md:text-lg text-foreground/70 font-light leading-[1.8] text-pretty">
+                      <p className="text-base md:text-lg text-foreground/70 font-light leading-[1.7] md:leading-[1.8] text-pretty">
                         {section.conclusion}
                       </p>
                     </div>
@@ -677,7 +674,7 @@ export default function CaseStudy() {
                 <div className={`my-12 ${section.fullWidth ? 'relative left-1/2 -translate-x-1/2 w-[min(100vw-3rem,80rem)] md:w-[min(100vw-6rem,80rem)]' : 'w-full'}`}>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-start">
                     {section.images.map((img: string, i: number) => (
-                      <div key={i} className="w-full overflow-hidden rounded-[40px] border-2 border-[#d4cfc4] bg-[#ebe5da] p-2">
+                      <div key={i} className="w-full overflow-hidden rounded-[40px] border-2 border-line bg-surface p-2">
                         <img
                           src={img}
                           alt={`Solution image ${i + 1}`}
@@ -693,7 +690,7 @@ export default function CaseStudy() {
                 <div className="w-full my-12">
                   <div className="flex flex-col md:flex-row justify-center gap-6 items-start">
                     {section.images.map((img: string, i: number) => (
-                      <div key={i} className={`w-full md:w-[calc((100%-3rem)/3)] shrink-0 overflow-hidden rounded-[40px] border-2 border-[#d4cfc4] bg-[#ebe5da] p-2 flex flex-col justify-start ${section.fixedHeight ? 'aspect-[360/780]' : ''}`}>
+                      <div key={i} className={`w-full md:w-[calc((100%-3rem)/3)] shrink-0 overflow-hidden rounded-[40px] border-2 border-line bg-surface p-2 flex flex-col justify-start ${section.fixedHeight ? 'aspect-[360/780]' : ''}`}>
                         <img
                           src={img}
                           alt={`Gallery image ${i + 1}`}
@@ -709,11 +706,11 @@ export default function CaseStudy() {
                 <div className={`flex flex-col ${section.imageFirst ? 'md:flex-row' : 'md:flex-row-reverse'} gap-10 md:gap-16 items-start`}>
                   <div className="w-full md:w-1/2 space-y-6 pt-4">
                     {section.heading && (
-                      <h3 className="text-3xl md:text-4xl lg:text-5xl font-display font-medium tracking-tight mb-4 md:mb-6 leading-[1.15] text-balance">
+                      <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-medium tracking-tight mb-4 md:mb-6 leading-[1.15] text-balance">
                         {section.heading}
-                      </h3>
+                      </h2>
                     )}
-                    <p className="text-base md:text-lg text-foreground/70 font-light leading-[1.7] md:leading-[1.8] text-pretty">
+                    <p className="text-base md:text-lg text-foreground/70 font-light leading-[1.7] md:leading-[1.8] text-pretty max-w-3xl">
                       {section.body}
                     </p>
                   </div>
@@ -726,7 +723,7 @@ export default function CaseStudy() {
                       />
                     </div>
                     {section.imageCaption && (
-                      <p className="text-[11px] text-muted-foreground font-mono uppercase tracking-widest mt-4">
+                      <p className="eyebrow font-mono text-muted-foreground mt-4">
                         {section.imageCaption}
                       </p>
                     )}
@@ -737,9 +734,9 @@ export default function CaseStudy() {
               {section.type === "list" && (
                 <div className="w-full">
                   {section.heading && (
-                    <h3 className="text-3xl md:text-4xl lg:text-5xl font-display font-medium tracking-tight mb-8 md:mb-12 leading-[1.15] text-balance">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-medium tracking-tight mb-8 md:mb-12 leading-[1.15] text-balance">
                       {section.heading}
-                    </h3>
+                    </h2>
                   )}
                   <ul className="space-y-4">
                     {section.items.map((item: string, i: number) => {
@@ -753,15 +750,15 @@ export default function CaseStudy() {
                         return (
                           <li key={i} className="flex flex-col md:flex-row md:gap-8 gap-4 items-start border-t border-border/10 pt-4">
                             <div className="flex items-start gap-4 md:w-1/3 shrink-0">
-                              <span className="text-[10px] font-mono text-muted-foreground opacity-50 mt-2">
+                              <span className="eyebrow font-mono text-muted-foreground/50 mt-2">
                                 {String(i + 1).padStart(2, '0')}
                               </span>
-                              <span className="text-xl md:text-2xl font-display font-medium tracking-tight text-foreground">
+                              <h3 className="text-xl md:text-2xl font-display font-medium tracking-tight text-foreground">
                                 {prefix}
-                              </span>
+                              </h3>
                             </div>
                             <div className="md:w-2/3 pt-1 md:pt-0">
-                              <span className="text-base md:text-lg lg:text-xl font-light text-foreground/70 leading-[1.9] block">
+                              <span className="text-base md:text-lg lg:text-xl font-light text-foreground/70 leading-[1.7] md:leading-[1.8] block">
                                 {suffix}
                               </span>
                             </div>
@@ -772,10 +769,10 @@ export default function CaseStudy() {
                       // Normal layout without splitting
                       return (
                         <li key={i} className="flex items-start gap-6 border-t border-border/10 pt-4">
-                          <span className="text-[10px] font-mono text-muted-foreground mt-2 opacity-50">
+                          <span className="eyebrow font-mono text-muted-foreground/50 mt-2">
                             {String(i + 1).padStart(2, '0')}
                           </span>
-                          <span className="text-base md:text-lg lg:text-xl font-light text-foreground/70 leading-[1.9] max-w-2xl">
+                          <span className="text-base md:text-lg lg:text-xl font-light text-foreground/70 leading-[1.7] md:leading-[1.8] max-w-2xl">
                             {item}
                           </span>
                         </li>
@@ -788,9 +785,9 @@ export default function CaseStudy() {
               {section.type === "metrics" && (
                 <div className="w-full py-12 md:py-20">
                   {section.heading && (
-                    <h3 className="text-3xl md:text-4xl lg:text-5xl font-display font-medium tracking-tight mb-12 md:mb-16 leading-[1.15] text-balance">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-medium tracking-tight mb-12 md:mb-16 leading-[1.15] text-balance">
                       {section.heading}
-                    </h3>
+                    </h2>
                   )}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
                     {section.metrics.map((metric: any, i: number) => (
@@ -815,10 +812,10 @@ export default function CaseStudy() {
                           viewport={{ once: true }}
                           transition={{ duration: 0.5, delay: 0.4 + (i * 0.1) }}
                         >
-                          <span className="text-sm font-mono uppercase tracking-widest text-foreground/90 mb-4 font-medium block">
+                          <span className="eyebrow font-mono text-foreground mb-4 font-medium block">
                             {metric.label}
                           </span>
-                          <p className="text-base text-foreground/60 font-light leading-relaxed">
+                          <p className="text-base text-foreground/70 font-light leading-[1.7]">
                             {metric.description}
                           </p>
                         </motion.div>
@@ -834,7 +831,7 @@ export default function CaseStudy() {
                     "{section.text}"
                   </p>
                   {section.author && (
-                    <p className="text-xs md:text-sm font-mono text-muted-foreground uppercase tracking-[0.3em] mt-6 md:mt-8">
+                    <p className="eyebrow font-mono text-muted-foreground mt-6 md:mt-8">
                       — {section.author}
                     </p>
                   )}
@@ -847,14 +844,14 @@ export default function CaseStudy() {
                     {section.steps.map((step: any, idx: number) => (
                       <div key={idx} className="flex flex-col md:flex-row gap-8 md:gap-16 items-center">
                         <div className="w-full md:w-[35%] flex flex-col justify-center py-6">
-                          <h4 className="text-2xl md:text-3xl lg:text-4xl font-display font-medium mb-6 text-[#1a1918]">
+                          <h3 className="text-2xl md:text-3xl lg:text-4xl font-display font-medium mb-6 text-foreground">
                             {step.title}
-                          </h4>
-                          <p className="text-base md:text-lg text-[#1a1918]/70 font-light leading-[1.8] max-w-lg">
+                          </h3>
+                          <p className="text-base md:text-lg text-foreground/70 font-light leading-[1.7] md:leading-[1.8] max-w-lg">
                             {step.description}
                           </p>
                         </div>
-                        <div className="w-full md:w-[65%] rounded-[24px] overflow-hidden bg-[#ebe5da]">
+                        <div className="w-full md:w-[65%] rounded-[24px] overflow-hidden bg-surface">
                           <div className="w-full aspect-[4/3] relative overflow-hidden">
                             <img 
                               src={step.image} 
@@ -872,22 +869,22 @@ export default function CaseStudy() {
               {section.type === "statement" && (
                 <div className="max-w-4xl py-10 md:py-16">
                   {section.heading && (
-                    <h3 className="text-xs md:text-sm font-mono uppercase tracking-[0.3em] text-muted-foreground mb-6 md:mb-8">
+                    <p className="eyebrow font-mono text-muted-foreground mb-6 md:mb-8">
                       {section.heading}
-                    </h3>
+                    </p>
                   )}
-                  <p className="text-3xl md:text-4xl lg:text-5xl font-display font-medium leading-[1.2] tracking-tight text-foreground text-balance">
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-medium leading-[1.2] tracking-tight text-foreground text-balance">
                     {section.text}
-                  </p>
+                  </h2>
                 </div>
               )}
 
               {section.type === "links" && (
                 <div className="w-full pt-8 pb-32 border-t border-border/10 mt-12 mb-16">
                   {section.heading && (
-                    <h3 className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-6">
+                    <h2 className="eyebrow font-mono text-muted-foreground mb-6">
                       {section.heading}
-                    </h3>
+                    </h2>
                   )}
                   <div className="flex flex-col gap-4">
                     {section.links.map((link: any, i: number) => (
@@ -896,9 +893,9 @@ export default function CaseStudy() {
                         href={link.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group flex items-center justify-between p-6 rounded-2xl bg-white/50 hover:bg-white transition-colors border border-border/5"
+                        className="group flex items-center justify-between p-6 rounded-2xl bg-card/60 hover:bg-card transition-colors border border-border/50"
                       >
-                        <span className="text-xl font-display font-medium text-foreground/90 group-hover:text-foreground transition-colors">
+                        <span className="text-xl font-display font-medium text-foreground/70 group-hover:text-foreground transition-colors">
                           {link.title}
                         </span>
                         <svg className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors transform group-hover:translate-x-1 group-hover:-translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -919,10 +916,10 @@ export default function CaseStudy() {
             {nextProject && (
               <Link href={`/project/${nextProjectId}`}>
                 <a className="group flex flex-col space-y-2">
-                  <span className="text-[11px] font-mono text-muted-foreground uppercase tracking-widest">
+                  <span className="eyebrow font-mono text-muted-foreground">
                     Up Next
                   </span>
-                  <span className="text-3xl font-display font-medium group-hover:text-black/60 transition-colors">
+                  <span className="text-3xl font-display font-medium group-hover:text-foreground/60 transition-colors">
                     {nextProject.title}
                   </span>
                 </a>
@@ -930,7 +927,7 @@ export default function CaseStudy() {
             )}
             <button 
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="text-[11px] font-mono font-bold uppercase tracking-widest hover:opacity-50 transition-opacity flex items-center gap-2"
+              className="eyebrow font-mono font-bold hover:opacity-50 transition-opacity flex items-center gap-2"
             >
               Back to Top <ArrowUpRight className="w-4 h-4" />
             </button>
