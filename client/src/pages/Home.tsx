@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { motion, useSpring } from "framer-motion";
+import { motion, useSpring, useScroll, useTransform } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 
 import project1 from "@assets/Collection_Cover.png";
@@ -373,6 +373,64 @@ function Hero() {
   );
 }
 
+type Project = (typeof MOCK_PROJECTS)[number];
+
+function ProjectCard({
+  project,
+  alignRight,
+}: {
+  project: Project;
+  alignRight: boolean;
+}) {
+  const frameRef = useRef<HTMLDivElement>(null);
+
+  // Scroll-linked parallax: track the frame from the moment it enters the
+  // viewport (progress 0) to the moment it leaves (progress 1).
+  const { scrollYProgress } = useScroll({
+    target: frameRef,
+    offset: ["start end", "end start"],
+  });
+
+  // The image is 130% of the frame's height, so there's 30% of vertical slack
+  // hidden by overflow. Panning ±8% of the image height (≈10.4% of the frame)
+  // stays well inside the ±15% the centring leaves on each edge, so the frame
+  // is always fully covered — no gaps creep in at the extremes of the scroll.
+  const y = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-120px" }}
+      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+      className={`w-full md:w-[46%] ${alignRight ? "md:ml-auto md:text-right md:-mt-[12vh]" : ""}`}
+    >
+      <Link href={`/project/${project.id}`} className="block group">
+        <div
+          ref={frameRef}
+          className="relative w-full aspect-[5/4] overflow-hidden rounded-[32px] bg-white/5 mb-10"
+        >
+          <motion.img
+            src={project.image}
+            alt={project.title}
+            style={{ top: "-15%", y }}
+            className="absolute left-0 w-full h-[130%] object-cover"
+          />
+        </div>
+        <p className="eyebrow font-mono text-white/50 mb-3">{project.category}</p>
+        <h3 className="text-3xl font-display font-medium tracking-tighter text-white mb-4">
+          {project.title}
+        </h3>
+        <p
+          className={`text-base text-white/70 font-light leading-[1.7] max-w-md ${alignRight ? "md:ml-auto" : ""}`}
+        >
+          {project.description}
+        </p>
+      </Link>
+    </motion.div>
+  );
+}
+
 function ProjectGrid() {
   const visibleProjects = MOCK_PROJECTS.filter((p) => !p.hidden);
 
@@ -403,40 +461,9 @@ function ProjectGrid() {
           Projects
         </h2>
 
-        {visibleProjects.map((project, i) => {
-          const alignRight = i % 2 === 1;
-          return (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-120px" }}
-              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-              className={`w-full md:w-[46%] ${alignRight ? "md:ml-auto md:text-right md:-mt-[12vh]" : ""}`}
-            >
-              <Link href={`/project/${project.id}`} className="block group">
-                <div className="w-full aspect-[5/4] overflow-hidden rounded-[32px] bg-white/5 mb-10">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.04]"
-                  />
-                </div>
-                <p className="eyebrow font-mono text-white/50 mb-3">
-                  {project.category}
-                </p>
-                <h3 className="text-3xl font-display font-medium tracking-tighter text-white mb-4 group-hover:opacity-70 transition-opacity">
-                  {project.title}
-                </h3>
-                <p
-                  className={`text-base text-white/70 font-light leading-[1.7] max-w-md ${alignRight ? "md:ml-auto" : ""}`}
-                >
-                  {project.description}
-                </p>
-              </Link>
-            </motion.div>
-          );
-        })}
+        {visibleProjects.map((project, i) => (
+          <ProjectCard key={project.id} project={project} alignRight={i % 2 === 1} />
+        ))}
       </div>
 
       {/*
