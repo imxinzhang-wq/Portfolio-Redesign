@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { motion, useSpring, useScroll, useTransform } from "framer-motion";
-import { useRef, useEffect, useState } from "react";
+import { Fragment, useRef, useEffect, useState } from "react";
 
 import project1 from "@assets/Collection_Cover.png";
 import project2 from "@assets/Darmi_Cover.PNG";
@@ -375,13 +375,70 @@ function Hero() {
 
 type Project = (typeof MOCK_PROJECTS)[number];
 
-function ProjectCard({
-  project,
-  alignRight,
+/*
+  Per-word roll-in. Each word gets its OWN clipping box, and that box is
+  exactly one line tall, so a word sliding up from below is only ever visible
+  inside its own line band — nothing bleeds into the line above or below the
+  way a single mask around a whole paragraph would allow.
+
+  Splitting on words rather than measured lines keeps this reflow-proof: the
+  masks re-wrap with the text, so no re-measuring is needed on resize.
+*/
+const maskedWord = {
+  hidden: { y: "115%" },
+  visible: {
+    y: "0%",
+    transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as const },
+  },
+};
+
+function MaskedText({
+  text,
+  className,
+  stagger = 0.045,
+  delay = 0,
 }: {
-  project: Project;
-  alignRight: boolean;
+  text: string;
+  className?: string;
+  stagger?: number;
+  delay?: number;
 }) {
+  const words = text.split(" ");
+
+  return (
+    <motion.span
+      className={className}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: false, margin: "-12% 0px -12% 0px" }}
+      variants={{
+        hidden: {},
+        visible: {
+          transition: { staggerChildren: stagger, delayChildren: delay },
+        },
+      }}
+    >
+      {words.map((word, i) => (
+        <Fragment key={`${word}-${i}`}>
+          {/*
+            The mask carries a little bottom padding pulled back out with a
+            negative margin: descenders (g, y, p) stay visible without the box
+            growing into the next line's band.
+          */}
+          <span className="inline-block overflow-hidden align-bottom pb-[0.12em] -mb-[0.12em]">
+            <motion.span variants={maskedWord} className="inline-block">
+              {word}
+            </motion.span>
+          </span>
+          {/* real space text node — lets the line still wrap between words */}
+          {i < words.length - 1 ? " " : null}
+        </Fragment>
+      ))}
+    </motion.span>
+  );
+}
+
+function ProjectCard({ project }: { project: Project }) {
   const frameRef = useRef<HTMLDivElement>(null);
 
   // Scroll-linked parallax: track the frame from the moment it enters the
@@ -397,18 +454,52 @@ function ProjectCard({
   // is always fully covered — no gaps creep in at the extremes of the scroll.
   const y = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"]);
 
+  // The year is its own column, so it is split off the category label here;
+  // the company half ("Personal Project", "Airbnb") is deliberately dropped.
+  const year = project.category.split("•")[0].trim();
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-120px" }}
-      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-      className={`w-full md:w-[46%] ${alignRight ? "md:ml-auto md:text-right md:-mt-[12vh]" : ""}`}
+    <Link
+      href={`/project/${project.id}`}
+      className="group grid md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] gap-y-8 md:gap-x-16 lg:gap-x-24"
     >
-      <Link href={`/project/${project.id}`} className="block group">
+      {/*
+        Left column: year + copy. The inner block is sticky so the text holds
+        its position while its own project image scrolls past it, then releases
+        and hands over to the next project.
+      */}
+      <div className="md:h-full">
+        <div className="md:sticky md:top-[38vh] flex items-start gap-6 md:gap-10">
+          <span className="shrink-0 pt-[0.45em] eyebrow font-mono text-white/50 tabular-nums">
+            {year}
+          </span>
+
+          <div className="min-w-0">
+            <h3 className="text-[2rem] md:text-[2.75rem] lg:text-5xl font-display font-medium tracking-tighter leading-[1.1] text-white">
+              <MaskedText text={project.title} stagger={0.06} />
+            </h3>
+
+            <p className="mt-6 md:mt-8 text-base text-white/70 font-normal leading-[1.7] max-w-sm">
+              <MaskedText
+                text={project.description}
+                stagger={0.018}
+                delay={0.12}
+              />
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Right column: the image, with the parallax pan inside its frame. */}
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-120px" }}
+        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+      >
         <div
           ref={frameRef}
-          className="relative w-full aspect-[5/4] overflow-hidden rounded-[32px] bg-white/5 mb-10"
+          className="relative w-full aspect-[5/4] overflow-hidden rounded-[32px] bg-white/5"
         >
           <motion.img
             src={project.image}
@@ -417,17 +508,8 @@ function ProjectCard({
             className="absolute left-0 w-full h-[130%] object-cover"
           />
         </div>
-        <p className="eyebrow font-mono text-white/50 mb-3">{project.category}</p>
-        <h3 className="text-3xl font-display font-medium tracking-tighter text-white mb-4">
-          {project.title}
-        </h3>
-        <p
-          className={`text-base text-white/70 font-normal leading-[1.7] max-w-md ${alignRight ? "md:ml-auto" : ""}`}
-        >
-          {project.description}
-        </p>
-      </Link>
-    </motion.div>
+      </motion.div>
+    </Link>
   );
 }
 
@@ -461,8 +543,8 @@ function ProjectGrid() {
           Projects
         </h2>
 
-        {visibleProjects.map((project, i) => (
-          <ProjectCard key={project.id} project={project} alignRight={i % 2 === 1} />
+        {visibleProjects.map((project) => (
+          <ProjectCard key={project.id} project={project} />
         ))}
       </div>
 
