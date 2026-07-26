@@ -448,7 +448,7 @@ export default function CaseStudy() {
             <div className="max-w-md w-full space-y-8 text-center">
               <div className="space-y-4">
                 <h1 className="text-3xl md:text-4xl font-display font-medium tracking-tight">Protected Project</h1>
-                <p className="text-muted-foreground font-light">This case study requires a password to view.</p>
+                <p className="text-muted-foreground font-normal">This case study requires a password to view.</p>
               </div>
               <form 
                 onSubmit={(e) => {
@@ -581,7 +581,7 @@ export default function CaseStudy() {
                       {section.heading}
                     </h2>
                   )}
-                  <p className="text-base md:text-lg text-foreground/70 font-light leading-[1.7] md:leading-[1.8] text-pretty max-w-3xl">
+                  <p className="text-base md:text-lg text-foreground/70 font-normal leading-[1.7] md:leading-[1.8] text-pretty max-w-3xl">
                     {section.body}
                   </p>
                 </div>
@@ -623,7 +623,7 @@ export default function CaseStudy() {
                               {concept.title}
                             </h3>
                           </div>
-                          <div className="space-y-3 text-base leading-[1.7] md:leading-[1.8] text-foreground/70 font-light max-w-[34rem]">
+                          <div className="space-y-3 text-base leading-[1.7] md:leading-[1.8] text-foreground/70 font-normal max-w-[34rem]">
                             {concept.body ? (
                               <p>{concept.body}</p>
                             ) : (
@@ -662,7 +662,7 @@ export default function CaseStudy() {
                   </div>
                   {section.conclusion && (
                     <div className="mt-10 max-w-4xl">
-                      <p className="text-base md:text-lg text-foreground/70 font-light leading-[1.7] md:leading-[1.8] text-pretty">
+                      <p className="text-base md:text-lg text-foreground/70 font-normal leading-[1.7] md:leading-[1.8] text-pretty">
                         {section.conclusion}
                       </p>
                     </div>
@@ -710,7 +710,7 @@ export default function CaseStudy() {
                         {section.heading}
                       </h2>
                     )}
-                    <p className="text-base md:text-lg text-foreground/70 font-light leading-[1.7] md:leading-[1.8] text-pretty max-w-3xl">
+                    <p className="text-base md:text-lg text-foreground/70 font-normal leading-[1.7] md:leading-[1.8] text-pretty max-w-3xl">
                       {section.body}
                     </p>
                   </div>
@@ -758,7 +758,7 @@ export default function CaseStudy() {
                               </h3>
                             </div>
                             <div className="md:w-2/3 pt-1 md:pt-0">
-                              <span className="text-base md:text-lg lg:text-xl font-light text-foreground/70 leading-[1.7] md:leading-[1.8] block">
+                              <span className="text-base md:text-lg lg:text-xl font-normal text-foreground/70 leading-[1.7] md:leading-[1.8] block">
                                 {suffix}
                               </span>
                             </div>
@@ -772,7 +772,7 @@ export default function CaseStudy() {
                           <span className="eyebrow font-mono text-muted-foreground/50 mt-2">
                             {String(i + 1).padStart(2, '0')}
                           </span>
-                          <span className="text-base md:text-lg lg:text-xl font-light text-foreground/70 leading-[1.7] md:leading-[1.8] max-w-2xl">
+                          <span className="text-base md:text-lg lg:text-xl font-normal text-foreground/70 leading-[1.7] md:leading-[1.8] max-w-2xl">
                             {item}
                           </span>
                         </li>
@@ -815,7 +815,7 @@ export default function CaseStudy() {
                           <span className="eyebrow font-mono text-foreground mb-4 font-medium block">
                             {metric.label}
                           </span>
-                          <p className="text-base text-foreground/70 font-light leading-[1.7]">
+                          <p className="text-base text-foreground/70 font-normal leading-[1.7]">
                             {metric.description}
                           </p>
                         </motion.div>
@@ -847,7 +847,7 @@ export default function CaseStudy() {
                           <h3 className="text-2xl md:text-3xl lg:text-4xl font-display font-medium mb-6 text-foreground">
                             {step.title}
                           </h3>
-                          <p className="text-base md:text-lg text-foreground/70 font-light leading-[1.7] md:leading-[1.8] max-w-lg">
+                          <p className="text-base md:text-lg text-foreground/70 font-normal leading-[1.7] md:leading-[1.8] max-w-lg">
                             {step.description}
                           </p>
                         </div>

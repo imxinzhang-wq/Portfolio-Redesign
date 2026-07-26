@@ -422,7 +422,7 @@ function ProjectCard({
           {project.title}
         </h3>
         <p
-          className={`text-base text-white/70 font-light leading-[1.7] max-w-md ${alignRight ? "md:ml-auto" : ""}`}
+          className={`text-base text-white/70 font-normal leading-[1.7] max-w-md ${alignRight ? "md:ml-auto" : ""}`}
         >
           {project.description}
         </p>
@@ -514,7 +514,7 @@ function About() {
               <h3 className="eyebrow font-bold text-foreground/40">
                 Outside of work
               </h3>
-              <p className="text-foreground/70 leading-[1.7] text-lg font-light">
+              <p className="text-foreground/70 leading-[1.7] text-lg font-normal">
                 I'm a global explorer (40+ countries), film photographer, and
                 painter.{" "}
                 <a
@@ -532,7 +532,7 @@ function About() {
             </div>
             <div className="space-y-4">
               <h3 className="eyebrow font-bold text-foreground/40">Fun Fact</h3>
-              <p className="text-foreground/70 leading-[1.7] text-lg font-light">
+              <p className="text-foreground/70 leading-[1.7] text-lg font-normal">
                 I hold a Bachelor's degree in Applied Mathematics and was
                 recognized as a Meritorious Winner in the 2013 Mathematical
                 Contest in Modeling.
