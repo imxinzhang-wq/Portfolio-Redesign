@@ -484,25 +484,23 @@ function ProjectCopy({
   inView?: boolean;
 }) {
   return (
-    <div className="flex items-start gap-6 md:gap-10">
-      <span className="shrink-0 pt-[0.45em] eyebrow font-mono text-white/50 tabular-nums">
+    <div className="min-w-0">
+      <p className="mb-4 eyebrow font-mono text-white/50 tabular-nums">
         <MaskedText text={yearOf(project)} inView={inView} />
-      </span>
+      </p>
 
-      <div className="min-w-0">
-        <h3 className="text-[2rem] md:text-[2.5rem] lg:text-[2.75rem] font-display font-medium tracking-tighter leading-[1.1] text-white">
-          <MaskedText text={project.title} stagger={0.06} inView={inView} />
-        </h3>
+      <h3 className="text-[2rem] md:text-[2.5rem] lg:text-[2.75rem] font-display font-medium tracking-tighter leading-[1.1] text-white">
+        <MaskedText text={project.title} stagger={0.06} inView={inView} />
+      </h3>
 
-        <p className="mt-6 md:mt-8 text-base text-white/70 font-normal leading-[1.7]">
-          <MaskedText
-            text={project.description}
-            stagger={0.018}
-            delay={0.12}
-            inView={inView}
-          />
-        </p>
-      </div>
+      <p className="mt-6 md:mt-8 text-base text-white/70 font-normal leading-[1.7]">
+        <MaskedText
+          text={project.description}
+          stagger={0.018}
+          delay={0.12}
+          inView={inView}
+        />
+      </p>
     </div>
   );
 }
@@ -612,7 +610,13 @@ function ProjectGrid() {
           Projects
         </h2>
 
-        <div className="grid md:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] md:gap-x-12 lg:gap-x-20">
+        {/*
+          The rail is capped at the width of the copy itself and everything
+          left over goes to the image column. Stacking the year above the title
+          freed the column it used to sit in, so the cap came down from 24rem
+          to 19rem — the copy keeps its measure and the image takes the rest.
+        */}
+        <div className="grid md:grid-cols-[minmax(0,13rem)_minmax(0,1fr)] lg:grid-cols-[minmax(0,19rem)_minmax(0,1fr)] md:gap-x-12 lg:gap-x-20">
           {/*
             The pinned copy rail. Sticky against the whole column, which spans
             every image, so the text holds one position for the entire section
