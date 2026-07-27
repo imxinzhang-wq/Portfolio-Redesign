@@ -548,7 +548,7 @@ function ProjectFrame({
             (frameRef as { current: HTMLDivElement | null }).current = el;
             onActivate(el);
           }}
-          className="relative w-full aspect-[3/2] overflow-hidden rounded-[32px] bg-white/5"
+          className="relative w-full aspect-[16/9] overflow-hidden rounded-[24px] bg-white/5"
         >
           <motion.img
             src={project.image}
@@ -612,7 +612,7 @@ function ProjectGrid() {
           Projects
         </h2>
 
-        <div className="grid md:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] lg:grid-cols-[minmax(0,28rem)_minmax(0,1fr)] md:gap-x-12 lg:gap-x-20">
+        <div className="grid md:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] md:gap-x-12 lg:gap-x-20">
           {/*
             The pinned copy rail. Sticky against the whole column, which spans
             every image, so the text holds one position for the entire section
@@ -638,7 +638,7 @@ function ProjectGrid() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-24 md:gap-[22vh]">
+          <div className="flex flex-col gap-24 md:gap-[4vh]">
             {visibleProjects.map((project, i) => (
               <ProjectFrame
                 key={project.id}
