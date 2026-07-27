@@ -394,7 +394,7 @@ const maskedWord = {
   hidden: { y: "115%" },
   visible: {
     y: "0%",
-    transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as const },
+    transition: { duration: 0.95, ease: [0.16, 1, 0.3, 1] as const },
   },
   /*
     Leaving is upward, not a rewind of the entrance: the outgoing copy keeps
@@ -404,7 +404,7 @@ const maskedWord = {
   */
   exit: {
     y: "-115%",
-    transition: { duration: 0.55, ease: [0.7, 0, 0.84, 0] as const },
+    transition: { duration: 0.75, ease: [0.7, 0, 0.84, 0] as const },
   },
 };
 
@@ -435,7 +435,7 @@ function MaskedText({
         ? {
             initial: "hidden" as const,
             whileInView: "visible" as const,
-            viewport: { once: false, margin: "-12% 0px -12% 0px" },
+            viewport: { once: false, margin: "-11% 0px -11% 0px" },
           }
         : {})}
       variants={{
@@ -525,7 +525,7 @@ function ProjectFrame({
   // hidden by overflow. Panning ±8% of the image height (≈10.4% of the frame)
   // stays well inside the ±15% the centring leaves on each edge, so the frame
   // is always fully covered — no gaps creep in at the extremes of the scroll.
-  const y = useTransform(scrollYProgress, [0, 1], ["-12%", "12%"]);
+  const y = useTransform(scrollYProgress, [0, 1], ["-11%", "11%"]);
 
   return (
     <Link href={`/project/${project.id}`} className="group block">
@@ -546,7 +546,7 @@ function ProjectFrame({
             (frameRef as { current: HTMLDivElement | null }).current = el;
             onActivate(el);
           }}
-          className="relative w-full aspect-[16/9] overflow-hidden rounded-[24px] bg-white/5"
+          className="relative w-full aspect-[16/9] overflow-hidden rounded-[32px] bg-white/5"
         >
           <motion.img
             src={project.image}
@@ -605,7 +605,7 @@ function ProjectGrid() {
       as a hard edge sliding up the screen instead of a crossfade.
     */
     <section id="work" data-bg-color={SECTION_BG.ink} className="relative">
-      <div className="max-w-[1600px] mx-auto px-6 md:px-10 py-24 md:py-[28vh]">
+      <div className="max-w-[1800px] mx-auto px-6 md:px-10 py-24 md:py-[28vh]">
         <h2 className="text-4xl font-display font-medium tracking-tighter text-white mb-16 md:hidden">
           Projects
         </h2>
@@ -616,7 +616,7 @@ function ProjectGrid() {
           freed the column it used to sit in, so the cap came down from 24rem
           to 19rem — the copy keeps its measure and the image takes the rest.
         */}
-        <div className="grid md:grid-cols-[minmax(0,13rem)_minmax(0,1fr)] lg:grid-cols-[minmax(0,19rem)_minmax(0,1fr)] md:gap-x-12 lg:gap-x-20">
+        <div className="grid md:grid-cols-[minmax(0,13rem)_minmax(0,1fr)] lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] md:gap-x-12 lg:gap-x-12">
           {/*
             The pinned copy rail. Sticky against the whole column, which spans
             every image, so the text holds one position for the entire section
