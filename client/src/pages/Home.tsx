@@ -413,12 +413,16 @@ function MaskedText({
   className,
   stagger = 0.045,
   delay = 0,
+  exitDelay = 0,
   inView = false,
 }: {
   text: string;
   className?: string;
   stagger?: number;
+  /* Lead-in before the first word rolls up. */
   delay?: number;
+  /* Same, on the way out — lets one block leave after another. */
+  exitDelay?: number;
   /*
     Off by default: the copy rail drives hidden/visible from its parent, so the
     words must inherit that state rather than run their own viewport trigger.
@@ -443,8 +447,10 @@ function MaskedText({
         visible: {
           transition: { staggerChildren: stagger, delayChildren: delay },
         },
-        // Same word order on the way out, tighter, and no lead-in delay.
-        exit: { transition: { staggerChildren: stagger * 0.6 } },
+        // Same word order on the way out, tighter.
+        exit: {
+          transition: { staggerChildren: stagger * 0.6, delayChildren: exitDelay },
+        },
       }}
     >
       {words.map((word, i) => (
@@ -493,11 +499,18 @@ function ProjectCopy({
         <MaskedText text={project.title} stagger={0.06} inView={inView} />
       </h3>
 
+      {/*
+        The description trails the title on both halves of a swap: it waits
+        for the title to clear before leaving, and waits again for the new
+        title to land before rolling up. The beat is what makes the two read
+        as a sequence rather than one block changing at once.
+      */}
       <p className="mt-6 md:mt-8 text-base text-white/70 font-normal leading-[1.7]">
         <MaskedText
           text={project.description}
           stagger={0.018}
-          delay={0.12}
+          delay={0.45}
+          exitDelay={0.2}
           inView={inView}
         />
       </p>
