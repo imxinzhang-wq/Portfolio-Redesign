@@ -3,8 +3,8 @@ import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { useEffect, useState } from "react";
 
-import project2Cover from "@assets/Darmi_Cover.PNG";
-import project1Cover from "@assets/Collection_Cover.png"; 
+import project2Cover from "@assets/Darmi_Cover.jpg";
+import project1Cover from "@assets/Collection_Cover.jpg"; 
 import project3Cover from "@assets/Airbnb_Cover_1774813459702.jpg";
 import collectionCreateGif from "@assets/Collection-create_1774547429730.gif";
 import collectionGif from "@assets/Collection_1774547429731.gif";
