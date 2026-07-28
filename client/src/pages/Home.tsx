@@ -394,7 +394,7 @@ const maskedWord = {
   hidden: { y: "115%" },
   visible: {
     y: "0%",
-    transition: { duration: 0.95, ease: [0.16, 1, 0.3, 1] as const },
+    transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as const },
   },
   /*
     Leaving is upward, not a rewind of the entrance: the outgoing copy keeps
@@ -404,7 +404,7 @@ const maskedWord = {
   */
   exit: {
     y: "-115%",
-    transition: { duration: 0.75, ease: [0.7, 0, 0.84, 0] as const },
+    transition: { duration: 0.6, ease: [0.7, 0, 0.84, 0] as const },
   },
 };
 
@@ -449,7 +449,10 @@ function MaskedText({
         },
         // Same word order on the way out, tighter.
         exit: {
-          transition: { staggerChildren: stagger * 0.6, delayChildren: exitDelay },
+          transition: {
+            staggerChildren: stagger * 0.6,
+            delayChildren: exitDelay,
+          },
         },
       }}
     >
@@ -496,7 +499,7 @@ function ProjectCopy({
       </p>
 
       <h3 className="text-[2rem] md:text-[2.5rem] lg:text-[2.75rem] font-display font-medium tracking-tighter leading-[1.1] text-white">
-        <MaskedText text={project.title} stagger={0.06} inView={inView} />
+        <MaskedText text={project.title} stagger={0.002} inView={inView} />
       </h3>
 
       {/*
@@ -508,9 +511,9 @@ function ProjectCopy({
       <p className="mt-6 md:mt-8 text-base text-white/70 font-normal leading-[1.7]">
         <MaskedText
           text={project.description}
-          stagger={0.018}
-          delay={0.45}
-          exitDelay={0.2}
+          stagger={0.005}
+          delay={0.1}
+          exitDelay={0.02}
           inView={inView}
         />
       </p>
