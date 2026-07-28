@@ -511,9 +511,9 @@ function ProjectCopy({
       <p className="mt-6 md:mt-8 text-base text-white/70 font-normal leading-[1.7]">
         <MaskedText
           text={project.description}
-          stagger={0.005}
+          stagger={0.001}
           delay={0.1}
-          exitDelay={0.02}
+          exitDelay={0.01}
           inView={inView}
         />
       </p>
