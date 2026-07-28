@@ -4,37 +4,31 @@ import { useLayoutEffect, useRef, useState } from "react";
 import film01 from "@assets/film-01.jpg";
 import film02 from "@assets/film-02.jpg";
 import film03 from "@assets/film-03.jpg";
-import film04 from "@assets/film-04.jpg";
-import film05 from "@assets/film-05.jpg";
-import film06 from "@assets/film-06.jpg";
-import film07 from "@assets/film-07.jpg";
-import film08 from "@assets/film-08.jpg";
-import film09 from "@assets/film-09.jpg";
-import film10 from "@assets/film-10.jpg";
 
 /*
   The strip runs left as the page scrolls down. Frames share one height and take
   whatever width their aspect ratio asks for, so the top and bottom edges stay
   flush across a mix of landscape and portrait shots — the way a contact sheet
-  reads. The ratios below are declared rather than measured so the track has its
-  full width on the first frame; waiting for the images to load would let the
+  reads. The ratios are declared rather than measured so the track has its full
+  width on the first frame; waiting for the images to load would let the
   measured scroll distance jump under the reader.
-
-  Verticals are grouped in pairs on purpose. Alternating them one by one makes
-  the row read as noise.
 */
-const FRAMES = [
-  { src: film01, ratio: 3 / 2 },
-  { src: film02, ratio: 3 / 2 },
-  { src: film03, ratio: 2 / 3 },
-  { src: film04, ratio: 3 / 2 },
-  { src: film05, ratio: 2 / 3 },
-  { src: film06, ratio: 2 / 3 },
-  { src: film07, ratio: 3 / 2 },
-  { src: film08, ratio: 3 / 2 },
-  { src: film09, ratio: 2 / 3 },
-  { src: film10, ratio: 3 / 2 },
+const PHOTOS = [
+  { src: film01, ratio: 2063 / 1400 },
+  { src: film02, ratio: 2063 / 1400 },
+  { src: film03, ratio: 950 / 1400 },
 ];
+
+/*
+  With only three photographs to work with, the strip repeats them. The order is
+  written out rather than generated: a plain 1-2-3 cycle puts the same photo at
+  the same phase of every repeat, which the eye picks up as a loop within a few
+  seconds. Varying the interval between a photo's appearances hides the seam,
+  and it keeps the portrait frames from landing at an even spacing of their own.
+*/
+const ORDER = [0, 2, 1, 0, 1, 2, 0, 2, 1, 2, 0, 1];
+
+const FRAMES = ORDER.map((i) => PHOTOS[i]);
 
 /*
   How much page scroll one pixel of travel costs. At 1 the strip tracks the
@@ -46,22 +40,27 @@ const PACE = 0.8;
 const FRAME_HEIGHT = "55vh";
 const GAP_PX = 24;
 
-function Sprockets({ className }: { className: string }) {
+// Fade applied to both ends of the strip and its perforations, so frames leave
+// the screen rather than being clipped by it.
+const EDGE_FADE =
+  "linear-gradient(to right, transparent, black 6%, black 94%, transparent)";
+
+function Sprockets() {
   /*
-    Purely decorative, and sized in the same units as the gap so the perforation
-    rhythm holds at any viewport width.
+    Perforations, at 35mm proportions: a hole roughly twice as wide as the gap
+    beside it, on a band shallower than the hole is wide. Drawn with a repeating
+    gradient rather than elements because there are a hundred of them and none
+    of them mean anything — the whole band is decorative.
   */
   return (
     <div
       aria-hidden
-      className={`pointer-events-none absolute inset-x-0 h-6 ${className}`}
+      className="pointer-events-none h-[9px] shrink-0"
       style={{
         backgroundImage:
-          "repeating-linear-gradient(to right, transparent 0 14px, rgba(255,255,255,0.14) 14px 30px)",
-        maskImage:
-          "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
-        WebkitMaskImage:
-          "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
+          "repeating-linear-gradient(to right, rgba(255,255,255,0.16) 0 13px, transparent 13px 22px)",
+        maskImage: EDGE_FADE,
+        WebkitMaskImage: EDGE_FADE,
       }}
     />
   );
@@ -72,7 +71,8 @@ function Frames({ sizes }: { sizes: string }) {
     <>
       {FRAMES.map((frame, i) => (
         <img
-          key={frame.src}
+          // Index, not src: the same photograph appears at several positions.
+          key={i}
           src={frame.src}
           alt=""
           aria-hidden
@@ -154,22 +154,22 @@ export default function Filmstrip({ bgColor }: { bgColor: string }) {
         data-bg-color={bgColor}
         className="relative py-24 md:py-32"
       >
-        <div className="relative">
-          <Sprockets className="top-0" />
+        <div className="flex flex-col gap-2">
+          <Sprockets />
           <div
             ref={viewportRef}
-            className="flex snap-x snap-mandatory items-center gap-6 overflow-x-auto px-6 py-8"
-            style={{ height: `calc(${FRAME_HEIGHT} + 4rem)` }}
+            className="snap-x snap-mandatory overflow-x-auto"
+            style={{ height: FRAME_HEIGHT }}
           >
             <div
               ref={trackRef}
-              className="flex h-full items-center gap-6 [&>img]:snap-center"
+              className="flex h-full items-center px-6 [&>img]:snap-center"
               style={{ gap: GAP_PX }}
             >
               <Frames sizes="80vw" />
             </div>
           </div>
-          <Sprockets className="bottom-0" />
+          <Sprockets />
         </div>
       </section>
     );
@@ -187,30 +187,31 @@ export default function Filmstrip({ bgColor }: { bgColor: string }) {
       className="relative"
       style={{ height: `calc(100vh + ${travel * PACE}px)` }}
     >
-      <div className="sticky top-0 h-screen overflow-hidden">
+      {/*
+        A column, so the perforations sit against the frames by layout rather
+        than by offsets computed from the frame height — the two stay in step
+        when that height changes.
+      */}
+      <div className="sticky top-0 flex h-screen flex-col justify-center gap-2 overflow-hidden">
+        <Sprockets />
         <div
           ref={viewportRef}
-          className="relative flex h-full items-center"
+          className="relative"
           style={{
-            maskImage:
-              "linear-gradient(to right, transparent, black 6%, black 94%, transparent)",
-            WebkitMaskImage:
-              "linear-gradient(to right, transparent, black 6%, black 94%, transparent)",
+            height: FRAME_HEIGHT,
+            maskImage: EDGE_FADE,
+            WebkitMaskImage: EDGE_FADE,
           }}
         >
           <motion.div
             ref={trackRef}
-            style={{ x, height: FRAME_HEIGHT, gap: GAP_PX }}
-            className="flex shrink-0 items-center will-change-transform"
+            style={{ x, gap: GAP_PX }}
+            className="flex h-full w-max items-center will-change-transform"
           >
             <Frames sizes="(min-width: 768px) 60vw, 90vw" />
           </motion.div>
         </div>
-
-        {/* Perforation runs the height of the pinned frame, not the track, so it
-            reads as the projector gate rather than as part of the strip. */}
-        <Sprockets className="top-[calc(50%-55vh/2-2.25rem)]" />
-        <Sprockets className="top-[calc(50%+55vh/2+0.75rem)]" />
+        <Sprockets />
       </div>
     </section>
   );
