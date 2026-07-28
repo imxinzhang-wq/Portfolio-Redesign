@@ -579,18 +579,53 @@ function ProjectFrame({
 function ProjectGrid() {
   const visibleProjects = MOCK_PROJECTS.filter((p) => !p.hidden);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [railVisible, setRailVisible] = useState(false);
   const frames = useRef<(HTMLDivElement | null)[]>([]);
 
   /*
-    Which project the rail is showing. The rail itself never moves, so the only
-    thing scroll decides is whose copy belongs in it: the frame whose centre is
-    closest to the viewport centre wins. Reading positions on scroll (rather
-    than an IntersectionObserver) keeps the answer correct in both directions
-    and while the images are still settling in.
+    The rail is position: fixed, so it is out of flow and cannot inherit the
+    grid column's geometry. An empty slot div holds the column open and the
+    rail is measured off it, which keeps the two in step through resizes and
+    breakpoint changes without hard-coding the width twice.
+  */
+  const railSlot = useRef<HTMLDivElement>(null);
+  const [railBox, setRailBox] = useState<{ left: number; width: number }>();
+
+  useEffect(() => {
+    const slot = railSlot.current;
+    if (!slot) return;
+
+    const measure = () => {
+      const box = slot.getBoundingClientRect();
+      setRailBox({ left: box.left, width: box.width });
+    };
+
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(slot);
+    window.addEventListener("resize", measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
+
+  /*
+    Two things scroll decides, and neither of them moves the rail:
+
+    1. Whose copy is in it — the frame whose centre is closest to the viewport
+       centre wins.
+    2. Whether it is there at all — it rolls in once part of the first image
+       has come into view, and rolls out once the last image is half gone off
+       the top. Between those two points the rail holds one fixed position.
+
+    Reading positions on scroll (rather than an IntersectionObserver) keeps the
+    answers correct in both directions and while images are still settling in.
   */
   useEffect(() => {
     const handleScroll = () => {
-      const middle = window.innerHeight / 2;
+      const viewport = window.innerHeight;
+      const middle = viewport / 2;
       let closest = 0;
       let smallest = Infinity;
 
@@ -603,8 +638,19 @@ function ProjectGrid() {
           closest = i;
         }
       });
-
       setActiveIndex(closest);
+
+      const first = frames.current[0];
+      const last = frames.current[frames.current.length - 1];
+      if (first && last) {
+        const firstBox = first.getBoundingClientRect();
+        const lastBox = last.getBoundingClientRect();
+        // A sliver of the first image is enough to bring the copy in.
+        const opened = firstBox.top <= viewport * 0.85;
+        // Half of the last image has passed above the top edge.
+        const closed = lastBox.top <= -lastBox.height / 2;
+        setRailVisible(opened && !closed);
+      }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -634,28 +680,38 @@ function ProjectGrid() {
         */}
         <div className="grid md:grid-cols-[minmax(0,13rem)_minmax(0,1fr)] lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] md:gap-x-12 lg:gap-x-12">
           {/*
-            The pinned copy rail. Sticky against the whole column, which spans
-            every image, so the text holds one position for the entire section
-            and only its content changes as projects go by.
+            The copy rail. Fixed, not sticky: sticky still travels with the page
+            at both ends of its column, and the copy is meant to hold one screen
+            position for the whole run of images. The slot div below is what
+            reserves the column; the rail itself is pinned to the viewport.
           */}
-          <div className="hidden md:block">
-            <div className="sticky top-[36vh]">
-              {/*
-                mode="wait" so the outgoing copy clears the top of its masks
-                before the incoming copy rolls up from the bottom — the two
-                never overlap mid-swap. Keying on the id restarts the stagger.
-              */}
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeProject.id}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                >
-                  <ProjectCopy project={activeProject} />
-                </motion.div>
-              </AnimatePresence>
-            </div>
+          <div ref={railSlot} className="hidden md:block">
+            {railBox && (
+              <div
+                className="fixed top-[36vh]"
+                style={{ left: railBox.left, width: railBox.width }}
+              >
+                {/*
+                  mode="wait" so the outgoing copy clears the top of its masks
+                  before the incoming copy rolls up from the bottom — the two
+                  never overlap mid-swap. Keying on the id restarts the stagger,
+                  and dropping the child entirely is what rolls the copy out at
+                  the end of the section.
+                */}
+                <AnimatePresence mode="wait">
+                  {railVisible && (
+                    <motion.div
+                      key={activeProject.id}
+                      initial="hidden"
+                      animate="visible"
+                      exit="exit"
+                    >
+                      <ProjectCopy project={activeProject} />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
           </div>
 
           <div className="flex flex-col gap-24 md:gap-[4vh]">
