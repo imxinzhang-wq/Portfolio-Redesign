@@ -20,51 +20,29 @@ const PHOTOS = [
 ];
 
 /*
-  With only three photographs to work with, the strip repeats them. The order is
-  written out rather than generated: a plain 1-2-3 cycle puts the same photo at
-  the same phase of every repeat, which the eye picks up as a loop within a few
-  seconds. Varying the interval between a photo's appearances hides the seam,
-  and it keeps the portrait frames from landing at an even spacing of their own.
+  Three photographs across seven frames. Roughly three frames are on screen at
+  once, so no photograph may repeat inside a window of three — seeing the same
+  shot twice in one glance is far more obvious than any rhythm spread over the
+  length of the strip. At this count that constraint has exactly one solution,
+  the plain cycle below, and its regularity is the price of never showing a
+  duplicate. More photographs would buy back the freedom to vary the interval.
+
+  It also lands the portrait frames at 2 and 5, which breaks up the landscapes
+  evenly.
 */
-const ORDER = [0, 2, 1, 0, 1, 2, 0, 2, 1, 2, 0, 1];
+const ORDER = [0, 1, 2, 0, 1, 2, 0];
 
 const FRAMES = ORDER.map((i) => PHOTOS[i]);
 
 /*
   How much page scroll one pixel of travel costs. At 1 the strip tracks the
-  wheel exactly, which for ten frames means an uncomfortably long pin; 0.8 keeps
-  the motion legible while cutting the section down to a reasonable height.
+  wheel exactly; above that it lags behind, which is what gives the transport
+  its unhurried feel — at the cost of a taller section.
 */
-const PACE = 0.8;
+const PACE = 1.4;
 
 const FRAME_HEIGHT = "55vh";
 const GAP_PX = 24;
-
-// Fade applied to both ends of the strip and its perforations, so frames leave
-// the screen rather than being clipped by it.
-const EDGE_FADE =
-  "linear-gradient(to right, transparent, black 6%, black 94%, transparent)";
-
-function Sprockets() {
-  /*
-    Perforations, at 35mm proportions: a hole roughly twice as wide as the gap
-    beside it, on a band shallower than the hole is wide. Drawn with a repeating
-    gradient rather than elements because there are a hundred of them and none
-    of them mean anything — the whole band is decorative.
-  */
-  return (
-    <div
-      aria-hidden
-      className="pointer-events-none h-[9px] shrink-0"
-      style={{
-        backgroundImage:
-          "repeating-linear-gradient(to right, rgba(255,255,255,0.16) 0 13px, transparent 13px 22px)",
-        maskImage: EDGE_FADE,
-        WebkitMaskImage: EDGE_FADE,
-      }}
-    />
-  );
-}
 
 function Frames({ sizes }: { sizes: string }) {
   return (
@@ -154,22 +132,18 @@ export default function Filmstrip({ bgColor }: { bgColor: string }) {
         data-bg-color={bgColor}
         className="relative py-24 md:py-32"
       >
-        <div className="flex flex-col gap-2">
-          <Sprockets />
+        <div
+          ref={viewportRef}
+          className="snap-x snap-mandatory overflow-x-auto"
+          style={{ height: FRAME_HEIGHT }}
+        >
           <div
-            ref={viewportRef}
-            className="snap-x snap-mandatory overflow-x-auto"
-            style={{ height: FRAME_HEIGHT }}
+            ref={trackRef}
+            className="flex h-full items-center px-6 [&>img]:snap-center"
+            style={{ gap: GAP_PX }}
           >
-            <div
-              ref={trackRef}
-              className="flex h-full items-center px-6 [&>img]:snap-center"
-              style={{ gap: GAP_PX }}
-            >
-              <Frames sizes="80vw" />
-            </div>
+            <Frames sizes="80vw" />
           </div>
-          <Sprockets />
         </div>
       </section>
     );
@@ -187,22 +161,8 @@ export default function Filmstrip({ bgColor }: { bgColor: string }) {
       className="relative"
       style={{ height: `calc(100vh + ${travel * PACE}px)` }}
     >
-      {/*
-        A column, so the perforations sit against the frames by layout rather
-        than by offsets computed from the frame height — the two stay in step
-        when that height changes.
-      */}
-      <div className="sticky top-0 flex h-screen flex-col justify-center gap-2 overflow-hidden">
-        <Sprockets />
-        <div
-          ref={viewportRef}
-          className="relative"
-          style={{
-            height: FRAME_HEIGHT,
-            maskImage: EDGE_FADE,
-            WebkitMaskImage: EDGE_FADE,
-          }}
-        >
+      <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
+        <div ref={viewportRef} className="relative" style={{ height: FRAME_HEIGHT }}>
           <motion.div
             ref={trackRef}
             style={{ x, gap: GAP_PX }}
@@ -211,7 +171,6 @@ export default function Filmstrip({ bgColor }: { bgColor: string }) {
             <Frames sizes="(min-width: 768px) 60vw, 90vw" />
           </motion.div>
         </div>
-        <Sprockets />
       </div>
     </section>
   );
