@@ -8,6 +8,8 @@ import {
 } from "framer-motion";
 import { Fragment, useRef, useEffect, useState } from "react";
 
+import Filmstrip from "@/components/Filmstrip";
+
 import project1 from "@assets/Collection_Cover.jpg";
 import project2 from "@assets/Darmi_Cover.jpg";
 import project3 from "@assets/Airbnb_Cover_1774813459702.jpg";
@@ -196,6 +198,7 @@ export default function Home() {
       <main className="relative">
         <Hero />
         <ProjectGrid />
+        <Filmstrip bgColor={SECTION_BG.ink} />
         <About />
       </main>
       <Footer />
