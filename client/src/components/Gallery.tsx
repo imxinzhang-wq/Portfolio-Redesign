@@ -2,36 +2,35 @@ import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import type { MotionValue } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
-import film01 from "@assets/film-01.jpg";
-import film02 from "@assets/film-02.jpg";
+/*
+  Filenames keep the numbers the photographs were uploaded under, gaps and all,
+  rather than being renumbered to run consecutively. Referring to one by the
+  number it already has beats keeping a mapping in your head.
+*/
 import film03 from "@assets/film-03.jpg";
 import film04 from "@assets/film-04.jpg";
-import film05 from "@assets/film-05.jpg";
 import film06 from "@assets/film-06.jpg";
 import film07 from "@assets/film-07.jpg";
 import film09 from "@assets/film-09.jpg";
 import film10 from "@assets/film-10.jpg";
+import film13 from "@assets/film-13.jpg";
+import film14 from "@assets/film-14.jpg";
+import film15 from "@assets/film-15.jpg";
 
-// Every photograph is cropped to 4:3 or 3:4, so a plate's shape is one of two
-// and the rows keep a rhythm instead of taking whatever the camera gave.
-const LANDSCAPE = 4 / 3;
+// Portraits only, every one cropped to exactly 3:4, so a plate's height follows
+// from its width and the three sizes stay in proportion to each other.
 const PORTRAIT = 3 / 4;
 
-/*
-  film-08 is cropped and in the repository but unplaced: the layout runs three
-  rows of three, and ten photographs do not divide into that. Swap it into any
-  slot below to trade it for the one there.
-*/
 const PHOTOS = [
-  { src: film01, ratio: LANDSCAPE },
-  { src: film02, ratio: LANDSCAPE },
   { src: film03, ratio: PORTRAIT },
   { src: film04, ratio: PORTRAIT },
-  { src: film05, ratio: LANDSCAPE },
   { src: film06, ratio: PORTRAIT },
   { src: film07, ratio: PORTRAIT },
   { src: film09, ratio: PORTRAIT },
   { src: film10, ratio: PORTRAIT },
+  { src: film13, ratio: PORTRAIT },
+  { src: film14, ratio: PORTRAIT },
+  { src: film15, ratio: PORTRAIT },
 ];
 
 /*
@@ -41,35 +40,50 @@ const PHOTOS = [
   that is large, quick and responsive reads as close, and separating any of those
   from the others would read as three unrelated animations sharing a screen.
 
-  The plates sit in three rows of large, medium and small, and the three sizes
-  change places from row to row so the column edges never line up. Everything
-  stays inside a 6% margin on both sides, and rows are spaced far enough apart
-  that the drift cannot close the gap: two plates separate by at most DRIFT
-  times the difference in their depths, which is 196px at the widest pairing
-  here, against gaps of 500px and up.
+  The plates come in threes of large, medium and small, but a three is a
+  grouping, not a row: the tops inside each are staggered by up to a tenth of
+  the stage, so nothing lines up on a baseline and the reader reads a scatter
+  rather than a table. The sizes change places between groups so the columns
+  never line up either, and the groups do not share a width — the first spans
+  the full measure, the second stops short on the right, the third starts late
+  on the left, putting the empty space somewhere different each time. Nothing
+  crosses the 6% margin on either side.
 
-  Positions are percentages of the stage, which is four viewports tall — the
-  scatter is never all in view, so seeing it takes a few screens, and the
-  emptiness between rows is the point rather than a gap to fill.
+  The tops below are the arrangement at rest, and rest is the middle of the
+  section: every plate's drift passes through zero there, so this is exactly
+  what the reader sees when a group is centred on screen. The groups are packed
+  close on that reading. Away from the middle the depths pull them apart and
+  they will run into each other, but by then they are near the top or bottom
+  edge and on their way out of frame.
 */
+/*
+  Three sizes, and each one is a fixed width and a fixed depth. Since depth is
+  what sets the drift, two plates of the same size always travel at the same
+  rate — the groups differ in their widths through their gaps and starting
+  offsets, never by resizing a plate, so nothing quietly breaks that.
+*/
+const LARGE = { width: "30vw", depth: 1 };
+const MEDIUM = { width: "23vw", depth: 0.6 };
+const SMALL = { width: "16vw", depth: 0.2 };
+
 const PLATES = [
-  // Row one: large, small, medium.
-  { photo: 0, left: "6%", top: "5%", width: "33.4vw", depth: 0.95 },
-  { photo: 6, left: "43.8%", top: "9%", width: "19.4vw", depth: 0.3 },
-  { photo: 2, left: "67.6%", top: "6.5%", width: "26.4vw", depth: 0.65 },
+  // 03, 04, 06 — full measure, 6% to 94%, wide gaps.
+  { photo: 0, left: "6%", top: "3%", ...LARGE },
+  { photo: 1, left: "45.5%", top: "14%", ...SMALL },
+  { photo: 2, left: "71%", top: "7%", ...MEDIUM },
 
-  // Row two: medium, large, small.
-  { photo: 4, left: "6%", top: "39%", width: "26.4vw", depth: 0.6 },
-  { photo: 5, left: "36.8%", top: "37%", width: "33.4vw", depth: 1 },
-  { photo: 7, left: "74.6%", top: "41%", width: "19.4vw", depth: 0.25 },
+  // 07, 09, 10 — tight gaps, stopping at 78% to open up the right.
+  { photo: 3, left: "6%", top: "33%", ...MEDIUM },
+  { photo: 4, left: "30.5%", top: "42%", ...LARGE },
+  { photo: 5, left: "62%", top: "36%", ...SMALL },
 
-  // Row three: small, medium, large.
-  { photo: 8, left: "6%", top: "72%", width: "19.4vw", depth: 0.35 },
-  { photo: 1, left: "29.8%", top: "69%", width: "26.4vw", depth: 0.7 },
-  { photo: 3, left: "60.6%", top: "70.5%", width: "33.4vw", depth: 0.9 },
+  // 13, 14, 15 — kept together at the end, starting at 20% to open the left.
+  { photo: 6, left: "20%", top: "68%", ...SMALL },
+  { photo: 7, left: "38.5%", top: "76%", ...MEDIUM },
+  { photo: 8, left: "64%", top: "70%", ...LARGE },
 ];
 
-const STAGE_HEIGHT = "360vh";
+const STAGE_HEIGHT = "260vh";
 
 /*
   Blank space ahead of the stage, one viewport deep. The copy pins as the
@@ -78,14 +92,22 @@ const STAGE_HEIGHT = "360vh";
 */
 const LEAD = "100vh";
 
-// Lead plus stage, plus room at the end for the last plates to clear.
-const SECTION_HEIGHT = "500vh";
+/*
+  Lead plus stage plus enough tail for the last plates to clear, and no more.
+  Anything beyond that is dead screen: the plates scroll with the page, so a
+  longer section does not slow them down, it only adds black after the stage has
+  gone by.
+*/
+const SECTION_HEIGHT = "360vh";
 
-// Pixels a plate at depth 1 drifts across the section's full pass through the
-// viewport, and how far it leans toward the pointer. The drift is large on
-// purpose: at a smaller figure the near and far plates travel at rates too
-// close together to read as depth rather than as drift for its own sake.
-const DRIFT = 280;
+/*
+  Pixels a plate at depth 1 drifts across the section's full pass through the
+  viewport, and how far it leans toward the pointer. Depths run 0.15 to 1, so
+  the widest pairing separates by 0.85 x DRIFT, or a little over 390px. Against
+  the lengthened section that works out at much the same rate per pixel scrolled
+  as before, with close to twice the separation.
+*/
+const DRIFT = 460;
 const SWAY = 30;
 
 function Plate({
