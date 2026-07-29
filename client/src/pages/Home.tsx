@@ -415,9 +415,15 @@ function InlineHeaderImage({
 }
 
 /*
-  Same inline-media pattern as InlineHeaderImage but backed by a looping,
-  muted, autoplaying <video> instead of a static <img> — everything else
-  (fixed em height, 3:4 → 4:3 width reveal, cursor label swap) is identical.
+  Same inline-media pattern as InlineHeaderImage but backed by a <video>
+  instead of a static <img> — everything else (fixed em height, 3:4 → 4:3
+  width reveal, cursor label swap) is identical.
+
+  Playback: plays through once on its own, then holds on the last frame.
+  Hovering (or focusing) turns looping on; if it had already finished, it's
+  restarted from the top. Leaving turns looping back off WITHOUT cutting the
+  clip short — `loop` is only checked when playback reaches the end, so the
+  current pass is left to finish and then just doesn't repeat.
 */
 function InlineHeaderVideo({
   src,
@@ -428,10 +434,26 @@ function InlineHeaderVideo({
   webmSrc: string;
   label: string;
 }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [looping, setLooping] = useState(false);
+
+  const startLooping = () => {
+    setLooping(true);
+    const video = videoRef.current;
+    if (video?.ended) {
+      video.currentTime = 0;
+      video.play();
+    }
+  };
+
   return (
     <span
       tabIndex={0}
       data-cursor-label={label}
+      onMouseEnter={startLooping}
+      onMouseLeave={() => setLooping(false)}
+      onFocus={startLooping}
+      onBlur={() => setLooping(false)}
       className="relative inline-block h-[1.2em] w-[0.9em] hover:w-[1.6em] focus:w-[1.6em] focus:outline-none mx-[0.16em] overflow-hidden rounded-[16px] bg-foreground/10 transition-[width] duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
       style={{ verticalAlign: "-0.28em" }}
       data-testid={`video-inline-${label.toLowerCase().replace(/\s+/g, "-")}`}
@@ -441,8 +463,9 @@ function InlineHeaderVideo({
         fallback for the odd build that ships without licensed codecs.
       */}
       <video
+        ref={videoRef}
         autoPlay
-        loop
+        loop={looping}
         muted
         playsInline
         className="absolute inset-0 h-full w-full object-cover object-center"
@@ -494,6 +517,7 @@ function Hero() {
                 alt="The Embarcadero, San Francisco"
                 label="San Francisco"
               />
+              <br />
               Airbnb China.
             </h1>
           </motion.div>
