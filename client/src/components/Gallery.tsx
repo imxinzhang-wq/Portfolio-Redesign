@@ -19,28 +19,48 @@ const PHOTOS = [
   that is large, quick and responsive reads as close, and separating any of those
   from the others would read as three unrelated animations sharing a screen.
 
-  Positions are percentages of a stage one viewport tall, not of the section, so
-  the whole arrangement is on screen at once when the section passes the middle
-  — the section's extra height is scroll room for the drift, not more canvas to
-  spread across. Plates are allowed to run off the top and bottom edges: a
-  scatter that fits neatly inside its frame looks composed rather than glimpsed.
+  Positions are percentages of a stage two viewports tall, not of the section.
+  The stage is deliberately taller than the screen: the scatter is never all in
+  view, so it takes a few screens of scrolling to see, and the emptiness between
+  plates is the point rather than a gap to fill.
+
+  Widths track depth, roughly 19vw at the back to 31vw at the front. The spread
+  is modest — plates shrunk far enough to read as distant just look small — so
+  what separates near from far is mostly how fast they move.
+
+  Plates may run off any edge, and may cross the copy; a scatter that fits
+  neatly inside its frame looks composed rather than glimpsed.
 */
 const PLATES = [
-  { photo: 2, left: "3%", top: "8%", width: "22vw", depth: 0.85 },
-  { photo: 0, left: "30%", top: "-6%", width: "16vw", depth: 0.4 },
-  { photo: 1, left: "58%", top: "2%", width: "19vw", depth: 0.6 },
-  { photo: 2, left: "80%", top: "14%", width: "17vw", depth: 0.35 },
-  { photo: 1, left: "17%", top: "56%", width: "15vw", depth: 0.5 },
-  { photo: 0, left: "68%", top: "50%", width: "21vw", depth: 0.9 },
-  { photo: 0, left: "-4%", top: "78%", width: "19vw", depth: 0.75 },
-  { photo: 2, left: "33%", top: "68%", width: "24vw", depth: 1 },
-  { photo: 1, left: "62%", top: "76%", width: "18vw", depth: 0.65 },
+  { photo: 2, left: "5%", top: "3%", width: "31vw", depth: 1 },
+  { photo: 0, left: "47%", top: "13%", width: "21vw", depth: 0.3 },
+  { photo: 1, left: "70%", top: "1%", width: "25vw", depth: 0.6 },
+  { photo: 2, left: "25%", top: "36%", width: "19vw", depth: 0.15 },
+  { photo: 1, left: "57%", top: "39%", width: "29vw", depth: 0.85 },
+  { photo: 0, left: "2%", top: "56%", width: "23vw", depth: 0.45 },
+  { photo: 2, left: "76%", top: "64%", width: "27vw", depth: 0.7 },
+  { photo: 0, left: "28%", top: "74%", width: "30vw", depth: 0.95 },
+  { photo: 1, left: "64%", top: "88%", width: "21vw", depth: 0.25 },
 ];
 
+const STAGE_HEIGHT = "200vh";
+
+/*
+  Blank space ahead of the stage, one viewport deep. The copy pins as the
+  section arrives and the plates only start at the far side of this gap, so the
+  reader gets the copy alone, held still, before the scatter climbs into view.
+*/
+const LEAD = "100vh";
+
+// Lead plus stage, plus room at the end for the last plates to clear.
+const SECTION_HEIGHT = "360vh";
+
 // Pixels a plate at depth 1 drifts across the section's full pass through the
-// viewport, and how far it leans toward the pointer.
-const DRIFT = 140;
-const SWAY = 26;
+// viewport, and how far it leans toward the pointer. The drift is large on
+// purpose: at a smaller figure the near and far plates travel at rates too
+// close together to read as depth rather than as drift for its own sake.
+const DRIFT = 340;
+const SWAY = 30;
 
 function Plate({
   plate,
@@ -134,6 +154,18 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
   });
 
   /*
+    The copy fades up as the section arrives and lets go once the last plates
+    are through, so it does not sit over the start of the section that follows.
+    Both edges are inside the range where it is pinned, so it never appears to
+    slide away.
+  */
+  const copyOpacity = useTransform(
+    scrollYProgress,
+    [0.04, 0.16, 0.82, 0.93],
+    [0, 1, 1, 0],
+  );
+
+  /*
     The narrow layout drops the scatter entirely. Absolute placement tuned for a
     wide viewport collapses into a pile on a phone, and parallax that depends on
     a pointer has nothing to depend on.
@@ -184,11 +216,43 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
     <section
       ref={sectionRef}
       data-bg-color={bgColor}
-      className="relative h-[180vh] overflow-hidden"
+      /*
+        overflow-clip, not overflow-hidden. Both trim the plates at the edges,
+        but hidden makes this a scroll container, and a scroll container is
+        exactly what stops the copy below from sticking to the viewport.
+      */
+      className="relative overflow-clip"
+      style={{ height: SECTION_HEIGHT }}
     >
-      {/* The stage the plates are arranged on: one viewport tall, centred in the
-          section, so the composition reads whole as it goes by. */}
-      <div className="absolute inset-x-0 top-1/2 h-screen -translate-y-1/2">
+      {/*
+        The copy pins itself for the length of the section: it arrives with the
+        section, settles in the middle of the screen, and holds there while the
+        plates climb past it. Above the plates so it stays readable whatever
+        drifts behind.
+      */}
+      <motion.div
+        style={{ opacity: copyOpacity }}
+        className="pointer-events-none sticky top-0 z-20 flex h-screen items-center justify-center px-6"
+      >
+        {/* The shadow is invisible against the background and only does any
+            work when a bright plate happens to be passing behind the copy. */}
+        <div className="max-w-sm text-center [text-shadow:0_2px_28px_rgba(0,0,0,0.9)]">
+          <h2 className="font-display text-4xl font-medium tracking-tight text-white">
+            Project name
+          </h2>
+          <p className="mt-5 text-base leading-[1.7] text-white/70">
+            Description Description Description Description Description
+            Description Description Description
+          </p>
+        </div>
+      </motion.div>
+
+      {/* The stage begins a full viewport in, so the first screen of the
+          section is the copy on its own. */}
+      <div
+        className="absolute inset-x-0"
+        style={{ top: LEAD, height: STAGE_HEIGHT }}
+      >
         {PLATES.map((plate, i) => (
           <Plate
             key={i}
@@ -199,20 +263,6 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
             still={still}
           />
         ))}
-
-        {/* The copy is the still point the plates drift past, so it holds the
-            middle of the stage and does not move at all. */}
-        <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-1/2 px-6">
-          <div className="mx-auto max-w-sm text-center">
-            <h2 className="font-display text-4xl font-medium tracking-tight text-white">
-              Project name
-            </h2>
-            <p className="mt-5 text-base leading-[1.7] text-white/60">
-              Description Description Description Description Description
-              Description Description Description
-            </p>
-          </div>
-        </div>
       </div>
     </section>
   );
