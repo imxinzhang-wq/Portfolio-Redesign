@@ -5,11 +5,33 @@ import { useEffect, useRef, useState } from "react";
 import film01 from "@assets/film-01.jpg";
 import film02 from "@assets/film-02.jpg";
 import film03 from "@assets/film-03.jpg";
+import film04 from "@assets/film-04.jpg";
+import film05 from "@assets/film-05.jpg";
+import film06 from "@assets/film-06.jpg";
+import film07 from "@assets/film-07.jpg";
+import film09 from "@assets/film-09.jpg";
+import film10 from "@assets/film-10.jpg";
 
+// Every photograph is cropped to 4:3 or 3:4, so a plate's shape is one of two
+// and the rows keep a rhythm instead of taking whatever the camera gave.
+const LANDSCAPE = 4 / 3;
+const PORTRAIT = 3 / 4;
+
+/*
+  film-08 is cropped and in the repository but unplaced: the layout runs three
+  rows of three, and ten photographs do not divide into that. Swap it into any
+  slot below to trade it for the one there.
+*/
 const PHOTOS = [
-  { src: film01, ratio: 2063 / 1400 },
-  { src: film02, ratio: 2063 / 1400 },
-  { src: film03, ratio: 950 / 1400 },
+  { src: film01, ratio: LANDSCAPE },
+  { src: film02, ratio: LANDSCAPE },
+  { src: film03, ratio: PORTRAIT },
+  { src: film04, ratio: PORTRAIT },
+  { src: film05, ratio: LANDSCAPE },
+  { src: film06, ratio: PORTRAIT },
+  { src: film07, ratio: PORTRAIT },
+  { src: film09, ratio: PORTRAIT },
+  { src: film10, ratio: PORTRAIT },
 ];
 
 /*
@@ -19,31 +41,35 @@ const PHOTOS = [
   that is large, quick and responsive reads as close, and separating any of those
   from the others would read as three unrelated animations sharing a screen.
 
-  Positions are percentages of a stage two viewports tall, not of the section.
-  The stage is deliberately taller than the screen: the scatter is never all in
-  view, so it takes a few screens of scrolling to see, and the emptiness between
-  plates is the point rather than a gap to fill.
+  The plates sit in three rows of large, medium and small, and the three sizes
+  change places from row to row so the column edges never line up. Everything
+  stays inside a 6% margin on both sides, and rows are spaced far enough apart
+  that the drift cannot close the gap: two plates separate by at most DRIFT
+  times the difference in their depths, which is 196px at the widest pairing
+  here, against gaps of 500px and up.
 
-  Widths track depth, roughly 19vw at the back to 31vw at the front. The spread
-  is modest — plates shrunk far enough to read as distant just look small — so
-  what separates near from far is mostly how fast they move.
-
-  Plates may run off any edge, and may cross the copy; a scatter that fits
-  neatly inside its frame looks composed rather than glimpsed.
+  Positions are percentages of the stage, which is four viewports tall — the
+  scatter is never all in view, so seeing it takes a few screens, and the
+  emptiness between rows is the point rather than a gap to fill.
 */
 const PLATES = [
-  { photo: 2, left: "5%", top: "3%", width: "31vw", depth: 1 },
-  { photo: 0, left: "47%", top: "13%", width: "21vw", depth: 0.3 },
-  { photo: 1, left: "70%", top: "1%", width: "25vw", depth: 0.6 },
-  { photo: 2, left: "25%", top: "36%", width: "19vw", depth: 0.15 },
-  { photo: 1, left: "57%", top: "39%", width: "29vw", depth: 0.85 },
-  { photo: 0, left: "2%", top: "56%", width: "23vw", depth: 0.45 },
-  { photo: 2, left: "76%", top: "64%", width: "27vw", depth: 0.7 },
-  { photo: 0, left: "28%", top: "74%", width: "30vw", depth: 0.95 },
-  { photo: 1, left: "64%", top: "88%", width: "21vw", depth: 0.25 },
+  // Row one: large, small, medium.
+  { photo: 0, left: "6%", top: "5%", width: "33.4vw", depth: 0.95 },
+  { photo: 6, left: "43.8%", top: "9%", width: "19.4vw", depth: 0.3 },
+  { photo: 2, left: "67.6%", top: "6.5%", width: "26.4vw", depth: 0.65 },
+
+  // Row two: medium, large, small.
+  { photo: 4, left: "6%", top: "39%", width: "26.4vw", depth: 0.6 },
+  { photo: 5, left: "36.8%", top: "37%", width: "33.4vw", depth: 1 },
+  { photo: 7, left: "74.6%", top: "41%", width: "19.4vw", depth: 0.25 },
+
+  // Row three: small, medium, large.
+  { photo: 8, left: "6%", top: "72%", width: "19.4vw", depth: 0.35 },
+  { photo: 1, left: "29.8%", top: "69%", width: "26.4vw", depth: 0.7 },
+  { photo: 3, left: "60.6%", top: "70.5%", width: "33.4vw", depth: 0.9 },
 ];
 
-const STAGE_HEIGHT = "200vh";
+const STAGE_HEIGHT = "360vh";
 
 /*
   Blank space ahead of the stage, one viewport deep. The copy pins as the
@@ -53,13 +79,13 @@ const STAGE_HEIGHT = "200vh";
 const LEAD = "100vh";
 
 // Lead plus stage, plus room at the end for the last plates to clear.
-const SECTION_HEIGHT = "360vh";
+const SECTION_HEIGHT = "500vh";
 
 // Pixels a plate at depth 1 drifts across the section's full pass through the
 // viewport, and how far it leans toward the pointer. The drift is large on
 // purpose: at a smaller figure the near and far plates travel at rates too
 // close together to read as depth rather than as drift for its own sake.
-const DRIFT = 340;
+const DRIFT = 280;
 const SWAY = 30;
 
 function Plate({
@@ -105,7 +131,7 @@ function Plate({
         aria-hidden
         loading="lazy"
         decoding="async"
-        className="w-full rounded-3xl object-cover shadow-2xl shadow-black/30"
+        className="w-full rounded-[6px] object-cover shadow-xl shadow-black/25"
         style={{ aspectRatio: String(photo.ratio) }}
       />
     </motion.div>
@@ -199,7 +225,7 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
               aria-hidden
               loading="lazy"
               decoding="async"
-              className="w-full rounded-3xl object-cover"
+              className="w-full rounded-[6px] object-cover"
               style={{ aspectRatio: String(photo.ratio) }}
             />
           ))}
