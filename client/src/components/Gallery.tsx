@@ -195,13 +195,18 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
   const [still, setStill] = useState(true);
 
   /*
-    A spring, so the plates settle into their offset rather than snapping to it,
-    but a stiff and heavily damped one — it takes the edge off the cursor
-    without the plates trailing behind it on a rubber band. Both values run -1
-    to 1 from the centre of the viewport, and the plates read them negated.
+    A spring only to take the jitter off the raw cursor, tuned to sit just under
+    critical damping rather than well over it. Heavy overdamping was what made
+    this feel like drag: the settle is governed by the slower of two poles, and
+    pushing damping up past critical pulls that pole down and stretches the tail
+    out. Near critical, with the stiffness high and the mass low, it catches up
+    in a few frames and overshoots by about a percent, which is not visible.
+
+    Both values run -1 to 1 from the centre of the viewport, and the plates read
+    them negated.
   */
-  const pointerX = useSpring(0, { stiffness: 220, damping: 40, mass: 0.3 });
-  const pointerY = useSpring(0, { stiffness: 220, damping: 40, mass: 0.3 });
+  const pointerX = useSpring(0, { stiffness: 700, damping: 36, mass: 0.5 });
+  const pointerY = useSpring(0, { stiffness: 700, damping: 36, mass: 0.5 });
 
   useEffect(() => {
     const narrow = window.matchMedia("(max-width: 767px)");
