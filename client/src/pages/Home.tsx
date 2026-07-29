@@ -72,6 +72,8 @@ function CustomCursor() {
   const dotY = useSpring(-100, { stiffness: 500, damping: 35, mass: 0.2 });
   const [hovering, setHovering] = useState(false);
   const [visible, setVisible] = useState(false);
+  // Set by [data-cursor-label] elements; swaps the ring for a text label.
+  const [label, setLabel] = useState<string | null>(null);
 
   useEffect(() => {
     const move = (e: MouseEvent) => {
@@ -85,6 +87,8 @@ function CustomCursor() {
 
     const checkHover = (e: MouseEvent) => {
       const el = e.target as HTMLElement;
+      const labelled = el.closest<HTMLElement>("[data-cursor-label]");
+      setLabel(labelled?.dataset.cursorLabel ?? null);
       setHovering(!!el.closest("a, button, [role='button'], .group"));
     };
 
@@ -109,7 +113,7 @@ function CustomCursor() {
           y: mouseY,
           translateX: hovering ? "-28px" : "-18px",
           translateY: hovering ? "-28px" : "-18px",
-          opacity: visible ? 1 : 0,
+          opacity: visible && !label ? 1 : 0,
           transition:
             "width 0.3s ease, height 0.3s ease, translate 0.3s ease, opacity 0.3s ease",
         }}
@@ -123,10 +127,27 @@ function CustomCursor() {
           y: dotY,
           translateX: "-50%",
           translateY: "-50%",
-          opacity: visible ? 0.7 : 0,
+          opacity: visible && !label ? 0.7 : 0,
           transition: "width 0.2s ease, height 0.2s ease, opacity 0.3s ease",
         }}
       />
+      {/*
+        The label replaces the ring rather than sitting beside it — the ring is
+        a pointer, and once there are words to read the pointer is just noise.
+      */}
+      <motion.div
+        className="fixed top-0 left-0 pointer-events-none z-[9999] whitespace-nowrap rounded-full bg-foreground px-4 py-2 text-background text-[10px] font-bold uppercase tracking-[0.2em]"
+        style={{
+          x: mouseX,
+          y: mouseY,
+          translateX: "-50%",
+          translateY: "-50%",
+          opacity: visible && label ? 1 : 0,
+          transition: "opacity 0.25s ease",
+        }}
+      >
+        {label}
+      </motion.div>
     </>
   );
 }
@@ -365,13 +386,22 @@ function Navbar() {
   them. Transitioning width (not transform) is the point here — a transform
   would scale the box without reflowing the line.
 */
-function InlineHeaderImage({ src, alt }: { src: string; alt: string }) {
+function InlineHeaderImage({
+  src,
+  alt,
+  label,
+}: {
+  src: string;
+  alt: string;
+  label: string;
+}) {
   return (
     <span
       tabIndex={0}
-      className="relative inline-block h-[1.25em] w-[0.9375em] hover:w-[1.25em] focus:w-[1.25em] focus:outline-none mx-[0.16em] overflow-hidden rounded-[16px] bg-foreground/10 transition-[width] duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
-      style={{ verticalAlign: "-0.3em" }}
-      data-testid={`img-inline-${alt.toLowerCase().replace(/\s+/g, "-")}`}
+      data-cursor-label={label}
+      className="relative inline-block h-[1.2em] w-[0.9em] hover:w-[1.2em] focus:w-[1.2em] focus:outline-none mx-[0.16em] overflow-hidden rounded-[16px] bg-foreground/10 transition-[width] duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
+      style={{ verticalAlign: "-0.28em" }}
+      data-testid={`img-inline-${label.toLowerCase().replace(/\s+/g, "-")}`}
     >
       <img
         src={src}
@@ -404,9 +434,17 @@ function Hero() {
           >
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-medium tracking-tight leading-[1.2]">
               I'm Xin, a Product Designer at
-              <InlineHeaderImage src={header1} alt="YouTube" />
+              <InlineHeaderImage
+                src={header1}
+                alt="The Matterhorn, seen from Zurich"
+                label="Zurich"
+              />
               YouTube. Previously a founding designer at
-              <InlineHeaderImage src={header2} alt="Airbnb China" />
+              <InlineHeaderImage
+                src={header2}
+                alt="The Embarcadero, San Francisco"
+                label="San Francisco"
+              />
               Airbnb China.
             </h1>
           </motion.div>
