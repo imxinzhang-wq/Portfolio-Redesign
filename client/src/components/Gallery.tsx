@@ -1,6 +1,6 @@
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import type { MotionValue } from "framer-motion";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /*
   Filenames keep the numbers the photographs were uploaded under, gaps and all,
@@ -121,12 +121,12 @@ const STAGE_HEIGHT = "260vh";
 const LEAD = "10vh";
 
 /*
-  Lead plus stage plus enough tail for the last plates to clear, and no more.
-  Anything beyond that is dead screen: the plates scroll with the page, so a
-  longer section does not slow them down, it only adds black after the stage has
-  gone by.
+  Lead plus stage plus the hold plus enough tail for the last plates to clear,
+  and no more. Anything beyond that is dead screen: the plates scroll with the
+  page, so a longer section does not slow them down, it only adds black after
+  the stage has gone by.
 */
-const SECTION_HEIGHT = "300vh";
+const SECTION_HEIGHT = "380vh";
 
 /*
   Pixels a plate at depth 1 drifts across the section's full pass through the
@@ -157,16 +157,29 @@ const WORDMARK_TOP = "-14%";
 const WORDMARK_END = 0.42;
 
 /*
-  The hold. Across this stretch of the section nothing moves: the stage is
-  translated down by exactly as much as the page has scrolled, and every drift
-  is frozen, so the arrangement sits still while the reader keeps scrolling and
-  only the wordmark shrinks. Past it everything picks up together from where it
-  stopped.
+  The hold. Across it nothing moves and only the wordmark shrinks; past it
+  everything resumes together from where it stopped.
 
-  It is placed to catch the wordmark just before it leaves the top of the
-  screen, so the shrink happens while the type is still worth looking at.
+  HOLD_LENGTH is the scroll it consumes, and it is also the extra height given
+  to the sticky track — pinning ends when the track's bottom catches the stage,
+  so the two are the same figure by construction rather than by agreement.
+
+  PIN_TOP is where the stage gets caught. Lowering it starts the shrink higher
+  up the screen, the wordmark riding above the stage's own top edge.
+
+  HOLD is that same window in scroll progress, which is what freezes the drift
+  and drives the shrink. It is derived rather than typed: progress runs across
+  the section plus a viewport, the stage's top begins LEAD below the fold, and
+  it is caught once that has travelled up to PIN_TOP. Typing it by hand is how
+  an earlier version ended up shrinking the type at -539px, well off screen.
 */
-const HOLD = [0.24, 0.44] as const;
+const HOLD_LENGTH = "80vh";
+const PIN_TOP = "4vh";
+
+const vh = (length: string) => Number(length.replace("vh", ""));
+const SPAN = vh(SECTION_HEIGHT) + 100;
+const HOLD_START = (100 + vh(LEAD) - vh(PIN_TOP)) / SPAN;
+const HOLD = [HOLD_START, HOLD_START + vh(HOLD_LENGTH) / SPAN] as const;
 
 function Wordmark({
   motionProgress,
@@ -346,49 +359,26 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
   });
 
   /*
-    The scroll the section spans, in pixels — its own height plus a viewport,
-    which is what the offset above measures across. The hold needs it in pixels
-    to cancel the page scroll, and it is written in vh, so it has to be read
-    back off the element.
-  */
-  const [span, setSpan] = useState(0);
-  useLayoutEffect(() => {
-    const measure = () => {
-      if (sectionRef.current)
-        setSpan(sectionRef.current.offsetHeight + window.innerHeight);
-    };
-    measure();
-    const observer = new ResizeObserver(measure);
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    window.addEventListener("resize", measure);
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", measure);
-    };
-  }, []);
-
-  /*
     Progress with the hold cut out of it and the remainder stretched back over
-    the full range. Everything that travels reads this instead of the raw
-    progress, so the whole arrangement freezes for the length of the hold and
-    then resumes from exactly where it stopped.
+    the full range. Every drift reads this instead of the raw progress, so the
+    parallax freezes for the length of the hold and then resumes from exactly
+    where it stopped.
+
+    Holding the drift is only half of the hold. The other half — keeping the
+    stage from riding the page while it is frozen — is CSS sticky's job, below,
+    and deliberately not this hook's. An earlier version did it here, with a
+    translation equal to the scroll consumed, and that was the jitter: the
+    browser scrolls on the compositor every frame, a JS transform lands on the
+    main thread a beat later and quantised to scroll events, and the difference
+    between the two is a visible wobble. It cannot be tuned out, because it is
+    what chasing the scroll from JS amounts to. Sticky is resolved by the
+    compositor in the same frame as the scroll, so there is nothing to chase.
   */
   const holdLength = HOLD[1] - HOLD[0];
   const motionProgress = useTransform(scrollYProgress, (p) => {
     const skipped = p <= HOLD[0] ? p : p >= HOLD[1] ? p - holdLength : HOLD[0];
     return skipped / (1 - holdLength);
   });
-
-  /*
-    Freezing the drift is only half of it: the plates also ride the page, so the
-    stage is pushed down by however much of the hold has been scrolled through,
-    which cancels that out. Past the hold the offset stays put and the stage
-    travels with the page again.
-  */
-  const stageY = useTransform(
-    scrollYProgress,
-    (p) => Math.min(Math.max(p - HOLD[0], 0), holdLength) * span,
-  );
 
   /*
     The narrow layout drops the scatter entirely. Absolute placement tuned for a
@@ -445,27 +435,39 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
       className="relative overflow-clip"
       style={{ height: SECTION_HEIGHT }}
     >
-      <motion.div
-        className="absolute inset-x-0 will-change-transform"
-        style={{ top: LEAD, height: STAGE_HEIGHT, y: stageY }}
+      {/*
+        Two elements where there used to be one. The outer is the track: it is
+        the stage plus the length of the hold, and it is what the sticky child
+        is pinned against — sticky releases once the track's bottom catches the
+        pinned element, so the track's extra height is exactly how long the hold
+        lasts. The inner is the stage, pinned by the compositor at PIN_TOP.
+      */}
+      <div
+        className="absolute inset-x-0"
+        style={{ top: LEAD, height: `calc(${STAGE_HEIGHT} + ${HOLD_LENGTH})` }}
       >
-        <Wordmark
-          motionProgress={motionProgress}
-          progress={scrollYProgress}
-          still={still}
-        />
-
-        {PLATES.map((plate, i) => (
-          <Plate
-            key={i}
-            plate={plate}
+        <div
+          className="sticky"
+          style={{ top: PIN_TOP, height: STAGE_HEIGHT }}
+        >
+          <Wordmark
             motionProgress={motionProgress}
-            pointerX={pointerX}
-            pointerY={pointerY}
+            progress={scrollYProgress}
             still={still}
           />
-        ))}
-      </motion.div>
+
+          {PLATES.map((plate, i) => (
+            <Plate
+              key={i}
+              plate={plate}
+              motionProgress={motionProgress}
+              pointerX={pointerX}
+              pointerY={pointerY}
+              still={still}
+            />
+          ))}
+        </div>
+      </div>
     </section>
   );
 }
