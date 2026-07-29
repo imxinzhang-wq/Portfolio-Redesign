@@ -198,7 +198,7 @@ export default function Home() {
       <main className="relative">
         <Hero />
         <ProjectGrid />
-        <Gallery bgColor={SECTION_BG.ink} />
+        <Gallery bgColor={SECTION_BG.canvas} />
         <About />
       </main>
       <Footer />
@@ -497,11 +497,11 @@ function ProjectCopy({
 }) {
   return (
     <div className="min-w-0">
-      <p className="mb-4 eyebrow font-mono text-white/50 tabular-nums">
+      <p className="mb-4 eyebrow font-mono text-foreground/50 tabular-nums">
         <MaskedText text={yearOf(project)} inView={inView} />
       </p>
 
-      <h3 className="text-[2rem] md:text-[2.5rem] lg:text-[2.75rem] font-display font-medium tracking-tighter leading-[1.1] text-white">
+      <h3 className="text-[2rem] md:text-[2.5rem] lg:text-[2.75rem] font-display font-medium tracking-tighter leading-[1.1] text-foreground">
         <MaskedText text={project.title} stagger={0.002} inView={inView} />
       </h3>
 
@@ -511,7 +511,7 @@ function ProjectCopy({
         title to land before rolling up. The beat is what makes the two read
         as a sequence rather than one block changing at once.
       */}
-      <p className="mt-6 md:mt-8 text-base text-white/70 font-normal leading-[1.7]">
+      <p className="mt-6 md:mt-8 text-base text-foreground/70 font-normal leading-[1.7]">
         <MaskedText
           text={project.description}
           stagger={0.001}
@@ -623,9 +623,9 @@ function ProjectGrid() {
       colour change lives on the page wrapper, and a background here would show
       as a hard edge sliding up the screen instead of a crossfade.
     */
-    <section id="work" data-bg-color={SECTION_BG.ink} className="relative">
+    <section id="work" data-bg-color={SECTION_BG.canvas} className="relative">
       <div className="max-w-[1800px] mx-auto px-6 md:px-10 py-24 md:py-[28vh]">
-        <h2 className="text-4xl font-display font-medium tracking-tighter text-white mb-16 md:hidden">
+        <h2 className="text-4xl font-display font-medium tracking-tighter text-foreground mb-16 md:hidden">
           Projects
         </h2>
 
