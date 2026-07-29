@@ -67,9 +67,10 @@ const SMALL = { width: "16vw", depth: 0.12 };
 
 /*
   The gaps inside a group are uneven on purpose — 13vw then 6vw in the first,
-  2.2 then 0.8 in the second — while the group's two ends stay where they are.
-  Even gaps read as a row that has been spaced out; uneven ones read as three
-  things that happen to be near each other.
+  5 then 3 in the second, 4 then 5 in the third. Even gaps read as a row that
+  has been spaced out; uneven ones read as three things that happen to be near
+  each other. Each group still ends where it did, so the empty space keeps
+  falling somewhere different from group to group.
 */
 const PLATES = [
   // 03, 04, 06 — full measure, 6% to 94%.
@@ -77,15 +78,15 @@ const PLATES = [
   { photo: 1, left: "49%", top: "14%", ...SMALL },
   { photo: 2, left: "71%", top: "7%", ...MEDIUM },
 
-  // 07, 09, 10 — close together, stopping at 78% to open up the right.
-  { photo: 3, left: "6%", top: "33%", ...MEDIUM },
-  { photo: 4, left: "31.2%", top: "42%", ...LARGE },
-  { photo: 5, left: "62%", top: "36%", ...SMALL },
+  // 09, 10, 07 — stopping at 83% to leave the right open.
+  { photo: 4, left: "6%", top: "33%", ...MEDIUM },
+  { photo: 5, left: "34%", top: "42%", ...LARGE },
+  { photo: 3, left: "67%", top: "36%", ...SMALL },
 
-  // 13, 14, 15 — kept together at the end, starting at 20% to open the left.
-  { photo: 6, left: "20%", top: "68%", ...SMALL },
-  { photo: 7, left: "37.5%", top: "76%", ...MEDIUM },
-  { photo: 8, left: "64%", top: "70%", ...LARGE },
+  // 13, 15, 14 — kept together at the end, starting at 16% to open the left.
+  { photo: 6, left: "16%", top: "68%", ...SMALL },
+  { photo: 8, left: "36%", top: "76%", ...MEDIUM },
+  { photo: 7, left: "64%", top: "70%", ...LARGE },
 ];
 
 const STAGE_HEIGHT = "260vh";
