@@ -401,8 +401,8 @@ function InlineHeaderImage({
     <span
       tabIndex={0}
       data-cursor-label={label}
-      className="relative inline-block h-[1.2em] w-[0.9em] hover:w-[1.6em] focus:w-[1.6em] focus:outline-none mx-[0.16em] overflow-hidden rounded-[16px] bg-foreground/10 transition-[width] duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
-      style={{ verticalAlign: "-0.28em" }}
+      className="relative inline-block h-[1.1em] w-[0.825em] hover:w-[1.4667em] focus:w-[1.4667em] focus:outline-none mx-[0.16em] overflow-hidden rounded-[16px] bg-foreground/10 transition-[width] duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
+      style={{ verticalAlign: "-0.257em" }}
       data-testid={`img-inline-${label.toLowerCase().replace(/\s+/g, "-")}`}
     >
       <img
@@ -454,8 +454,8 @@ function InlineHeaderVideo({
       onMouseLeave={() => setLooping(false)}
       onFocus={startLooping}
       onBlur={() => setLooping(false)}
-      className="relative inline-block h-[1.2em] w-[0.9em] hover:w-[1.6em] focus:w-[1.6em] focus:outline-none mx-[0.16em] overflow-hidden rounded-[16px] bg-foreground/10 transition-[width] duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
-      style={{ verticalAlign: "-0.28em" }}
+      className="relative inline-block h-[1.1em] w-[0.825em] hover:w-[1.4667em] focus:w-[1.4667em] focus:outline-none mx-[0.16em] overflow-hidden rounded-[16px] bg-foreground/10 transition-[width] duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
+      style={{ verticalAlign: "-0.257em" }}
       data-testid={`video-inline-${label.toLowerCase().replace(/\s+/g, "-")}`}
     >
       {/*
@@ -491,7 +491,7 @@ function Hero() {
         centre of the first screen.
       */}
       <div className="h-screen flex items-center justify-start">
-        <div className="max-w-6xl w-full">
+        <div className="max-w-[1550px] w-full">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -517,8 +517,7 @@ function Hero() {
                 alt="The Embarcadero, San Francisco"
                 label="San Francisco"
               />
-              <br />
-              Airbnb China.
+              <span className="whitespace-nowrap">Airbnb China.</span>
             </h1>
           </motion.div>
         </div>
