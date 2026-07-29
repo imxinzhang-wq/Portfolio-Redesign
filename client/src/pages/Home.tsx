@@ -369,8 +369,8 @@ function InlineHeaderImage({ src, alt }: { src: string; alt: string }) {
   return (
     <span
       tabIndex={0}
-      className="relative inline-block h-[0.72em] w-[0.54em] hover:w-[0.72em] focus:w-[0.72em] focus:outline-none mx-[0.14em] overflow-hidden rounded-[16px] bg-foreground/10 transition-[width] duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
-      style={{ verticalAlign: "-0.04em" }}
+      className="relative inline-block h-[1.25em] w-[0.9375em] hover:w-[1.25em] focus:w-[1.25em] focus:outline-none mx-[0.16em] overflow-hidden rounded-[16px] bg-foreground/10 transition-[width] duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
+      style={{ verticalAlign: "-0.3em" }}
       data-testid={`img-inline-${alt.toLowerCase().replace(/\s+/g, "-")}`}
     >
       <img
@@ -384,7 +384,10 @@ function InlineHeaderImage({ src, alt }: { src: string; alt: string }) {
 
 function Hero() {
   return (
-    <section data-bg-color={SECTION_BG.canvas} className="min-h-[115vh] px-6">
+    <section
+      data-bg-color={SECTION_BG.canvas}
+      className="min-h-[115vh] px-6 md:px-12 lg:px-16"
+    >
       {/*
         Centring happens inside a viewport-tall box, not against the section.
         The section is deliberately taller than the screen (the extra 15vh is
@@ -392,7 +395,7 @@ function Hero() {
         centring against the section itself put the headline ~100px below the
         centre of the first screen.
       */}
-      <div className="h-screen flex items-center justify-center">
+      <div className="h-screen flex items-center justify-start">
         <div className="max-w-6xl w-full">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
