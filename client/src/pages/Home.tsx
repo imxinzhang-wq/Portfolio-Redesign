@@ -14,6 +14,8 @@ import project1 from "@assets/Collection_Cover.jpg";
 import project2 from "@assets/Darmi_Cover.jpg";
 import project3 from "@assets/Airbnb_Cover_1774813459702.jpg";
 import project4 from "@assets/tagging_cover_1775594426781.jpeg";
+import header1 from "@assets/header1.jpg";
+import header2 from "@assets/header2.JPG";
 
 /*
   Section background colours. These drive the scroll-linked background swap and
@@ -356,6 +358,30 @@ function Navbar() {
   );
 }
 
+/*
+  An image that sits inside the headline as if it were a word. Height is fixed
+  in `em` so it tracks the type scale; only the WIDTH animates, 3:4 → 1:1 on
+  hover, which is what pushes the words after it along instead of overlapping
+  them. Transitioning width (not transform) is the point here — a transform
+  would scale the box without reflowing the line.
+*/
+function InlineHeaderImage({ src, alt }: { src: string; alt: string }) {
+  return (
+    <span
+      tabIndex={0}
+      className="relative inline-block h-[0.72em] w-[0.54em] hover:w-[0.72em] focus:w-[0.72em] focus:outline-none mx-[0.14em] overflow-hidden rounded-[16px] bg-foreground/10 transition-[width] duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
+      style={{ verticalAlign: "-0.04em" }}
+      data-testid={`img-inline-${alt.toLowerCase().replace(/\s+/g, "-")}`}
+    >
+      <img
+        src={src}
+        alt={alt}
+        className="absolute inset-0 h-full w-full object-cover object-center"
+      />
+    </span>
+  );
+}
+
 function Hero() {
   return (
     <section data-bg-color={SECTION_BG.canvas} className="min-h-[115vh] px-6">
@@ -372,18 +398,13 @@ function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1] }}
-            className="text-center"
           >
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-medium tracking-tight leading-[1.15] text-balance">
-              I'm Xin, a Product Designer at{" "}
-              <span className="text-primary/60 transition-colors hover:text-primary cursor-default">
-                YouTube
-              </span>
-              . Previously a founding designer at{" "}
-              <span className="text-primary/60 transition-colors hover:text-primary cursor-default">
-                Airbnb China
-              </span>
-              .
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-medium tracking-tight leading-[1.2]">
+              I'm Xin, a Product Designer at
+              <InlineHeaderImage src={header1} alt="YouTube" />
+              YouTube. Previously a founding designer at
+              <InlineHeaderImage src={header2} alt="Airbnb China" />
+              Airbnb China.
             </h1>
           </motion.div>
         </div>
