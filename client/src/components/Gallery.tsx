@@ -61,9 +61,19 @@ const PHOTOS = [
   rate — groups differ in width through their gaps and starting offsets, never
   by resizing a plate, so nothing quietly breaks that.
 */
-const LARGE = { width: "30vw", depth: 1 };
-const MEDIUM = { width: "23vw", depth: 0.5 };
-const SMALL = { width: "16vw", depth: 0.12 };
+/*
+  Each width is capped in vh as well as set in vw. A plate is 3:4, so its height
+  comes from its width, which is in vw — while the vertical spacing between
+  groups is a share of the stage, which is in vh. On a wide, short screen the
+  first grows and the second does not, and plates that clear each other at
+  1440x900 close right up. The vh term holds every plate's height to the same
+  fraction of the screen whatever the aspect ratio, which is what the spacing
+  was written against. The cost is a wider right margin on very wide screens,
+  since the groups no longer reach their stated end.
+*/
+const LARGE = { width: "min(30vw, 48vh)", depth: 1 };
+const MEDIUM = { width: "min(23vw, 37vh)", depth: 0.5 };
+const SMALL = { width: "min(16vw, 26vh)", depth: 0.12 };
 
 /*
   The gaps inside a group are uneven on purpose — 13vw then 6vw in the first,
@@ -78,15 +88,20 @@ const PLATES = [
   { photo: 1, left: "49%", top: "14%", ...SMALL },
   { photo: 2, left: "71%", top: "7%", ...MEDIUM },
 
-  // 09, 10, 07 — stopping at 83% to leave the right open.
-  { photo: 4, left: "6%", top: "33%", ...MEDIUM },
-  { photo: 5, left: "34%", top: "42%", ...LARGE },
-  { photo: 3, left: "67%", top: "36%", ...SMALL },
+  // 09, 07, 10 — stopping at 83% to leave the right open.
+  { photo: 4, left: "6%", top: "40%", ...MEDIUM },
+  { photo: 3, left: "34%", top: "42%", ...LARGE },
+  { photo: 5, left: "67%", top: "36%", ...SMALL },
 
-  // 13, 15, 14 — kept together at the end, starting at 16% to open the left.
+  /*
+    13, 15, 14 — kept together at the end, starting at 16% to open the left.
+    The large one sits at 74% rather than 70%: it follows directly below the
+    large plate in the group above, and four points of the stage is the
+    difference between the two reading as separate and as one tall column.
+  */
   { photo: 6, left: "16%", top: "68%", ...SMALL },
   { photo: 8, left: "36%", top: "76%", ...MEDIUM },
-  { photo: 7, left: "64%", top: "70%", ...LARGE },
+  { photo: 7, left: "64%", top: "74%", ...LARGE },
 ];
 
 const STAGE_HEIGHT = "260vh";
@@ -119,7 +134,7 @@ const SECTION_HEIGHT = "320vh";
   rate do the work, and the rest only decorates it.
 */
 const DRIFT = 700;
-const SWAY = 55;
+const SWAY = 90;
 
 function Plate({
   plate,
@@ -180,12 +195,13 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
   const [still, setStill] = useState(true);
 
   /*
-    A spring rather than the raw pointer position: the plates should settle
-    into their offset, not snap to it. Both values run -1 to 1 from the centre
-    of the viewport, and the plates read them negated.
+    A spring, so the plates settle into their offset rather than snapping to it,
+    but a stiff and heavily damped one — it takes the edge off the cursor
+    without the plates trailing behind it on a rubber band. Both values run -1
+    to 1 from the centre of the viewport, and the plates read them negated.
   */
-  const pointerX = useSpring(0, { stiffness: 60, damping: 20, mass: 0.6 });
-  const pointerY = useSpring(0, { stiffness: 60, damping: 20, mass: 0.6 });
+  const pointerX = useSpring(0, { stiffness: 220, damping: 40, mass: 0.3 });
+  const pointerY = useSpring(0, { stiffness: 220, damping: 40, mass: 0.3 });
 
   useEffect(() => {
     const narrow = window.matchMedia("(max-width: 767px)");
@@ -233,9 +249,10 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
     wide viewport collapses into a pile on a phone, and parallax that depends on
     a pointer has nothing to depend on.
 
-    It also shows each photograph once rather than walking the plates. Repeats
-    are there to fill a scatter; stacked in a column they are just the same
-    picture again.
+    Six photographs in a two-column grid, not all nine down a column. Two
+    abreast gives each one a neighbour to be read against, which is the nearest
+    a phone gets to the arrangement on a wide screen, and three rows is as far
+    as this is worth scrolling.
   */
   if (still) {
     return (
@@ -244,7 +261,7 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
         data-bg-color={bgColor}
         className="relative px-6 py-24"
       >
-        <div className="mx-auto max-w-md space-y-10">
+        <div className="mx-auto max-w-md">
           <div className="text-center">
             <h2 className="font-display text-3xl font-medium tracking-tight text-white">
               Project name
@@ -254,18 +271,20 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
               Description Description Description
             </p>
           </div>
-          {PHOTOS.map((photo, i) => (
-            <img
-              key={i}
-              src={photo.src}
-              alt=""
-              aria-hidden
-              loading="lazy"
-              decoding="async"
-              className="w-full rounded-[6px] object-cover"
-              style={{ aspectRatio: String(photo.ratio) }}
-            />
-          ))}
+          <div className="mt-12 grid grid-cols-2 gap-3">
+            {PHOTOS.slice(0, 6).map((photo, i) => (
+              <img
+                key={i}
+                src={photo.src}
+                alt=""
+                aria-hidden
+                loading="lazy"
+                decoding="async"
+                className="w-full rounded-[6px] object-cover"
+                style={{ aspectRatio: String(photo.ratio) }}
+              />
+            ))}
+          </div>
         </div>
       </section>
     );
