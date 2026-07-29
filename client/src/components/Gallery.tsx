@@ -55,31 +55,36 @@ const PHOTOS = [
   close on that reading. Away from the middle the depths pull them apart and
   they will run into each other, but by then they are near the top or bottom
   edge and on their way out of frame.
-*/
-/*
-  Three sizes, and each one is a fixed width and a fixed depth. Since depth is
-  what sets the drift, two plates of the same size always travel at the same
-  rate — the groups differ in their widths through their gaps and starting
-  offsets, never by resizing a plate, so nothing quietly breaks that.
+
+  Each of the three sizes is a fixed width and a fixed depth, below. Since depth
+  is what sets the drift, two plates of the same size always travel at the same
+  rate — groups differ in width through their gaps and starting offsets, never
+  by resizing a plate, so nothing quietly breaks that.
 */
 const LARGE = { width: "30vw", depth: 1 };
-const MEDIUM = { width: "23vw", depth: 0.6 };
-const SMALL = { width: "16vw", depth: 0.2 };
+const MEDIUM = { width: "23vw", depth: 0.5 };
+const SMALL = { width: "16vw", depth: 0.12 };
 
+/*
+  The gaps inside a group are uneven on purpose — 13vw then 6vw in the first,
+  2.2 then 0.8 in the second — while the group's two ends stay where they are.
+  Even gaps read as a row that has been spaced out; uneven ones read as three
+  things that happen to be near each other.
+*/
 const PLATES = [
-  // 03, 04, 06 — full measure, 6% to 94%, wide gaps.
+  // 03, 04, 06 — full measure, 6% to 94%.
   { photo: 0, left: "6%", top: "3%", ...LARGE },
-  { photo: 1, left: "45.5%", top: "14%", ...SMALL },
+  { photo: 1, left: "49%", top: "14%", ...SMALL },
   { photo: 2, left: "71%", top: "7%", ...MEDIUM },
 
-  // 07, 09, 10 — tight gaps, stopping at 78% to open up the right.
+  // 07, 09, 10 — close together, stopping at 78% to open up the right.
   { photo: 3, left: "6%", top: "33%", ...MEDIUM },
-  { photo: 4, left: "30.5%", top: "42%", ...LARGE },
+  { photo: 4, left: "31.2%", top: "42%", ...LARGE },
   { photo: 5, left: "62%", top: "36%", ...SMALL },
 
   // 13, 14, 15 — kept together at the end, starting at 20% to open the left.
   { photo: 6, left: "20%", top: "68%", ...SMALL },
-  { photo: 7, left: "38.5%", top: "76%", ...MEDIUM },
+  { photo: 7, left: "37.5%", top: "76%", ...MEDIUM },
   { photo: 8, left: "64%", top: "70%", ...LARGE },
 ];
 
@@ -90,7 +95,7 @@ const STAGE_HEIGHT = "260vh";
   section arrives and the plates only start at the far side of this gap, so the
   reader gets the copy alone, held still, before the scatter climbs into view.
 */
-const LEAD = "100vh";
+const LEAD = "50vh";
 
 /*
   Lead plus stage plus enough tail for the last plates to clear, and no more.
@@ -98,17 +103,30 @@ const LEAD = "100vh";
   longer section does not slow them down, it only adds black after the stage has
   gone by.
 */
-const SECTION_HEIGHT = "360vh";
+const SECTION_HEIGHT = "320vh";
 
 /*
   Pixels a plate at depth 1 drifts across the section's full pass through the
-  viewport, and how far it leans toward the pointer. Depths run 0.15 to 1, so
-  the widest pairing separates by 0.85 x DRIFT, or a little over 390px. Against
-  the lengthened section that works out at much the same rate per pixel scrolled
-  as before, with close to twice the separation.
+  viewport, and how far it leans toward the pointer. Depths run 0.12 to 1, so
+  the widest pairing separates by 0.88 x DRIFT, a little over 600px — more than
+  two thirds of a screen between the fastest and slowest plate.
 */
-const DRIFT = 460;
-const SWAY = 30;
+const DRIFT = 700;
+const SWAY = 55;
+
+/*
+  The cues that carry the depth beyond speed alone. A far plate is softer, the
+  way a lens renders one, set once per plate rather than animated: it is a
+  property of where the plate sits in the space, not of what the reader is
+  doing. Focus only — dimming the far plates was the obvious companion to it and
+  is deliberately not here.
+
+  TURN is how far the whole arrangement swings under the pointer, in degrees.
+  Every plate turns by the same amount — a camera turning, not nine plates
+  turning independently — and the depth-scaled travel does the rest.
+*/
+const FOCUS_BLUR = 2.2;
+const TURN = 4;
 
 function Plate({
   plate,
@@ -135,6 +153,11 @@ function Plate({
   );
   const x = useTransform(pointerX, (v) => v * plate.depth * SWAY);
 
+  // Uniform across the plates: the arrangement swings as one, and what makes it
+  // read as space is that the near ones travel further while doing it.
+  const rotateY = useTransform(pointerX, (v) => v * TURN);
+  const rotateX = useTransform(pointerY, (v) => -v * TURN * 0.7);
+
   return (
     <motion.div
       className="absolute will-change-transform"
@@ -144,7 +167,7 @@ function Plate({
         width: plate.width,
         // Nearer plates sit in front, which is also the order the sizes imply.
         zIndex: Math.round(plate.depth * 10),
-        ...(still ? {} : { x, y }),
+        ...(still ? {} : { x, y, rotateY, rotateX }),
       }}
     >
       <img
@@ -154,7 +177,12 @@ function Plate({
         loading="lazy"
         decoding="async"
         className="w-full rounded-[6px] object-cover shadow-xl shadow-black/25"
-        style={{ aspectRatio: String(photo.ratio) }}
+        style={{
+          aspectRatio: String(photo.ratio),
+          filter: still
+            ? undefined
+            : `blur(${((1 - plate.depth) * FOCUS_BLUR).toFixed(2)}px)`,
+        }}
       />
     </motion.div>
   );
@@ -297,9 +325,12 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
 
       {/* The stage begins a full viewport in, so the first screen of the
           section is the copy on its own. */}
+      {/* The perspective is what turns the plates' rotation into a turn in
+          space rather than a flat skew. It belongs to the stage, so every plate
+          is seen from the same eye. */}
       <div
         className="absolute inset-x-0"
-        style={{ top: LEAD, height: STAGE_HEIGHT }}
+        style={{ top: LEAD, height: STAGE_HEIGHT, perspective: "1400px" }}
       >
         {PLATES.map((plate, i) => (
           <Plate
