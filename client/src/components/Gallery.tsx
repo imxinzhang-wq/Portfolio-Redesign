@@ -107,13 +107,12 @@ const PLATES = [
 const STAGE_HEIGHT = "260vh";
 
 /*
-  Blank space ahead of the stage. The copy pins as the section arrives and the
-  plates only start at the far side of this gap, so the reader gets the copy
-  alone, held still, before the scatter climbs into view. Half a viewport is
-  enough because the drift pushes the plates a further DRIFT down at the start
-  of the section, deepening the gap on its own.
+  Blank space ahead of the stage, now that there is no copy to hold it. The
+  drift already pushes every plate a further DRIFT down at the start of the
+  section, so the first group arrives late on its own and a small gap is enough
+  to keep the section from opening flush against the one before it.
 */
-const LEAD = "50vh";
+const LEAD = "10vh";
 
 /*
   Lead plus stage plus enough tail for the last plates to clear, and no more.
@@ -121,7 +120,7 @@ const LEAD = "50vh";
   longer section does not slow them down, it only adds black after the stage has
   gone by.
 */
-const SECTION_HEIGHT = "320vh";
+const SECTION_HEIGHT = "280vh";
 
 /*
   Pixels a plate at depth 1 drifts across the section's full pass through the
@@ -183,7 +182,7 @@ function Plate({
         aria-hidden
         loading="lazy"
         decoding="async"
-        className="w-full rounded-[6px] object-cover shadow-xl shadow-black/25"
+        className="w-full rounded-[6px] object-cover"
         style={{ aspectRatio: String(photo.ratio) }}
       />
     </motion.div>
@@ -210,8 +209,8 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
     Both values run -1 to 1 from the centre of the viewport, and the plates read
     them negated.
   */
-  const pointerX = useSpring(0, { stiffness: 320, damping: 32, mass: 0.5 });
-  const pointerY = useSpring(0, { stiffness: 320, damping: 32, mass: 0.5 });
+  const pointerX = useSpring(0, { stiffness: 320, damping: 40, mass: 0.5 });
+  const pointerY = useSpring(0, { stiffness: 320, damping: 40, mass: 0.5 });
 
   useEffect(() => {
     const narrow = window.matchMedia("(max-width: 767px)");
@@ -243,18 +242,6 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
   });
 
   /*
-    The copy fades up as the section arrives and lets go once the last plates
-    are through, so it does not sit over the start of the section that follows.
-    Both edges are inside the range where it is pinned, so it never appears to
-    slide away.
-  */
-  const copyOpacity = useTransform(
-    scrollYProgress,
-    [0.04, 0.16, 0.82, 0.93],
-    [0, 1, 1, 0],
-  );
-
-  /*
     The narrow layout drops the scatter entirely. Absolute placement tuned for a
     wide viewport collapses into a pile on a phone, and parallax that depends on
     a pointer has nothing to depend on.
@@ -272,16 +259,7 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
         className="relative px-6 py-24"
       >
         <div className="mx-auto max-w-md">
-          <div className="text-center">
-            <h2 className="font-display text-3xl font-medium tracking-tight text-white">
-              Project name
-            </h2>
-            <p className="mt-4 text-base leading-[1.7] text-white/60">
-              Description Description Description Description Description
-              Description Description Description
-            </p>
-          </div>
-          <div className="mt-12 grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3">
             {PHOTOS.slice(0, 6).map((photo, i) => (
               <img
                 key={i}
@@ -308,39 +286,11 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
     <section
       ref={sectionRef}
       data-bg-color={bgColor}
-      /*
-        overflow-clip, not overflow-hidden. Both trim the plates at the edges,
-        but hidden makes this a scroll container, and a scroll container is
-        exactly what stops the copy below from sticking to the viewport.
-      */
+      // overflow-clip rather than overflow-hidden: it trims the plates at the
+      // edges without making the section a scroll container.
       className="relative overflow-clip"
       style={{ height: SECTION_HEIGHT }}
     >
-      {/*
-        The copy pins itself for the length of the section: it arrives with the
-        section, settles in the middle of the screen, and holds there while the
-        plates climb past it. Above the plates so it stays readable whatever
-        drifts behind.
-      */}
-      <motion.div
-        style={{ opacity: copyOpacity }}
-        className="pointer-events-none sticky top-0 z-20 flex h-screen items-center justify-center px-6"
-      >
-        {/* The shadow is invisible against the background and only does any
-            work when a bright plate happens to be passing behind the copy. */}
-        <div className="max-w-sm text-center [text-shadow:0_2px_28px_rgba(0,0,0,0.9)]">
-          <h2 className="font-display text-4xl font-medium tracking-tight text-white">
-            Project name
-          </h2>
-          <p className="mt-5 text-base leading-[1.7] text-white/70">
-            Description Description Description Description Description
-            Description Description Description
-          </p>
-        </div>
-      </motion.div>
-
-      {/* The stage begins a full viewport in, so the first screen of the
-          section is the copy on its own. */}
       <div
         className="absolute inset-x-0"
         style={{ top: LEAD, height: STAGE_HEIGHT }}
