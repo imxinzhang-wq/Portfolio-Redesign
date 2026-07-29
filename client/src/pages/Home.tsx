@@ -381,7 +381,7 @@ function Navbar() {
 
 /*
   An image that sits inside the headline as if it were a word. Height is fixed
-  in `em` so it tracks the type scale; only the WIDTH animates, 3:4 → 1:1 on
+  in `em` so it tracks the type scale; only the WIDTH animates, 3:4 → 4:3 on
   hover, which is what pushes the words after it along instead of overlapping
   them. Transitioning width (not transform) is the point here — a transform
   would scale the box without reflowing the line.
@@ -399,7 +399,7 @@ function InlineHeaderImage({
     <span
       tabIndex={0}
       data-cursor-label={label}
-      className="relative inline-block h-[1.2em] w-[0.9em] hover:w-[1.2em] focus:w-[1.2em] focus:outline-none mx-[0.16em] overflow-hidden rounded-[16px] bg-foreground/10 transition-[width] duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
+      className="relative inline-block h-[1.2em] w-[0.9em] hover:w-[1.6em] focus:w-[1.6em] focus:outline-none mx-[0.16em] overflow-hidden rounded-[16px] bg-foreground/10 transition-[width] duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
       style={{ verticalAlign: "-0.28em" }}
       data-testid={`img-inline-${label.toLowerCase().replace(/\s+/g, "-")}`}
     >
@@ -436,7 +436,7 @@ function Hero() {
               I'm Xin, a Product Designer at
               <InlineHeaderImage
                 src={header1}
-                alt="The Matterhorn, seen from Zurich"
+                alt="The Matterhorn, seen from Zermatt"
                 label="Zurich"
               />
               YouTube. Previously a founding designer at
