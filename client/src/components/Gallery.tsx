@@ -71,37 +71,43 @@ const PHOTOS = [
   was written against. The cost is a wider right margin on very wide screens,
   since the groups no longer reach their stated end.
 */
-const LARGE = { width: "min(30vw, 48vh)", depth: 1 };
+const LARGE = { width: "min(33vw, 53vh)", depth: 1 };
 const MEDIUM = { width: "min(23vw, 37vh)", depth: 0.5 };
-const SMALL = { width: "min(16vw, 26vh)", depth: 0.12 };
+const SMALL = { width: "min(16vw, 26vh)", depth: 0.22 };
 
 /*
-  The gaps inside a group are uneven on purpose — 13vw then 6vw in the first,
-  5 then 3 in the second, 4 then 5 in the third. Even gaps read as a row that
+  The gaps inside a group are uneven on purpose — 11vw then 5vw in the first,
+  4 then 2 in the second, 4 then 6 in the third. Even gaps read as a row that
   has been spaced out; uneven ones read as three things that happen to be near
-  each other. Each group still ends where it did, so the empty space keeps
-  falling somewhere different from group to group.
+  each other.
+
+  The three widths now sum to 72vw against a measure of 88, so the spare room a
+  group has to be asymmetric with is thinner than it was. The first group still
+  spans the full measure, the second still stops short on the right and the
+  third still starts in from the left — by 10vw and 6vw rather than 11 and 10.
 */
 const PLATES = [
   // 03, 04, 06 — full measure, 6% to 94%.
   { photo: 0, left: "6%", top: "3%", ...LARGE },
-  { photo: 1, left: "49%", top: "14%", ...SMALL },
+  { photo: 1, left: "50%", top: "14%", ...SMALL },
   { photo: 2, left: "71%", top: "7%", ...MEDIUM },
 
-  // 09, 07, 10 — stopping at 83% to leave the right open.
+  // 09, 07, 10 — stopping at 84% to leave the right open.
   { photo: 4, left: "6%", top: "40%", ...MEDIUM },
-  { photo: 3, left: "34%", top: "42%", ...LARGE },
-  { photo: 5, left: "67%", top: "36%", ...SMALL },
+  { photo: 3, left: "33%", top: "42%", ...LARGE },
+  { photo: 5, left: "68%", top: "36%", ...SMALL },
 
   /*
-    13, 15, 14 — kept together at the end, starting at 16% to open the left.
-    The large one sits at 74% rather than 70%: it follows directly below the
-    large plate in the group above, and four points of the stage is the
-    difference between the two reading as separate and as one tall column.
+    13, 15, 14 — kept together at the end, starting at 12% to open the left.
+    The large one sits at 78%: it follows directly below the large plate in the
+    group above, and that pair needs about a fifth of a screen between them to
+    read as separate rather than as one tall column. Growing the large size ate
+    into that — the gap fell to 0.13 screens at 74% — so the plate moves down to
+    win it back.
   */
-  { photo: 6, left: "16%", top: "68%", ...SMALL },
-  { photo: 8, left: "36%", top: "76%", ...MEDIUM },
-  { photo: 7, left: "64%", top: "74%", ...LARGE },
+  { photo: 6, left: "12%", top: "68%", ...SMALL },
+  { photo: 8, left: "32%", top: "73%", ...MEDIUM },
+  { photo: 7, left: "61%", top: "78%", ...LARGE },
 ];
 
 const STAGE_HEIGHT = "260vh";
@@ -120,7 +126,7 @@ const LEAD = "10vh";
   longer section does not slow them down, it only adds black after the stage has
   gone by.
 */
-const SECTION_HEIGHT = "280vh";
+const SECTION_HEIGHT = "300vh";
 
 /*
   Pixels a plate at depth 1 drifts across the section's full pass through the
