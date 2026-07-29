@@ -1,6 +1,6 @@
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import type { MotionValue } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 /*
   Filenames keep the numbers the photographs were uploaded under, gaps and all,
@@ -143,38 +143,45 @@ const SWAY = 90;
 
 /*
   The wordmark. Its depth sits above every plate's, so it climbs the screen
-  faster than anything else and is the first thing to leave — the plates come up
-  past it and it is gone before they are.
+  faster than anything else and is the first thing to leave.
 
-  There is a trade here and it cannot be avoided: what the reader sees moving is
-  page scroll plus drift, and page scroll is common to everything, so the only
-  way to make the wordmark visibly outrun the plates is more drift — which is
-  also what carries it off the screen sooner. At this depth it is on screen for
-  the stretch below, which is where a single line of type sized to the viewport
-  can be.
-
-  WORDMARK_LIFE is that stretch, measured. The shrink is mapped across it rather
-  than across the section, which matters: spread over the whole section the type
-  went 0.87 to 0.82 while anyone could see it, which is no shrink at all.
-
-  Scaling is a transform, not a font-size — it composites, where animating
-  font-size relayouts the text every frame.
+  WORDMARK_TOP is far enough above the first group that the type's top edge
+  clears the photographs' from the moment it enters. Being quicker, it starts
+  the section pushed further down than they are — by the difference in depth
+  times DRIFT, 245px — so it has to be that much higher again at rest to come
+  in overhead rather than from below.
 */
 const WORDMARK = "Beyond Design";
 const WORDMARK_DEPTH = 1.35;
-const WORDMARK_LIFE = [0.24, 0.41] as const;
-const WORDMARK_END = 0.5;
+const WORDMARK_TOP = "-14%";
+const WORDMARK_END = 0.42;
+
+/*
+  The hold. Across this stretch of the section nothing moves: the stage is
+  translated down by exactly as much as the page has scrolled, and every drift
+  is frozen, so the arrangement sits still while the reader keeps scrolling and
+  only the wordmark shrinks. Past it everything picks up together from where it
+  stopped.
+
+  It is placed to catch the wordmark just before it leaves the top of the
+  screen, so the shrink happens while the type is still worth looking at.
+*/
+const HOLD = [0.24, 0.44] as const;
 
 function Wordmark({
+  motionProgress,
   progress,
   still,
 }: {
+  motionProgress: MotionValue<number>;
   progress: MotionValue<number>;
   still: boolean;
 }) {
   const drift = WORDMARK_DEPTH * DRIFT;
-  const y = useTransform(progress, (p) => drift - p * drift * 2);
-  const scale = useTransform(progress, [...WORDMARK_LIFE], [1, WORDMARK_END]);
+  const y = useTransform(motionProgress, (p) => drift - p * drift * 2);
+  // Scale runs off the raw progress, not the held one: the shrink is the whole
+  // point of the hold, so it is the one thing that must keep moving through it.
+  const scale = useTransform(progress, [...HOLD], [1, WORDMARK_END]);
 
   return (
     <motion.div
@@ -187,7 +194,7 @@ function Wordmark({
       */
       className="pointer-events-none absolute inset-x-0 z-[15] select-none text-center"
       style={{
-        top: "12%",
+        top: WORDMARK_TOP,
         // Scaling about the top keeps the letters anchored where they start
         // instead of sliding up out of position as they shrink.
         transformOrigin: "50% 0%",
@@ -203,19 +210,20 @@ function Wordmark({
 
 function Plate({
   plate,
-  progress,
+  motionProgress,
   pointerX,
   pointerY,
   still,
 }: {
   plate: (typeof PLATES)[number];
-  progress: MotionValue<number>;
+  motionProgress: MotionValue<number>;
   pointerX: MotionValue<number>;
   pointerY: MotionValue<number>;
   still: boolean;
 }) {
   const photo = PHOTOS[plate.photo];
   const drift = plate.depth * DRIFT;
+  const progress = motionProgress;
 
   /*
     The pointer terms are negated: the plates move against the cursor, the way
@@ -308,6 +316,51 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
   });
 
   /*
+    The scroll the section spans, in pixels — its own height plus a viewport,
+    which is what the offset above measures across. The hold needs it in pixels
+    to cancel the page scroll, and it is written in vh, so it has to be read
+    back off the element.
+  */
+  const [span, setSpan] = useState(0);
+  useLayoutEffect(() => {
+    const measure = () => {
+      if (sectionRef.current)
+        setSpan(sectionRef.current.offsetHeight + window.innerHeight);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    window.addEventListener("resize", measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
+
+  /*
+    Progress with the hold cut out of it and the remainder stretched back over
+    the full range. Everything that travels reads this instead of the raw
+    progress, so the whole arrangement freezes for the length of the hold and
+    then resumes from exactly where it stopped.
+  */
+  const holdLength = HOLD[1] - HOLD[0];
+  const motionProgress = useTransform(scrollYProgress, (p) => {
+    const skipped = p <= HOLD[0] ? p : p >= HOLD[1] ? p - holdLength : HOLD[0];
+    return skipped / (1 - holdLength);
+  });
+
+  /*
+    Freezing the drift is only half of it: the plates also ride the page, so the
+    stage is pushed down by however much of the hold has been scrolled through,
+    which cancels that out. Past the hold the offset stays put and the stage
+    travels with the page again.
+  */
+  const stageY = useTransform(
+    scrollYProgress,
+    (p) => Math.min(Math.max(p - HOLD[0], 0), holdLength) * span,
+  );
+
+  /*
     The narrow layout drops the scatter entirely. Absolute placement tuned for a
     wide viewport collapses into a pile on a phone, and parallax that depends on
     a pointer has nothing to depend on.
@@ -362,23 +415,27 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
       className="relative overflow-clip"
       style={{ height: SECTION_HEIGHT }}
     >
-      <div
-        className="absolute inset-x-0"
-        style={{ top: LEAD, height: STAGE_HEIGHT }}
+      <motion.div
+        className="absolute inset-x-0 will-change-transform"
+        style={{ top: LEAD, height: STAGE_HEIGHT, y: stageY }}
       >
-        <Wordmark progress={scrollYProgress} still={still} />
+        <Wordmark
+          motionProgress={motionProgress}
+          progress={scrollYProgress}
+          still={still}
+        />
 
         {PLATES.map((plate, i) => (
           <Plate
             key={i}
             plate={plate}
-            progress={scrollYProgress}
+            motionProgress={motionProgress}
             pointerX={pointerX}
             pointerY={pointerY}
             still={still}
           />
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 }
