@@ -24,6 +24,7 @@ import project4 from "@assets/tagging_cover_1775594426781.jpeg";
 const SECTION_BG = {
   canvas: "#f5f0e6",
   ink: "#1a1a1a",
+  mist: "#dde2e9",
 } as const;
 
 const MOCK_PROJECTS = [
@@ -198,7 +199,7 @@ export default function Home() {
       <main className="relative">
         <Hero />
         <ProjectGrid />
-        <Gallery bgColor={SECTION_BG.canvas} />
+        <Gallery bgColor={SECTION_BG.mist} />
         <About />
       </main>
       <Footer />
