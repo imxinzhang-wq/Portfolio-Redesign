@@ -16,6 +16,8 @@ import project3 from "@assets/Airbnb_Cover_1774813459702.jpg";
 import project4 from "@assets/tagging_cover_1775594426781.jpeg";
 import header1 from "@assets/header1.jpg";
 import header2 from "@assets/header2.JPG";
+import header3 from "@assets/header3.mp4";
+import header3Webm from "@assets/header3.webm";
 
 /*
   Section background colours. These drive the scroll-linked background swap and
@@ -412,6 +414,46 @@ function InlineHeaderImage({
   );
 }
 
+/*
+  Same inline-media pattern as InlineHeaderImage but backed by a looping,
+  muted, autoplaying <video> instead of a static <img> — everything else
+  (fixed em height, 3:4 → 4:3 width reveal, cursor label swap) is identical.
+*/
+function InlineHeaderVideo({
+  src,
+  webmSrc,
+  label,
+}: {
+  src: string;
+  webmSrc: string;
+  label: string;
+}) {
+  return (
+    <span
+      tabIndex={0}
+      data-cursor-label={label}
+      className="relative inline-block h-[1.2em] w-[0.9em] hover:w-[1.6em] focus:w-[1.6em] focus:outline-none mx-[0.16em] overflow-hidden rounded-[16px] bg-foreground/10 transition-[width] duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
+      style={{ verticalAlign: "-0.28em" }}
+      data-testid={`video-inline-${label.toLowerCase().replace(/\s+/g, "-")}`}
+    >
+      {/*
+        mp4/h264 first (universal on real browsers) with webm/vp9 as a
+        fallback for the odd build that ships without licensed codecs.
+      */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 h-full w-full object-cover object-center"
+      >
+        <source src={src} type="video/mp4" />
+        <source src={webmSrc} type="video/webm" />
+      </video>
+    </span>
+  );
+}
+
 function Hero() {
   return (
     <section
@@ -433,7 +475,14 @@ function Hero() {
             transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1] }}
           >
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-medium tracking-tight leading-[1.2]">
-              I'm Xin, a Product Designer at
+              I'm Xin
+              <InlineHeaderVideo
+                src={header3}
+                webmSrc={header3Webm}
+                label="Hello"
+              />
+              , a Product
+              Designer at
               <InlineHeaderImage
                 src={header1}
                 alt="The Matterhorn, seen from Zermatt"
