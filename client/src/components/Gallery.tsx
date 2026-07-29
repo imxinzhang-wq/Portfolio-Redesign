@@ -192,16 +192,32 @@ function Wordmark({
         tab order: it is the section's title, but the section is a wall of
         pictures with nothing to read.
       */
-      className="pointer-events-none absolute inset-x-0 z-[15] select-none text-center"
+      className="pointer-events-none absolute inset-x-0 z-[15] select-none text-center will-change-transform"
       style={{
         top: WORDMARK_TOP,
         // Scaling about the top keeps the letters anchored where they start
         // instead of sliding up out of position as they shrink.
         transformOrigin: "50% 0%",
-        ...(still ? {} : { y, scale }),
+        /*
+          A scaling glyph is re-rasterised at every new size, and the hinting
+          snaps its stems to a different pixel grid each time, which is what the
+          shrink was shimmering with. The geometry was never the problem — the
+          plates and the type both measure 0px of drift through the hold.
+
+          will-change plus a translateZ hand the element its own compositing
+          layer, so the GPU resamples one raster instead of the text being drawn
+          again every frame. geometricPrecision turns off the hinting that does
+          the snapping. The trade is that the type softens slightly at the top
+          of the scale, where it is rendered above its rasterised size.
+        */
+        backfaceVisibility: "hidden",
+        ...(still ? {} : { y, scale, z: 0 }),
       }}
     >
-      <span className="font-display block font-medium leading-[0.82] tracking-[-0.04em] text-foreground text-[clamp(3rem,13.5vw,17rem)]">
+      <span
+        className="font-display block font-medium leading-[0.82] tracking-[-0.04em] text-foreground text-[clamp(3rem,13.5vw,17rem)]"
+        style={{ textRendering: "geometricPrecision" }}
+      >
         {WORDMARK}
       </span>
     </motion.div>
