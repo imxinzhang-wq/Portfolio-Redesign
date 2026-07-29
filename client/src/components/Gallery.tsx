@@ -181,7 +181,21 @@ function Wordmark({
   const y = useTransform(motionProgress, (p) => drift - p * drift * 2);
   // Scale runs off the raw progress, not the held one: the shrink is the whole
   // point of the hold, so it is the one thing that must keep moving through it.
-  const scale = useTransform(progress, [...HOLD], [1, WORDMARK_END]);
+  const scaleTarget = useTransform(progress, [...HOLD], [1, WORDMARK_END]);
+
+  /*
+    The jitter in the shrink was never rendering — it was the input. A wheel
+    delivers scroll in steps of a hundred-odd pixels, and with the hold spanning
+    seven hundred, each click moved the scale by several percent in one jump.
+    While everything else sits frozen, that staircase is the only motion on
+    screen, and it reads as shudder.
+
+    The spring turns the staircase into a curve: each wheel step becomes a new
+    target that the scale glides to over a few frames. Stiff and overdamped, so
+    it trails the wheel by barely enough to notice and never oscillates —
+    softness here would read as the type lagging the scroll.
+  */
+  const scale = useSpring(scaleTarget, { stiffness: 260, damping: 34 });
 
   return (
     <motion.div
