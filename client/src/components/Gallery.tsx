@@ -91,9 +91,11 @@ const PLATES = [
 const STAGE_HEIGHT = "260vh";
 
 /*
-  Blank space ahead of the stage, one viewport deep. The copy pins as the
-  section arrives and the plates only start at the far side of this gap, so the
-  reader gets the copy alone, held still, before the scatter climbs into view.
+  Blank space ahead of the stage. The copy pins as the section arrives and the
+  plates only start at the far side of this gap, so the reader gets the copy
+  alone, held still, before the scatter climbs into view. Half a viewport is
+  enough because the drift pushes the plates a further DRIFT down at the start
+  of the section, deepening the gap on its own.
 */
 const LEAD = "50vh";
 
@@ -107,26 +109,16 @@ const SECTION_HEIGHT = "320vh";
 
 /*
   Pixels a plate at depth 1 drifts across the section's full pass through the
-  viewport, and how far it leans toward the pointer. Depths run 0.12 to 1, so
+  viewport, and how far it slides against the pointer. Depths run 0.12 to 1, so
   the widest pairing separates by 0.88 x DRIFT, a little over 600px — more than
   two thirds of a screen between the fastest and slowest plate.
+
+  Depth is carried by movement alone. Blurring the far plates and turning the
+  arrangement in perspective were both tried and both taken out: position and
+  rate do the work, and the rest only decorates it.
 */
 const DRIFT = 700;
 const SWAY = 55;
-
-/*
-  The cues that carry the depth beyond speed alone. A far plate is softer, the
-  way a lens renders one, set once per plate rather than animated: it is a
-  property of where the plate sits in the space, not of what the reader is
-  doing. Focus only — dimming the far plates was the obvious companion to it and
-  is deliberately not here.
-
-  TURN is how far the whole arrangement swings under the pointer, in degrees.
-  Every plate turns by the same amount — a camera turning, not nine plates
-  turning independently — and the depth-scaled travel does the rest.
-*/
-const FOCUS_BLUR = 2.2;
-const TURN = 4;
 
 function Plate({
   plate,
@@ -144,19 +136,18 @@ function Plate({
   const photo = PHOTOS[plate.photo];
   const drift = plate.depth * DRIFT;
 
-  // Scroll and pointer both move the plate vertically, so they are summed into
-  // one value rather than fighting over the transform.
+  /*
+    The pointer terms are negated: the plates move against the cursor, the way
+    the near side of a scene slides the other way when you lean into it. Scroll
+    and pointer both move the plate vertically, so they are summed into one
+    value rather than fighting over the transform.
+  */
   const y = useTransform(
     [progress, pointerY] as [MotionValue<number>, MotionValue<number>],
     ([p, pointer]: number[]) =>
-      drift - p * drift * 2 + pointer * plate.depth * SWAY * 0.6,
+      drift - p * drift * 2 - pointer * plate.depth * SWAY * 0.6,
   );
-  const x = useTransform(pointerX, (v) => v * plate.depth * SWAY);
-
-  // Uniform across the plates: the arrangement swings as one, and what makes it
-  // read as space is that the near ones travel further while doing it.
-  const rotateY = useTransform(pointerX, (v) => v * TURN);
-  const rotateX = useTransform(pointerY, (v) => -v * TURN * 0.7);
+  const x = useTransform(pointerX, (v) => -v * plate.depth * SWAY);
 
   return (
     <motion.div
@@ -167,7 +158,7 @@ function Plate({
         width: plate.width,
         // Nearer plates sit in front, which is also the order the sizes imply.
         zIndex: Math.round(plate.depth * 10),
-        ...(still ? {} : { x, y, rotateY, rotateX }),
+        ...(still ? {} : { x, y }),
       }}
     >
       <img
@@ -177,12 +168,7 @@ function Plate({
         loading="lazy"
         decoding="async"
         className="w-full rounded-[6px] object-cover shadow-xl shadow-black/25"
-        style={{
-          aspectRatio: String(photo.ratio),
-          filter: still
-            ? undefined
-            : `blur(${((1 - plate.depth) * FOCUS_BLUR).toFixed(2)}px)`,
-        }}
+        style={{ aspectRatio: String(photo.ratio) }}
       />
     </motion.div>
   );
@@ -194,8 +180,8 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
 
   /*
     A spring rather than the raw pointer position: the plates should settle
-    toward the cursor, not snap to it. Both values run -1 to 1 from the centre
-    of the viewport.
+    into their offset, not snap to it. Both values run -1 to 1 from the centre
+    of the viewport, and the plates read them negated.
   */
   const pointerX = useSpring(0, { stiffness: 60, damping: 20, mass: 0.6 });
   const pointerY = useSpring(0, { stiffness: 60, damping: 20, mass: 0.6 });
@@ -325,12 +311,9 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
 
       {/* The stage begins a full viewport in, so the first screen of the
           section is the copy on its own. */}
-      {/* The perspective is what turns the plates' rotation into a turn in
-          space rather than a flat skew. It belongs to the stage, so every plate
-          is seen from the same eye. */}
       <div
         className="absolute inset-x-0"
-        style={{ top: LEAD, height: STAGE_HEIGHT, perspective: "1400px" }}
+        style={{ top: LEAD, height: STAGE_HEIGHT }}
       >
         {PLATES.map((plate, i) => (
           <Plate
