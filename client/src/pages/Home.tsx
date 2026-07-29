@@ -168,15 +168,24 @@ export default function Home() {
       const color = active?.dataset.bgColor;
       if (color && wrapper) {
         wrapper.style.backgroundColor = color;
-        // Keep html background in sync so macOS overscroll bounce shows the
-        // correct colour instead of the browser default white.
+        // Keep html background in sync so the overscroll bounce shows the
+        // section's colour rather than the page's default.
         document.documentElement.style.backgroundColor = color;
       }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      /*
+        Hand <html> back to the stylesheet on the way out. This override is the
+        only thing painting the overscroll area, and leaving it behind meant a
+        case study opened showing whichever section colour Home had reached —
+        the gallery's blue-grey, most visibly.
+      */
+      document.documentElement.style.backgroundColor = "";
+    };
   }, []);
 
   return (

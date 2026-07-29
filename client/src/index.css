@@ -105,11 +105,23 @@
   * {
     @apply border-border;
   }
+  /*
+    Overscroll is the viewport's, so both of these belong on <html>. They were
+    on <body>, where neither took: overscroll-behavior only reaches the viewport
+    from the root, and a background on body alone leaves the rubber-band area
+    painting whatever the canvas last held.
+
+    The colour here is the default every page falls back to. Home overrides it
+    per section as you scroll and clears the override on its way out, so a case
+    study can never inherit the gallery's blue-grey.
+  */
+  html {
+    background-color: hsl(var(--background));
+    overscroll-behavior: none;
+  }
   body {
     @apply font-sans antialiased bg-background text-foreground selection:bg-accent selection:text-accent-foreground;
     overscroll-behavior: none;
-    /* Initial overscroll colour — updated dynamically by the scroll listener
-       in Home.tsx, which writes the active section colour onto <html>. */
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-display tracking-tight font-medium;

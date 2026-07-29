@@ -3,35 +3,54 @@ import type { MotionValue } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
 /*
-  Filenames keep the numbers the photographs were uploaded under, gaps and all,
-  rather than being renumbered to run consecutively. Referring to one by the
-  number it already has beats keeping a mapping in your head.
+  Every photograph ships as WebP at three widths, and the browser is told what
+  each plate actually renders at so it can pick one. The single 1200px JPEG this
+  replaces was between one and seven times larger than the box it went into,
+  depending on the slot, and the nine of them landed as 3.19MB the moment the
+  gallery came into view.
+
+  The JPEGs stay in the repository as the masters the variants are derived from;
+  nothing imports them, so they are not built.
+
+  Numbers are the ones the photographs were uploaded under, gaps and all —
+  referring to one by the number it already has beats keeping a mapping in your
+  head. They are read off the filenames rather than listed, so adding a
+  photograph is a matter of dropping its three variants in.
 */
-import film03 from "@assets/film-03.jpg";
-import film04 from "@assets/film-04.jpg";
-import film06 from "@assets/film-06.jpg";
-import film07 from "@assets/film-07.jpg";
-import film09 from "@assets/film-09.jpg";
-import film10 from "@assets/film-10.jpg";
-import film13 from "@assets/film-13.jpg";
-import film14 from "@assets/film-14.jpg";
-import film15 from "@assets/film-15.jpg";
+const VARIANTS = import.meta.glob<string>(
+  "../../../attached_assets/film-*-*.webp",
+  { eager: true, query: "?url", import: "default" },
+);
+
+type Variant = { width: number; url: string };
+
+const SOURCES = (() => {
+  const byNumber: Record<string, Variant[]> = {};
+  for (const [path, url] of Object.entries(VARIANTS)) {
+    const match = path.match(/film-(\d+)-(\d+)\.webp$/);
+    if (!match) continue;
+    (byNumber[match[1]] ??= []).push({ width: Number(match[2]), url });
+  }
+  return Object.keys(byNumber)
+    .sort((a, b) => Number(a) - Number(b))
+    .map((number) => {
+      const widths = byNumber[number].sort(
+        (a: Variant, b: Variant) => a.width - b.width,
+      );
+      return {
+        number,
+        srcSet: widths.map((v: Variant) => `${v.url} ${v.width}w`).join(", "),
+        // The middle width as the fallback for anything that cannot read srcSet.
+        src: widths[Math.floor(widths.length / 2)].url,
+      };
+    });
+})();
 
 // Portraits only, every one cropped to exactly 3:4, so a plate's height follows
 // from its width and the three sizes stay in proportion to each other.
 const PORTRAIT = 3 / 4;
 
-const PHOTOS = [
-  { src: film03, ratio: PORTRAIT },
-  { src: film04, ratio: PORTRAIT },
-  { src: film06, ratio: PORTRAIT },
-  { src: film07, ratio: PORTRAIT },
-  { src: film09, ratio: PORTRAIT },
-  { src: film10, ratio: PORTRAIT },
-  { src: film13, ratio: PORTRAIT },
-  { src: film14, ratio: PORTRAIT },
-  { src: film15, ratio: PORTRAIT },
-];
+const PHOTOS = SOURCES.map((source) => ({ ...source, ratio: PORTRAIT }));
 
 /*
   Every plate carries one number that stands for how near it is, and that number
@@ -71,9 +90,16 @@ const PHOTOS = [
   was written against. The cost is a wider right margin on very wide screens,
   since the groups no longer reach their stated end.
 */
-const LARGE = { width: "min(33vw, 53vh)", depth: 1 };
-const MEDIUM = { width: "min(23vw, 37vh)", depth: 0.5 };
-const SMALL = { width: "min(16vw, 26vh)", depth: 0.22 };
+/*
+  `sizes` is the vw half of each width, without the vh cap — sizes takes a plain
+  length, and the cap only bites on wide, short screens, where over-fetching by
+  one step is the cheaper mistake. Leaving it off entirely is the expensive one:
+  the browser would assume the full viewport and take the largest variant every
+  time.
+*/
+const LARGE = { width: "min(33vw, 53vh)", sizes: "33vw", depth: 1 };
+const MEDIUM = { width: "min(23vw, 37vh)", sizes: "23vw", depth: 0.5 };
+const SMALL = { width: "min(16vw, 26vh)", sizes: "16vw", depth: 0.22 };
 
 /*
   The gaps inside a group are uneven on purpose — 11vw then 5vw in the first,
@@ -305,6 +331,8 @@ function Plate({
     >
       <img
         src={photo.src}
+        srcSet={photo.srcSet}
+        sizes={plate.sizes}
         alt=""
         aria-hidden
         loading="lazy"
@@ -422,6 +450,8 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
               <img
                 key={i}
                 src={photo.src}
+                srcSet={photo.srcSet}
+                sizes="(min-width: 28rem) 13rem, 45vw"
                 alt=""
                 aria-hidden
                 loading="lazy"
