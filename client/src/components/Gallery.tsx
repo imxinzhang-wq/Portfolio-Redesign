@@ -157,8 +157,9 @@ const WORDMARK_TOP = "-14%";
 const WORDMARK_END = 0.42;
 
 /*
-  The hold. Across it nothing moves and only the wordmark shrinks; past it
-  everything resumes together from where it stopped.
+  The hold. Across it the arrangement all but stops — it keeps creeping by
+  CRAWL, enough that it never reads as frozen — while the wordmark shrinks. Past
+  it everything resumes together from where it left off.
 
   HOLD_LENGTH is the scroll it consumes, and it is also the extra height given
   to the sticky track — pinning ends when the track's bottom catches the stage,
@@ -175,6 +176,15 @@ const WORDMARK_END = 0.42;
 */
 const HOLD_LENGTH = "80vh";
 const PIN_TOP = "4vh";
+
+/*
+  Pixels the stage still creeps upward across the hold, so it eases rather than
+  stops dead. This is safe to do in JS where the pin itself was not: it is a
+  small offset added on top of the sticky, not an attempt to cancel the scroll,
+  so there is no exact figure to fall behind. At 60px against the hold's 720px
+  it advances at a twelfth of scroll speed — about a pixel a frame.
+*/
+const CRAWL = 60;
 
 const vh = (length: string) => Number(length.replace("vh", ""));
 const SPAN = vh(SECTION_HEIGHT) + 100;
@@ -380,6 +390,10 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
     return skipped / (1 - holdLength);
   });
 
+  // The creep that keeps the hold from reading as a dead stop. It settles at
+  // its full value and stays there, so the resumption is continuous.
+  const crawl = useTransform(scrollYProgress, [...HOLD], [0, -CRAWL]);
+
   /*
     The narrow layout drops the scatter entirely. Absolute placement tuned for a
     wide viewport collapses into a pile on a phone, and parallax that depends on
@@ -446,9 +460,9 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
         className="absolute inset-x-0"
         style={{ top: LEAD, height: `calc(${STAGE_HEIGHT} + ${HOLD_LENGTH})` }}
       >
-        <div
+        <motion.div
           className="sticky"
-          style={{ top: PIN_TOP, height: STAGE_HEIGHT }}
+          style={{ top: PIN_TOP, height: STAGE_HEIGHT, y: still ? 0 : crawl }}
         >
           <Wordmark
             motionProgress={motionProgress}
@@ -466,7 +480,7 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
               still={still}
             />
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
