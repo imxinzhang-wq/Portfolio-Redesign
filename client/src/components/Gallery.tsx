@@ -141,6 +141,66 @@ const SECTION_HEIGHT = "300vh";
 const DRIFT = 700;
 const SWAY = 90;
 
+/*
+  The wordmark. Its depth sits above every plate's, so it climbs the screen
+  faster than anything else and is the first thing to leave — the plates come up
+  past it and it is gone before they are.
+
+  There is a trade here and it cannot be avoided: what the reader sees moving is
+  page scroll plus drift, and page scroll is common to everything, so the only
+  way to make the wordmark visibly outrun the plates is more drift — which is
+  also what carries it off the screen sooner. At this depth it is on screen for
+  the stretch below, which is where a single line of type sized to the viewport
+  can be.
+
+  WORDMARK_LIFE is that stretch, measured. The shrink is mapped across it rather
+  than across the section, which matters: spread over the whole section the type
+  went 0.87 to 0.82 while anyone could see it, which is no shrink at all.
+
+  Scaling is a transform, not a font-size — it composites, where animating
+  font-size relayouts the text every frame.
+*/
+const WORDMARK = "Beyond Design";
+const WORDMARK_DEPTH = 1.35;
+const WORDMARK_LIFE = [0.24, 0.41] as const;
+const WORDMARK_END = 0.5;
+
+function Wordmark({
+  progress,
+  still,
+}: {
+  progress: MotionValue<number>;
+  still: boolean;
+}) {
+  const drift = WORDMARK_DEPTH * DRIFT;
+  const y = useTransform(progress, (p) => drift - p * drift * 2);
+  const scale = useTransform(progress, [...WORDMARK_LIFE], [1, WORDMARK_END]);
+
+  return (
+    <motion.div
+      aria-hidden
+      /*
+        Above the plates, which top out at z-index 10, so the photographs pass
+        behind the letters rather than over them. Not selectable and not in the
+        tab order: it is the section's title, but the section is a wall of
+        pictures with nothing to read.
+      */
+      className="pointer-events-none absolute inset-x-0 z-[15] select-none text-center"
+      style={{
+        top: "12%",
+        // Scaling about the top keeps the letters anchored where they start
+        // instead of sliding up out of position as they shrink.
+        transformOrigin: "50% 0%",
+        ...(still ? {} : { y, scale }),
+      }}
+    >
+      <span className="font-display block font-medium leading-[0.82] tracking-[-0.04em] text-foreground text-[clamp(3rem,13.5vw,17rem)]">
+        {WORDMARK}
+      </span>
+    </motion.div>
+  );
+}
+
 function Plate({
   plate,
   progress,
@@ -265,6 +325,11 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
         className="relative px-6 py-24"
       >
         <div className="mx-auto max-w-md">
+          {/* Static here: the wordmark's whole behaviour on the wide layout is
+              motion, and there is none of that to inherit. */}
+          <h2 className="font-display mb-10 text-center text-[13vw] font-medium leading-[0.9] tracking-[-0.04em] text-foreground">
+            {WORDMARK}
+          </h2>
           <div className="grid grid-cols-2 gap-3">
             {PHOTOS.slice(0, 6).map((photo, i) => (
               <img
@@ -301,6 +366,8 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
         className="absolute inset-x-0"
         style={{ top: LEAD, height: STAGE_HEIGHT }}
       >
+        <Wordmark progress={scrollYProgress} still={still} />
+
         {PLATES.map((plate, i) => (
           <Plate
             key={i}
