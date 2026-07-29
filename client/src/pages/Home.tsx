@@ -661,7 +661,7 @@ function ProjectGrid() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-24 md:gap-[4vh]">
+          <div className="flex flex-col gap-24 md:gap-[6vh]">
             {visibleProjects.map((project, i) => (
               <ProjectFrame
                 key={project.id}
