@@ -423,7 +423,7 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
           {PHOTOS.map((photo) => (
             <div
               key={photo.number}
-              className="shrink-0 snap-center overflow-hidden rounded-[6px]"
+              className="shrink-0 snap-center overflow-hidden rounded-xl"
               style={{ width: "72vw", aspectRatio: "3 / 4" }}
             >
               <img

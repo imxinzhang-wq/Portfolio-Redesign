@@ -393,7 +393,7 @@ function InlineHeaderImage({
       tabIndex={0}
       data-cursor-label={label}
       data-cursor-label-size="sm"
-      className="relative inline-block h-[1.1em] w-[0.825em] hover:w-[1.4667em] focus:w-[1.4667em] focus:outline-none mx-[0.16em] overflow-hidden rounded-[16px] bg-foreground/10 transition-[width] duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
+      className="relative inline-block h-[1.1em] w-[0.825em] hover:w-[1.4667em] focus:w-[1.4667em] focus:outline-none mx-[0.16em] overflow-hidden rounded-sm md:rounded-[16px] bg-foreground/10 transition-[width] duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
       style={{ verticalAlign: "-0.257em" }}
       data-testid={`img-inline-${label.toLowerCase().replace(/\s+/g, "-")}`}
     >
@@ -447,7 +447,7 @@ function InlineHeaderVideo({
       onMouseLeave={() => setLooping(false)}
       onFocus={startLooping}
       onBlur={() => setLooping(false)}
-      className="relative inline-block h-[1.1em] w-[0.825em] hover:w-[1.4667em] focus:w-[1.4667em] focus:outline-none mx-[0.16em] overflow-hidden rounded-[16px] bg-foreground/10 transition-[width] duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
+      className="relative inline-block h-[1.1em] w-[0.825em] hover:w-[1.4667em] focus:w-[1.4667em] focus:outline-none mx-[0.16em] overflow-hidden rounded-sm md:rounded-[16px] bg-foreground/10 transition-[width] duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
       style={{ verticalAlign: "-0.257em" }}
       data-testid={`video-inline-${label.toLowerCase().replace(/\s+/g, "-")}`}
     >
@@ -707,7 +707,7 @@ function ProjectFrame({
             onActivate(el);
           }}
           data-project-frame
-          className="relative w-full aspect-[16/9] overflow-hidden rounded-[32px] bg-white/5"
+          className="relative w-full aspect-[16/9] overflow-hidden rounded-xl md:rounded-[32px] bg-white/5"
         >
           <motion.img
             src={project.image}
