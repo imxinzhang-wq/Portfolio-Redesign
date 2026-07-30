@@ -33,6 +33,9 @@ const SECTION_BG = {
   // and it leaves nowhere to go for anything that needs to sit darker still.
   void: "#0a0a0a",
   mist: "#dde2e9",
+  // Closing section — a warm grey, a step down from the canvas so the page
+  // settles rather than returning to where it started.
+  dust: "#e7e2dd",
 } as const;
 
 const MOCK_PROJECTS = [
@@ -260,7 +263,6 @@ export default function Home() {
         <Hero />
         <ProjectGrid />
         <Gallery bgColor={SECTION_BG.mist} />
-        <About />
       </main>
       <Footer />
     </div>
@@ -387,13 +389,6 @@ function Navbar() {
               BEYOND DESIGN
             </button>
             <button
-              onClick={() => handleNavClick("about")}
-              className="transition-colors duration-300 hover:text-white"
-              data-testid="link-about"
-            >
-              ABOUT
-            </button>
-            <button
               onClick={() => handleNavClick("contact")}
               className="transition-colors duration-300 hover:text-white"
               data-testid="link-contact"
@@ -425,13 +420,6 @@ function Navbar() {
               data-testid="link-beyond-mobile"
             >
               BEYOND DESIGN
-            </button>
-            <button
-              onClick={() => handleNavClick("about")}
-              className="text-sm font-display font-bold uppercase tracking-[0.25em] text-foreground text-left"
-              data-testid="link-about-mobile"
-            >
-              ABOUT
             </button>
             <button
               onClick={() => handleNavClick("contact")}
@@ -907,94 +895,49 @@ function ProjectGrid() {
   );
 }
 
-function About() {
-  return (
-    <section
-      id="about"
-      data-bg-color={SECTION_BG.canvas}
-      className="pt-60 pb-16 px-6"
-    >
-      <div className="max-w-4xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          className="space-y-16"
-        >
-          <div className="space-y-12">
-            <h2 className="eyebrow font-bold text-foreground/40">About Me</h2>
-            <div className="text-3xl md:text-5xl font-display leading-[1.3] font-medium tracking-tight space-y-10 text-foreground">
-              <p>
-                I moved to the U.S. in 2014 to study Human-Computer Interaction
-                at the University of Michigan. Since then, my work has taken me
-                from California to Switzerland.
-              </p>
-            </div>
-          </div>
+/*
+  The closing section, standing in for what used to be two — an About block
+  and a small contact strip. It keeps id="contact" because the nav still
+  points here.
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-12">
-            <div className="space-y-4">
-              <h3 className="eyebrow font-bold text-foreground/40">
-                Outside of work
-              </h3>
-              <p className="text-foreground/70 leading-[1.7] text-lg font-normal">
-                I'm a global explorer (40+ countries), film photographer, and
-                painter.{" "}
-                <a
-                  href="https://xhslink.com/m/gXhYLsbMVt"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline decoration-current underline-offset-4 hover:opacity-70 transition-opacity"
-                  data-testid="link-creator-story"
-                >
-                  As a creator,
-                </a>{" "}
-                I'm passionate about visual storytelling through video and
-                editing—an obsession that shapes how I see the creator journey.
-              </p>
-            </div>
-            <div className="space-y-4">
-              <h3 className="eyebrow font-bold text-foreground/40">Fun Fact</h3>
-              <p className="text-foreground/70 leading-[1.7] text-lg font-normal">
-                I hold a Bachelor's degree in Applied Mathematics and was
-                recognized as a Meritorious Winner in the 2013 Mathematical
-                Contest in Modeling.
-              </p>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  );
-}
-
+  A screen tall, with the address sitting low rather than centred: the empty
+  upper half is the point, and it is what makes the address land as the last
+  thing on the page instead of one more row of content.
+*/
 function Footer() {
   return (
     <footer
       id="contact"
-      data-bg-color={SECTION_BG.canvas}
-      className="py-16 px-6 relative"
+      data-bg-color={SECTION_BG.dust}
+      className="min-h-screen flex flex-col justify-end px-6 md:px-12 pb-10"
     >
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-        <div className="text-center md:text-left">
-          <p className="eyebrow font-bold text-foreground/40 mb-2">Say hello</p>
-          <a
-            href="mailto:about.dala@gmail.com"
-            className="text-2xl font-display text-foreground hover:opacity-50 transition-opacity"
-            data-testid="link-email"
-          >
-            about.dala@gmail.com
-          </a>
-        </div>
-        <div className="flex gap-8 eyebrow font-bold text-foreground/40">
-          <a
-            href="https://www.linkedin.com/in/imxinzhang/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-foreground transition-colors"
-          >
-            LinkedIn
-          </a>
-        </div>
+      <div className="mb-[16vh]">
+        <p className="text-base text-foreground mb-4">Say hello</p>
+        <a
+          href="mailto:about.dala@gmail.com"
+          className="block font-display font-medium tracking-tight leading-[1.05] text-foreground text-[clamp(2rem,7vw,7rem)] hover:opacity-60 transition-opacity"
+          data-testid="link-email"
+        >
+          about.dala@gmail.com
+        </a>
+      </div>
+
+      {/*
+        Three columns rather than justify-between, so LINKEDIN sits on the
+        page's centre line. Spaced apart it would only look centred if the
+        year and the byline happened to be the same width, which they are not.
+      */}
+      <div className="grid grid-cols-3 items-center text-sm text-foreground">
+        <span className="tabular-nums">{new Date().getFullYear()}</span>
+        <a
+          href="https://www.linkedin.com/in/imxinzhang/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="justify-self-center font-bold tracking-wide hover:opacity-60 transition-opacity"
+        >
+          LINKEDIN
+        </a>
+        <span className="justify-self-end">by XIN ZHANG</span>
       </div>
     </footer>
   );
