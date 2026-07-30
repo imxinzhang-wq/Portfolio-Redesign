@@ -366,7 +366,7 @@ function Navbar() {
               setIsMenuOpen(false);
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
-            className="text-base font-display font-bold tracking-tighter uppercase relative z-20"
+            className="text-lg font-display font-bold tracking-tighter uppercase relative z-20"
             data-testid="link-home"
           >
             Xin Zhang
@@ -389,27 +389,36 @@ function Navbar() {
             </div>
           </button>
 
-          <div className="hidden md:flex gap-10 eyebrow font-display font-bold text-white/70">
+          {/*
+            Not `eyebrow` any more. That utility carries 11px, 0.25em tracking
+            and uppercase as one bundle, and all three are now unwanted here —
+            keeping the class and overriding each part would leave the next
+            reader wondering which of them still applied.
+
+            Full white rather than white/70, so hover can no longer be a
+            colour step; it is opacity instead.
+          */}
+          <div className="hidden md:flex gap-10 font-display font-bold text-base text-white">
             <button
               onClick={() => handleNavClick("work")}
-              className="transition-colors duration-300 hover:text-white"
+              className="transition-opacity duration-300 hover:opacity-60"
               data-testid="link-work"
             >
-              WORK
+              Work
             </button>
             <button
               onClick={() => handleNavClick("beyond")}
-              className="transition-colors duration-300 hover:text-white"
+              className="transition-opacity duration-300 hover:opacity-60"
               data-testid="link-beyond"
             >
-              BEYOND DESIGN
+              Beyond Design
             </button>
             <button
               onClick={() => handleNavClick("contact")}
-              className="transition-colors duration-300 hover:text-white"
+              className="transition-opacity duration-300 hover:opacity-60"
               data-testid="link-contact"
             >
-              CONTACT
+              Contact
             </button>
           </div>
         </motion.nav>
@@ -425,24 +434,24 @@ function Navbar() {
           <div className="bg-card/90 backdrop-blur-xl border border-border rounded-2xl p-6 flex flex-col gap-6 shadow-[0_8px_32px_rgba(0,0,0,0.04)]">
             <button
               onClick={() => handleNavClick("work")}
-              className="text-sm font-display font-bold uppercase tracking-[0.25em] text-foreground text-left"
+              className="text-base font-display font-bold text-foreground text-left"
               data-testid="link-work-mobile"
             >
-              WORK
+              Work
             </button>
             <button
               onClick={() => handleNavClick("beyond")}
-              className="text-sm font-display font-bold uppercase tracking-[0.25em] text-foreground text-left"
+              className="text-base font-display font-bold text-foreground text-left"
               data-testid="link-beyond-mobile"
             >
-              BEYOND DESIGN
+              Beyond Design
             </button>
             <button
               onClick={() => handleNavClick("contact")}
-              className="text-sm font-display font-bold uppercase tracking-[0.25em] text-foreground text-left"
+              className="text-base font-display font-bold text-foreground text-left"
               data-testid="link-contact-mobile"
             >
-              CONTACT
+              Contact
             </button>
           </div>
         </div>
