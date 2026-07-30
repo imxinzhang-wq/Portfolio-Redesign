@@ -13,8 +13,8 @@ import { useEffect, useRef, useState } from "react";
   depending on the slot, and the nine of them landed as 3.19MB the moment the
   gallery came into view.
 
-  The JPEGs stay in the repository as the masters the variants are derived from;
-  nothing imports them, so they are not built.
+  The JPEGs/JPGs stay in the repository as the masters the variants are
+  derived from; nothing imports them, so they are not built.
 
   Numbers are the ones the photographs were uploaded under, gaps and all —
   referring to one by the number it already has beats keeping a mapping in your
