@@ -102,7 +102,7 @@ const TEXT_OFFSET_VH = 104;
   and a distance, and the duration follows. Setting all three by hand is how
   the photograph ended up covering 900px in 200px of scroll.
 */
-const TEXT_LEAD_VH = 34;
+const TEXT_LEAD_VH = -14;
 const PHOTO_SLIDE_VH = PHOTO_OFFSET_VH / PHOTO_SPEED;
 const ENTRY_VH = TEXT_LEAD_VH + PHOTO_SLIDE_VH;
 
