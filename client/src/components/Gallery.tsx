@@ -82,7 +82,7 @@ const WORDMARK_END = 0.42;
   The title is the nearer, faster element, so it is the larger of the two.
 */
 const TEXT_SPEED = 1.15;
-const PHOTO_SPEED = 1;
+const PHOTO_SPEED = 0.9;
 
 /*
   How far below its resting place each element begins. Both start clear of the
@@ -141,12 +141,20 @@ const SEGMENT_VH = 26;
   catch-up logic.
 
   SLOW_FACTOR is how much of normal speed the crawl runs at, and SLOW_VH is
-  how much real scroll it eats. The effective distance it yields is the
-  product — 80vh of scrolling buys 9.6vh of movement at 0.12.
+  how much real scroll it eats — which is also how long the shrink takes,
+  since they are the same window. The effective distance the crawl yields is
+  the product, so those two numbers together decide how far the title creeps
+  while it shrinks: 50vh at 0.12 buys 6vh of movement, and the title covers
+  1.15x that.
+
+  TEXT_PARK_VH is where the crawl begins, and it has to leave room for that
+  creep. At 26 the title started the shrink with its top edge 12vh down and
+  finished it at 1vh — right against the edge. 40 starts it at 26vh and
+  finishes around 19vh, clear of the top the whole way through.
 */
-const TEXT_PARK_VH = 26;
+const TEXT_PARK_VH = 40;
 const SLOW_FACTOR = 0.12;
-const SLOW_VH = 80;
+const SLOW_VH = 50;
 
 const TEXT_RISE_VH = (TEXT_OFFSET_VH - TEXT_PARK_VH) / TEXT_SPEED;
 const SLOW_START_VH = TEXT_RISE_VH;
