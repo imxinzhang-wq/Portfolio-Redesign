@@ -128,8 +128,8 @@ function CustomCursor() {
       <motion.div
         className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full bg-white mix-blend-difference"
         style={{
-          width: hovering ? 16 : 10,
-          height: hovering ? 16 : 10,
+          width: hovering ? 18 : 12,
+          height: hovering ? 18 : 12,
           x: dotX,
           y: dotY,
           translateX: "-50%",
@@ -696,7 +696,11 @@ function ProjectFrame({
   const y = useTransform(scrollYProgress, [0, 1], ["-11%", "11%"]);
 
   return (
-    <Link href={`/project/${project.id}`} className="group block">
+    <Link
+      href={`/project/${project.id}`}
+      className="group block"
+      data-cursor-label="View"
+    >
       {/* Mobile only: the rail cannot be pinned on a narrow screen, so each
           image carries its own copy above it. */}
       <div className="md:hidden mb-8">
