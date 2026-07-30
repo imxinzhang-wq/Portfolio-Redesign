@@ -58,63 +58,107 @@ const PHOTOS = SOURCES.map((source) => ({ ...source, ratio: PORTRAIT }));
 
 const WORDMARK = "Beyond Design";
 
-/*
-  The title's own depth and drift, independent of the photograph's. Both climb
-  the screen the whole time the section is pinned, but at different rates —
-  that gap in speed is what the entrance reads as parallax rather than two
-  things simply appearing together. The title is the faster of the two, so it
-  also finishes its climb first and is off the top of the screen well before
-  the photographs are done cycling.
-*/
-const WORDMARK_DEPTH = 1.35;
-const DRIFT = 700;
 const WORDMARK_TOP = "-14%";
-
 const WORDMARK_END = 0.42;
 
 /*
-  Scroll distance is split into two kinds of segment: ENTRY_VH is spent once,
-  sliding the first photograph up into its resting, centred position. Every
-  photograph after that — including the first, once it has arrived — gets an
-  equal SEGMENT_VH of scroll as its own dwell, so scrolling past it is what
-  swaps in the next one. Position never moves during a dwell; only the
-  photograph itself changes.
+  ── The two speeds ────────────────────────────────────────────────────────
+  Both are literal multiples of scroll speed: 1 means the element climbs the
+  screen at exactly the rate the page scrolls, 2 means twice that. They are
+  the only two numbers that set the parallax, and they are directly
+  comparable — which is the whole reason for expressing them this way rather
+  than as the old depth-times-drift, where the actual rate was an emergent
+  property of four constants and nobody could tell the two apart by reading.
 
-  SEGMENT_VH is deliberately short — around one wheel notch per photograph —
-  so the sequence rips through rather than dwelling.
+  The title is the nearer, faster element, so it is the larger of the two.
 */
-const ENTRY_VH = 70;
-const SEGMENT_VH = 14;
-const TOTAL_VH = ENTRY_VH + PHOTOS.length * SEGMENT_VH;
-const ENTRY_FRAC = ENTRY_VH / TOTAL_VH;
+const TEXT_SPEED = 1.15;
+const PHOTO_SPEED = 0.85;
 
 /*
-  The title has to read first and the photograph second, so the photograph
-  does not begin its slide until the entry is a third gone. Before that it
-  is parked a full viewport down, off screen — the title has the frame to
-  itself, coming up through the middle, and the photograph only starts to
-  show once the type is well established.
+  How far below its resting place each element begins. Both start clear of the
+  fold: the photograph's resting top edge is 10vh down, so 95vh puts it just
+  off the bottom, and 104vh puts the title's at 90vh — right on the bottom
+  edge, so it enters immediately and gets the full height of the screen to
+  cross.
 
-  Both still finish together at ENTRY_FRAC, which is what keeps it reading as
-  one arrival at two speeds rather than two separate entrances.
+  That full-screen run is what lets the title be the faster element and still
+  be around when the photograph lands. At 78vh it started halfway up, ran out
+  of screen in 640px, and was long gone by the time the photograph settled
+  1300px later — the shrink included, which happened to an element nobody
+  could see.
 */
-const PHOTO_START = ENTRY_FRAC * 0.35;
-const ENTRY_OFFSET = "100vh";
+const PHOTO_OFFSET_VH = 95;
+const TEXT_OFFSET_VH = 104;
 
 /*
-  The shrink runs AFTER the entry, not during it: the title spends the entry
-  rising at full size, and only once it has arrived does it start shrinking
-  and carry on up and out of frame.
+  Scroll distances, in vh, and these now mean exactly what they say — see the
+  PIN_VH note below for why they previously did not.
+
+  TEXT_LEAD_VH is the run the title gets on its own before the photograph
+  starts moving at all. Each element's slide then takes however long its own
+  distance at its own speed requires, so the entry's length is derived from
+  the four numbers above rather than set independently of them: pick a speed
+  and a distance, and the duration follows. Setting all three by hand is how
+  the photograph ended up covering 900px in 200px of scroll.
 */
-const SHRINK_VH = 35;
-const SHRINK = [ENTRY_FRAC, ENTRY_FRAC + SHRINK_VH / TOTAL_VH] as const;
+const TEXT_LEAD_VH = 34;
+const PHOTO_SLIDE_VH = PHOTO_OFFSET_VH / PHOTO_SPEED;
+const ENTRY_VH = TEXT_LEAD_VH + PHOTO_SLIDE_VH;
+
+/*
+  Every photograph after the first gets an equal SEGMENT_VH of scroll as its
+  own dwell, so scrolling past it is what swaps in the next one. Position
+  never moves during a dwell; only the photograph itself changes.
+
+  SEGMENT_VH is deliberately short — about one wheel notch each — so the
+  sequence rips through rather than dwelling.
+*/
+const SEGMENT_VH = 26;
+
+/*
+  PIN_VH is the scroll actually consumed while the stage is pinned, and it is
+  what every fraction below divides by. TOTAL_VH — the section's height — is
+  that plus the 100vh the sticky child itself occupies.
+
+  These being the same number is the bug this replaces. scrollYProgress is
+  normalised over the track's scrollable range, which is height minus the
+  sticky child, but the fractions were dividing by the full height. Every vh
+  constant therefore delivered only PIN_VH/TOTAL_VH of its stated distance —
+  49% of it, as the section was tuned — so everything ran about twice as fast
+  as the numbers implied, and hand-tuning them meant fighting that factor.
+*/
+const PIN_VH = ENTRY_VH + PHOTOS.length * SEGMENT_VH;
+const TOTAL_VH = PIN_VH + 100;
+
+const PHOTO_START = TEXT_LEAD_VH / PIN_VH;
+const ENTRY_FRAC = ENTRY_VH / PIN_VH;
+
+/*
+  The shrink, as an absolute position in the scroll rather than something
+  pegged to the photograph's arrival. It has to land inside the window where
+  the title is actually on screen — it rises at TEXT_SPEED and is clear of the
+  top by about 93vh — and the photograph does not arrive until 146vh, so
+  hanging the shrink off ENTRY_FRAC put it entirely after the title had left.
+*/
+const SHRINK_START_VH = 45;
+const SHRINK_VH = 40;
+const SHRINK = [
+  SHRINK_START_VH / PIN_VH,
+  (SHRINK_START_VH + SHRINK_VH) / PIN_VH,
+] as const;
 
 function Wordmark({ progress }: { progress: ReturnType<typeof useScroll>["scrollYProgress"] }) {
-  const drift = WORDMARK_DEPTH * DRIFT;
-  // Continuous across the whole pin, unlike the photograph: this is what
-  // gives the title a different speed than the photo during the entrance,
-  // and what carries it on off-screen while the photos are still cycling.
-  const y = useTransform(progress, (p) => drift - p * drift * 2);
+  /*
+    Starts TEXT_OFFSET_VH below its resting place and climbs at TEXT_SPEED
+    times the scroll rate, in vh so the rate holds at any viewport height.
+    Unlike the photograph this never clamps: it keeps going past rest and off
+    the top of the screen while the photographs are still cycling below.
+  */
+  const y = useTransform(
+    progress,
+    (p) => `${TEXT_OFFSET_VH - TEXT_SPEED * p * PIN_VH}vh`,
+  );
   const scale = useTransform(progress, [...SHRINK], [1, WORDMARK_END], {
     clamp: true,
   });
@@ -154,7 +198,7 @@ function Frame({ progress }: { progress: ReturnType<typeof useScroll>["scrollYPr
   const y = useTransform(
     progress,
     [PHOTO_START, ENTRY_FRAC],
-    [ENTRY_OFFSET, "0vh"],
+    [`${PHOTO_OFFSET_VH}vh`, "0vh"],
     { clamp: true },
   );
 
