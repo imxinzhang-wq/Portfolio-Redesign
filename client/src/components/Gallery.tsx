@@ -82,7 +82,7 @@ const WORDMARK_END = 0.42;
   The title is the nearer, faster element, so it is the larger of the two.
 */
 const TEXT_SPEED = 1.15;
-const PHOTO_SPEED = 0.55;
+const PHOTO_SPEED = 1;
 
 /*
   How far below its resting place each element begins. Both start clear of the
@@ -112,8 +112,6 @@ const TEXT_OFFSET_VH = 104;
   the photograph ended up covering 900px in 200px of scroll.
 */
 const TEXT_LEAD_VH = -14;
-const PHOTO_SLIDE_VH = PHOTO_OFFSET_VH / PHOTO_SPEED;
-const ENTRY_VH = TEXT_LEAD_VH + PHOTO_SLIDE_VH;
 
 /*
   Every photograph after the first gets an equal SEGMENT_VH of scroll as its
@@ -124,6 +122,61 @@ const ENTRY_VH = TEXT_LEAD_VH + PHOTO_SLIDE_VH;
   sequence rips through rather than dwelling.
 */
 const SEGMENT_VH = 26;
+
+/*
+  ── The slow zone ─────────────────────────────────────────────────────────
+  Once the title has climbed to TEXT_PARK_VH, everything drops to a crawl for
+  a stretch — the title AND the photograph together — and that crawl is when
+  the title shrinks. Past it both pick up exactly the speeds they had before.
+
+  This replaces a dead stop. Parking the title froze it while the photograph
+  carried on, which made them two separate animations that happened to
+  overlap; slowing the whole scene keeps them one scene that goes into slow
+  motion. Nothing is frozen, so nothing has to un-freeze.
+
+  It is implemented as a time warp rather than as per-element special cases:
+  `eased` converts real scroll into the effective scroll both elements
+  actually read. They stay on their own speeds throughout and slow together
+  because the clock they share slowed, which is why resuming needs no
+  catch-up logic.
+
+  SLOW_FACTOR is how much of normal speed the crawl runs at, and SLOW_VH is
+  how much real scroll it eats. The effective distance it yields is the
+  product — 80vh of scrolling buys 9.6vh of movement at 0.12.
+*/
+const TEXT_PARK_VH = 26;
+const SLOW_FACTOR = 0.12;
+const SLOW_VH = 80;
+
+const TEXT_RISE_VH = (TEXT_OFFSET_VH - TEXT_PARK_VH) / TEXT_SPEED;
+const SLOW_START_VH = TEXT_RISE_VH;
+const SLOW_END_VH = SLOW_START_VH + SLOW_VH;
+const SLOW_GAIN_VH = SLOW_FACTOR * SLOW_VH;
+
+/* Real scroll → the effective scroll every moving thing here reads. */
+function eased(scrolled: number) {
+  if (scrolled < SLOW_START_VH) return scrolled;
+  if (scrolled < SLOW_END_VH) {
+    return SLOW_START_VH + SLOW_FACTOR * (scrolled - SLOW_START_VH);
+  }
+  return SLOW_START_VH + SLOW_GAIN_VH + (scrolled - SLOW_END_VH);
+}
+
+/* And back again, to work out where in real scroll the photograph lands. */
+function unEased(effective: number) {
+  if (effective < SLOW_START_VH) return effective;
+  if (effective < SLOW_START_VH + SLOW_GAIN_VH) {
+    return SLOW_START_VH + (effective - SLOW_START_VH) / SLOW_FACTOR;
+  }
+  return SLOW_END_VH + (effective - SLOW_START_VH - SLOW_GAIN_VH);
+}
+
+/*
+  The photograph settles once it has covered its offset at its own speed —
+  measured in effective scroll, so the crawl stretches it out in real scroll
+  exactly as much as it stretches the title.
+*/
+const ENTRY_VH = unEased(TEXT_LEAD_VH + PHOTO_OFFSET_VH / PHOTO_SPEED);
 
 /*
   PIN_VH is the scroll actually consumed while the stage is pinned, and it is
@@ -140,71 +193,23 @@ const SEGMENT_VH = 26;
 const PIN_VH = ENTRY_VH + PHOTOS.length * SEGMENT_VH;
 const TOTAL_VH = PIN_VH + 100;
 
-const PHOTO_START = TEXT_LEAD_VH / PIN_VH;
 const ENTRY_FRAC = ENTRY_VH / PIN_VH;
 
-/*
-  ── The title's hold ──────────────────────────────────────────────────────
-  The title does not climb straight through and out. It rises, parks near the
-  top of the screen, and sits there shrinking very slowly while the
-  photograph carries on up past it; once it is small it resumes and leaves.
-
-  TEXT_PARK_VH is the y it holds at. With WORDMARK_TOP at -14vh, 26vh puts
-  the type's top edge 12vh down the screen.
-
-  TEXT_RISE_VH is derived — the climb to the park is just that distance at
-  TEXT_SPEED — but TEXT_HOLD_VH is set by hand on purpose, and this is the
-  one number here that is NOT allowed to follow from the others.
-
-  It was briefly `ENTRY_VH - TEXT_RISE_VH`, so the shrink would finish on the
-  same frame the photograph settled. That reads well but it couples the length
-  of the shrink to the photograph's timing: moving TEXT_LEAD_VH from 34 to -14
-  to bring the photograph in sooner also cut the hold from 78vh to 30vh, and a
-  30vh shrink is not the slow one this is supposed to be. The hold is a
-  deliberate duration, so it gets its own number.
-
-  It does still need to end near ENTRY_VH, though, and that is what
-  PHOTO_SPEED is holding up: the photograph is meant to be climbing for the
-  whole hold, so if it settles early the frames start cutting underneath a
-  title that is still shrinking on top of them. Slowing the climb is the way
-  to buy that time — delaying the start instead would cost the photograph its
-  entrance, which is what TEXT_LEAD_VH at -14 is deliberately spending.
-
-  So: hold 90vh ends at 158vh, photograph settles at 159vh. Change one and
-  check the other.
-
-  The shrink runs across the hold, which is the whole point of the hold: it
-  is the one thing still moving while the type sits still.
-*/
-const TEXT_PARK_VH = 26;
-const TEXT_HOLD_VH = 90;
-const TEXT_RISE_VH = (TEXT_OFFSET_VH - TEXT_PARK_VH) / TEXT_SPEED;
-const SHRINK = [
-  TEXT_RISE_VH / PIN_VH,
-  (TEXT_RISE_VH + TEXT_HOLD_VH) / PIN_VH,
-] as const;
+// The shrink is the slow zone — that is what the crawl is there to give room
+// to, so the two are the same window by construction.
+const SHRINK = [SLOW_START_VH / PIN_VH, SLOW_END_VH / PIN_VH] as const;
 
 function Wordmark({ progress }: { progress: ReturnType<typeof useScroll>["scrollYProgress"] }) {
   /*
-    Three phases: climb from TEXT_OFFSET_VH at TEXT_SPEED, hold at
-    TEXT_PARK_VH, then carry on from the park at the same speed and off the
-    top of the screen. Everything is in vh so the rates hold at any viewport
-    height.
-
-    Resuming from TEXT_PARK_VH rather than from where an uninterrupted climb
-    would have reached is what makes the hold a hold: the scroll spent parked
-    is not paid back afterwards, so the type leaves from where it stopped
-    instead of jumping to catch up.
+    One rate all the way through, applied to eased scroll rather than real
+    scroll. The crawl is entirely in `eased`, so there are no phases here and
+    nothing to resume from — the title never stops, it just spends the slow
+    zone covering very little ground.
   */
-  const y = useTransform(progress, (p) => {
-    const scrolled = p * PIN_VH;
-    if (scrolled < TEXT_RISE_VH) {
-      return `${TEXT_OFFSET_VH - TEXT_SPEED * scrolled}vh`;
-    }
-    const afterHold = scrolled - (TEXT_RISE_VH + TEXT_HOLD_VH);
-    if (afterHold <= 0) return `${TEXT_PARK_VH}vh`;
-    return `${TEXT_PARK_VH - TEXT_SPEED * afterHold}vh`;
-  });
+  const y = useTransform(
+    progress,
+    (p) => `${TEXT_OFFSET_VH - TEXT_SPEED * eased(p * PIN_VH)}vh`,
+  );
   const scale = useTransform(progress, [...SHRINK], [1, WORDMARK_END], {
     clamp: true,
   });
@@ -237,16 +242,21 @@ function Wordmark({ progress }: { progress: ReturnType<typeof useScroll>["scroll
 function Frame({ progress }: { progress: ReturnType<typeof useScroll>["scrollYProgress"] }) {
   const [index, setIndex] = useState(0);
 
-  // Slides the frame up into its resting position across the entry window,
-  // then holds at rest for good — clamp means nothing after ENTRY_FRAC ever
-  // reads anything but "0vh", so the frame cannot drift again once it has
-  // arrived, no matter how far the rest of the section scrolls.
-  const y = useTransform(
-    progress,
-    [PHOTO_START, ENTRY_FRAC],
-    [`${PHOTO_OFFSET_VH}vh`, "0vh"],
-    { clamp: true },
-  );
+  /*
+    Reads the same eased scroll the title does, so the photograph goes into
+    the crawl and comes out of it in step rather than sailing past at full
+    speed while the title labours.
+
+    Clamped at both ends: at 0 so it cannot drift once it has arrived no
+    matter how far the rest of the section scrolls, and at its own offset so
+    a positive TEXT_LEAD_VH would park it off screen rather than push it
+    further down.
+  */
+  const y = useTransform(progress, (p) => {
+    const travelled = PHOTO_SPEED * (eased(p * PIN_VH) - TEXT_LEAD_VH);
+    const remaining = PHOTO_OFFSET_VH - travelled;
+    return `${Math.min(PHOTO_OFFSET_VH, Math.max(0, remaining))}vh`;
+  });
 
   useMotionValueEvent(progress, "change", (p) => {
     if (p <= ENTRY_FRAC) {
