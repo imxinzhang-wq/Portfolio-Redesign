@@ -491,7 +491,7 @@ function Hero() {
         centre of the first screen.
       */}
       <div className="h-screen flex items-center justify-start">
-        <div className="max-w-[1550px] w-full">
+        <div className="max-w-7xl w-full">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
