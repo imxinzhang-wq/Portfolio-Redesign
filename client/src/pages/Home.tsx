@@ -11,7 +11,7 @@ import { Fragment, useRef, useEffect, useState } from "react";
 import Gallery from "@/components/Gallery";
 
 import project1 from "@assets/Collection_Cover.jpg";
-import project2 from "@assets/Darmi_Cover.jpg";
+import project2 from "@assets/Darmi_home.jpg";
 import project3 from "@assets/Airbnb_Cover_1774813459702.jpg";
 import project4 from "@assets/tagging_cover_1775594426781.jpeg";
 import header1 from "@assets/header1.jpg";
