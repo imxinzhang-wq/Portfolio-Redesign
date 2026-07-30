@@ -2,13 +2,13 @@ import { Link } from "wouter";
 import {
   AnimatePresence,
   motion,
-  useSpring,
   useScroll,
   useTransform,
 } from "framer-motion";
 import { Fragment, useRef, useEffect, useState } from "react";
 
 import Gallery, { getBeyondCenterScrollTop } from "@/components/Gallery";
+import CustomCursor from "@/components/CustomCursor";
 
 import project1 from "@assets/collection.jpg";
 import project2 from "@assets/Darmi_home.jpg";
@@ -73,115 +73,6 @@ const MOCK_PROJECTS = [
     image: project3,
   },
 ];
-
-function CustomCursor() {
-  const mouseX = useSpring(-100, { stiffness: 200, damping: 28, mass: 0.5 });
-  const mouseY = useSpring(-100, { stiffness: 200, damping: 28, mass: 0.5 });
-  const dotX = useSpring(-100, { stiffness: 500, damping: 35, mass: 0.2 });
-  const dotY = useSpring(-100, { stiffness: 500, damping: 35, mass: 0.2 });
-  const [hovering, setHovering] = useState(false);
-  const [visible, setVisible] = useState(false);
-  // Set by [data-cursor-label] elements; swaps the ring for a text label.
-  const [label, setLabel] = useState<string | null>(null);
-  const [labelSize, setLabelSize] = useState<string | null>(null);
-  const pointer = useRef<{ x: number; y: number } | null>(null);
-
-  useEffect(() => {
-    /*
-      Hit-test whatever is under the pointer right now. Reading the element
-      from the coordinates rather than an event's target is what lets scroll
-      reuse this: a scroll moves the page under a stationary cursor, so the
-      element changes without any mouse event to carry a new target.
-    */
-    const syncToPointer = () => {
-      const at = pointer.current;
-      if (!at) return;
-      const el = document.elementFromPoint(at.x, at.y) as HTMLElement | null;
-      if (!el) {
-        setLabel(null);
-        setLabelSize(null);
-        setHovering(false);
-        return;
-      }
-      const labelled = el.closest<HTMLElement>("[data-cursor-label]");
-      setLabel(labelled?.dataset.cursorLabel ?? null);
-      setLabelSize(labelled?.dataset.cursorLabelSize ?? null);
-      setHovering(!!el.closest("a, button, [role='button'], .group"));
-    };
-
-    const move = (e: MouseEvent) => {
-      pointer.current = { x: e.clientX, y: e.clientY };
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
-      dotX.set(e.clientX);
-      dotY.set(e.clientY);
-      setVisible(true);
-      syncToPointer();
-    };
-    const leave = () => setVisible(false);
-
-    window.addEventListener("mousemove", move);
-    window.addEventListener("scroll", syncToPointer, { passive: true });
-    document.documentElement.addEventListener("mouseleave", leave);
-    return () => {
-      window.removeEventListener("mousemove", move);
-      window.removeEventListener("scroll", syncToPointer);
-      document.documentElement.removeEventListener("mouseleave", leave);
-    };
-  }, [mouseX, mouseY, dotX, dotY]);
-
-  return (
-    <>
-      {/*
-        One solid dot, standing in for the pointer the page hides with
-        `cursor-none`. The outer ring it used to travel with is gone.
-
-        White with `difference` rather than ink with `multiply`. Multiply can
-        only ever darken, so against the projects section's near-black the old
-        cursor was mathematically invisible — multiplying a value of 10 by
-        anything leaves it at 10 or below. Difference inverts whatever is
-        behind it instead, which reads as near-black on the cream sections and
-        near-white on the dark one, with no per-section switching to keep in
-        sync.
-
-        It still steps aside for the label: on the header's photographs the
-        pill replaces the dot rather than sitting next to it.
-      */}
-      <motion.div
-        className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full bg-white mix-blend-difference"
-        style={{
-          width: hovering ? 18 : 12,
-          height: hovering ? 18 : 12,
-          x: dotX,
-          y: dotY,
-          translateX: "-50%",
-          translateY: "-50%",
-          opacity: visible && !label ? 1 : 0,
-          transition: "width 0.2s ease, height 0.2s ease, opacity 0.3s ease",
-        }}
-      />
-      {/*
-        The label replaces the ring rather than sitting beside it — the ring is
-        a pointer, and once there are words to read the pointer is just noise.
-      */}
-      <motion.div
-        className={`fixed top-0 left-0 pointer-events-none z-[9999] whitespace-nowrap rounded-full bg-foreground text-background font-bold uppercase tracking-[0.2em] ${
-          labelSize === "sm" ? "px-4 py-2 text-[10px]" : "px-6 py-3 text-xs"
-        }`}
-        style={{
-          x: mouseX,
-          y: mouseY,
-          translateX: "-50%",
-          translateY: "-50%",
-          opacity: visible && label ? 1 : 0,
-          transition: "opacity 0.25s ease",
-        }}
-      >
-        {label}
-      </motion.div>
-    </>
-  );
-}
 
 export default function Home() {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -274,8 +165,8 @@ function Navbar() {
 
   /*
     Scroll a section into view. Everything lands 100px below the viewport top
-    except WORK and BEYOND DESIGN, which both need more than their section's
-    top edge to land somewhere worth looking at.
+    except WORK, BEYOND DESIGN and CONTACT, which each need something other
+    than their section's top edge to land somewhere worth looking at.
 
     WORK: the projects section opens with 28vh of padding above its first
     photograph, so aligning its top edge leaves that photograph — Darmi —
@@ -287,8 +178,23 @@ function Navbar() {
     before the title has scrolled in at all — the title only enters after
     TEXT_LEAD_VH of scroll, so landing there shows an empty screen. Gallery
     exports the scroll position where the title is actually centred.
+
+    CONTACT: the footer pins its content to its own bottom edge rather than
+    its top, so the usual "top minus 100" rule clips the address off the
+    bottom of the screen instead of revealing it.
   */
   const scrollToSection = (id: string) => {
+    if (id === "contact") {
+      // The footer is the last thing on the page and pins its content to its
+      // own bottom edge, so "the top of #contact minus 100" — everyone
+      // else's rule — lands short of the actual bottom of the document and
+      // clips it. The scrollable max is exact regardless of section height.
+      window.scrollTo({
+        top: document.documentElement.scrollHeight - window.innerHeight,
+        behavior: "smooth",
+      });
+      return;
+    }
     if (id === "beyond") {
       const track = document.getElementById("beyond");
       const top = track && getBeyondCenterScrollTop(track);

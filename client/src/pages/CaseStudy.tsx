@@ -3,6 +3,8 @@ import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { useEffect, useState } from "react";
 
+import CustomCursor from "@/components/CustomCursor";
+
 import project2Cover from "@assets/Darmi_Cover.jpg";
 import project1Cover from "@assets/Collection_Cover.jpg"; 
 import project3Cover from "@assets/Airbnb_Cover_1774813459702.jpg";
@@ -434,11 +436,12 @@ export default function CaseStudy() {
 
   if ((projectId === "1" || projectId === "4") && !isAuthenticated) {
     return (
-      <div className="bg-background min-h-screen flex flex-col relative overflow-hidden font-sans">
+      <div className="bg-background min-h-screen flex flex-col relative overflow-hidden font-sans cursor-none">
+        <CustomCursor />
         <main className="relative z-10 flex-1 flex flex-col">
           <nav className="px-6 md:px-12 py-12 max-w-7xl mx-auto w-full">
             <Link href="/">
-              <a className="inline-flex items-center gap-2 eyebrow font-mono hover:opacity-60 transition-opacity">
+              <a className="inline-flex items-center gap-2 eyebrow font-mono hover:opacity-60 transition-opacity cursor-none">
                 <ArrowLeft className="w-4 h-4" /> Home
               </a>
             </Link>
@@ -485,12 +488,13 @@ export default function CaseStudy() {
   }
 
   return (
-    <div className="bg-background min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans">
+    <div className="bg-background min-h-screen relative overflow-hidden text-foreground selection:bg-accent selection:text-accent-foreground font-sans cursor-none">
+      <CustomCursor />
       <main className="relative z-10 pb-12">
         {/* Navigation */}
         <nav className="px-6 md:px-12 py-12 max-w-7xl mx-auto flex items-center justify-between">
           <Link href="/">
-            <a className="inline-flex items-center gap-2 eyebrow font-mono hover:opacity-60 transition-opacity">
+            <a className="inline-flex items-center gap-2 eyebrow font-mono hover:opacity-60 transition-opacity cursor-none">
               <ArrowLeft className="w-4 h-4" /> Home
             </a>
           </Link>
@@ -893,7 +897,7 @@ export default function CaseStudy() {
                         href={link.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group flex items-center justify-between p-6 rounded-2xl bg-card/60 hover:bg-card transition-colors border border-border/50"
+                        className="group flex items-center justify-between p-6 rounded-2xl bg-card/60 hover:bg-card transition-colors border border-border/50 cursor-none"
                       >
                         <span className="text-xl font-display font-medium text-foreground/70 group-hover:text-foreground transition-colors">
                           {link.title}
@@ -915,7 +919,7 @@ export default function CaseStudy() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
             {nextProject && (
               <Link href={`/project/${nextProjectId}`}>
-                <a className="group flex flex-col space-y-2">
+                <a className="group flex flex-col space-y-2 cursor-none">
                   <span className="eyebrow font-mono text-muted-foreground">
                     Up Next
                   </span>
