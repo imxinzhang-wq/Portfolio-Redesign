@@ -1,5 +1,4 @@
 import {
-  AnimatePresence,
   motion,
   useMotionValueEvent,
   useScroll,
@@ -71,12 +70,6 @@ const WORDMARK_DEPTH = 1.35;
 const DRIFT = 700;
 const WORDMARK_TOP = "-14%";
 
-/*
-  The title shrinks once, during the photograph's own slide-in, then holds
-  that size for the rest of the pin — it reads as "arrives large, settles
-  small, and is still shrinking while it exits" rather than continuously
-  resizing against the cycling photographs below.
-*/
 const WORDMARK_END = 0.42;
 
 /*
@@ -85,12 +78,25 @@ const WORDMARK_END = 0.42;
   photograph after that — including the first, once it has arrived — gets an
   equal SEGMENT_VH of scroll as its own dwell, so scrolling past it is what
   swaps in the next one. Position never moves during a dwell; only the
-  photograph itself changes, in a quick cut rather than a drag.
+  photograph itself changes.
+
+  SEGMENT_VH is deliberately short — around one wheel notch per photograph —
+  so the sequence rips through rather than dwelling.
 */
 const ENTRY_VH = 70;
-const SEGMENT_VH = 45;
+const SEGMENT_VH = 14;
 const TOTAL_VH = ENTRY_VH + PHOTOS.length * SEGMENT_VH;
 const ENTRY_FRAC = ENTRY_VH / TOTAL_VH;
+
+/*
+  The shrink runs AFTER the entry, not during it. The title enters from below
+  and is only clear of the fold around the moment the entry ends, so shrinking
+  it on the way in means it is already half its size by the time you can see
+  all of it — and the whole point is that it arrives taller than the
+  photograph. So: rise at full size, then shrink, then carry on up and out.
+*/
+const SHRINK_VH = 35;
+const SHRINK = [ENTRY_FRAC, ENTRY_FRAC + SHRINK_VH / TOTAL_VH] as const;
 
 // How far below its resting spot the first photograph starts, so sliding it
 // up into place has somewhere to slide from.
@@ -102,7 +108,7 @@ function Wordmark({ progress }: { progress: ReturnType<typeof useScroll>["scroll
   // gives the title a different speed than the photo during the entrance,
   // and what carries it on off-screen while the photos are still cycling.
   const y = useTransform(progress, (p) => drift - p * drift * 2);
-  const scale = useTransform(progress, [0, ENTRY_FRAC], [1, WORDMARK_END], {
+  const scale = useTransform(progress, [...SHRINK], [1, WORDMARK_END], {
     clamp: true,
   });
 
@@ -121,11 +127,32 @@ function Wordmark({ progress }: { progress: ReturnType<typeof useScroll>["scroll
         z: 0,
       }}
     >
+      {/*
+        Stacked on two lines and sized against BOTH viewport axes, because the
+        title has to clear the photograph's height without running off the
+        sides — and those two pull in opposite directions.
+
+        Measured rather than estimated: "Beyond" is the wider word at 3.152em
+        with this tracking. So 30vw of type is 94.6vw wide, which fits with a
+        little air. Two lines at 0.9 leading come to 1.8x the font size, so
+        46vh of type stands 82.8vh tall against the photograph's 80vh.
+
+        The leading is 0.9 rather than the 0.82 this had while it was a single
+        line: at 0.82 the only sizes tall enough to beat the photograph were
+        also too wide for the screen, and "Beyond" got guillotined mid-word.
+        Both limits are satisfiable at every desktop ratio down to about 1.4:1,
+        which covers 16:9 and 16:10; below that the width wins and the title
+        comes in a little shorter than the photograph rather than clipped.
+      */}
       <span
-        className="font-display block font-medium leading-[0.82] tracking-[-0.04em] text-foreground text-[clamp(3rem,13.5vw,17rem)]"
+        className="font-display block font-medium leading-[0.9] tracking-[-0.04em] text-foreground text-[min(46vh,30vw)]"
         style={{ textRendering: "geometricPrecision" }}
       >
-        {WORDMARK}
+        {WORDMARK.split(" ").map((word) => (
+          <span key={word} className="block">
+            {word}
+          </span>
+        ))}
       </span>
     </motion.div>
   );
@@ -151,36 +178,39 @@ function Frame({ progress }: { progress: ReturnType<typeof useScroll>["scrollYPr
     setIndex(Math.min(PHOTOS.length - 1, Math.floor(within * PHOTOS.length)));
   });
 
-  const photo = PHOTOS[index];
-
   return (
     <motion.div
       className="absolute inset-0 flex items-center justify-center will-change-transform"
       style={{ y }}
     >
       {/*
-        mode="wait" so the outgoing photograph is fully gone before the next
-        one appears — the frame shows exactly one photograph at a time, never
-        two mid-crossfade, which is what makes the swap read as a quick cut
-        rather than a dissolve.
+        All nine are mounted and stacked, and the swap is a plain opacity
+        flip with no transition on it — a hard cut on the frame the scroll
+        crosses the boundary.
+
+        Mounting them all is what makes the cut clean rather than merely
+        instant: swapping one <img>'s src would hit the network on first
+        showing, and at this speed that is a blank frame where the photograph
+        should be. Nine 640px WebPs decoded up front costs less than that.
       */}
-      <AnimatePresence mode="wait">
-        <motion.img
-          key={photo.number}
-          src={photo.src}
-          srcSet={photo.srcSet}
-          sizes="min(60vh, 90vw)"
-          alt=""
-          aria-hidden
-          decoding="async"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2, ease: "easeOut" }}
-          className="max-w-[90vw] rounded-[8px] object-cover"
-          style={{ height: "80vh", aspectRatio: String(PORTRAIT) }}
-        />
-      </AnimatePresence>
+      <div
+        className="relative max-w-[90vw]"
+        style={{ height: "80vh", aspectRatio: String(PORTRAIT) }}
+      >
+        {PHOTOS.map((photo, i) => (
+          <img
+            key={photo.number}
+            src={photo.src}
+            srcSet={photo.srcSet}
+            sizes="min(60vh, 90vw)"
+            alt=""
+            aria-hidden
+            decoding="async"
+            className="absolute inset-0 h-full w-full rounded-[8px] object-cover"
+            style={{ opacity: i === index ? 1 : 0 }}
+          />
+        ))}
+      </div>
     </motion.div>
   );
 }
