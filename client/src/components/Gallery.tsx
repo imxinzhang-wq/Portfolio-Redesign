@@ -73,7 +73,7 @@ const WORDMARK_END = 0.42;
   The title is the nearer, faster element, so it is the larger of the two.
 */
 const TEXT_SPEED = 1.15;
-const PHOTO_SPEED = 0.85;
+const PHOTO_SPEED = 0.55;
 
 /*
   How far below its resting place each element begins. Both start clear of the
@@ -143,22 +143,37 @@ const ENTRY_FRAC = ENTRY_VH / PIN_VH;
   TEXT_PARK_VH is the y it holds at. With WORDMARK_TOP at -14vh, 26vh puts
   the type's top edge 12vh down the screen.
 
-  The other two are derived, not typed, so the three stay consistent when the
-  speeds are tuned:
-    - TEXT_RISE_VH — the scroll the climb to the park takes, which is just
-      the distance covered at TEXT_SPEED.
-    - TEXT_HOLD_VH — whatever is left until the photograph lands. Ending the
-      hold exactly on ENTRY_VH is what makes the title finish shrinking on
-      the same frame the photograph settles, so it is done being interesting
-      right as it starts to leave.
+  TEXT_RISE_VH is derived — the climb to the park is just that distance at
+  TEXT_SPEED — but TEXT_HOLD_VH is set by hand on purpose, and this is the
+  one number here that is NOT allowed to follow from the others.
+
+  It was briefly `ENTRY_VH - TEXT_RISE_VH`, so the shrink would finish on the
+  same frame the photograph settled. That reads well but it couples the length
+  of the shrink to the photograph's timing: moving TEXT_LEAD_VH from 34 to -14
+  to bring the photograph in sooner also cut the hold from 78vh to 30vh, and a
+  30vh shrink is not the slow one this is supposed to be. The hold is a
+  deliberate duration, so it gets its own number.
+
+  It does still need to end near ENTRY_VH, though, and that is what
+  PHOTO_SPEED is holding up: the photograph is meant to be climbing for the
+  whole hold, so if it settles early the frames start cutting underneath a
+  title that is still shrinking on top of them. Slowing the climb is the way
+  to buy that time — delaying the start instead would cost the photograph its
+  entrance, which is what TEXT_LEAD_VH at -14 is deliberately spending.
+
+  So: hold 90vh ends at 158vh, photograph settles at 159vh. Change one and
+  check the other.
 
   The shrink runs across the hold, which is the whole point of the hold: it
   is the one thing still moving while the type sits still.
 */
 const TEXT_PARK_VH = 26;
+const TEXT_HOLD_VH = 90;
 const TEXT_RISE_VH = (TEXT_OFFSET_VH - TEXT_PARK_VH) / TEXT_SPEED;
-const TEXT_HOLD_VH = ENTRY_VH - TEXT_RISE_VH;
-const SHRINK = [TEXT_RISE_VH / PIN_VH, ENTRY_FRAC] as const;
+const SHRINK = [
+  TEXT_RISE_VH / PIN_VH,
+  (TEXT_RISE_VH + TEXT_HOLD_VH) / PIN_VH,
+] as const;
 
 function Wordmark({ progress }: { progress: ReturnType<typeof useScroll>["scrollYProgress"] }) {
   /*
