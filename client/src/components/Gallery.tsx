@@ -89,18 +89,25 @@ const TOTAL_VH = ENTRY_VH + PHOTOS.length * SEGMENT_VH;
 const ENTRY_FRAC = ENTRY_VH / TOTAL_VH;
 
 /*
-  The shrink runs AFTER the entry, not during it. The title enters from below
-  and is only clear of the fold around the moment the entry ends, so shrinking
-  it on the way in means it is already half its size by the time you can see
-  all of it — and the whole point is that it arrives taller than the
-  photograph. So: rise at full size, then shrink, then carry on up and out.
+  The title has to read first and the photograph second, so the photograph
+  does not begin its slide until the entry is a third gone. Before that it
+  is parked a full viewport down, off screen — the title has the frame to
+  itself, coming up through the middle, and the photograph only starts to
+  show once the type is well established.
+
+  Both still finish together at ENTRY_FRAC, which is what keeps it reading as
+  one arrival at two speeds rather than two separate entrances.
+*/
+const PHOTO_START = ENTRY_FRAC * 0.35;
+const ENTRY_OFFSET = "100vh";
+
+/*
+  The shrink runs AFTER the entry, not during it: the title spends the entry
+  rising at full size, and only once it has arrived does it start shrinking
+  and carry on up and out of frame.
 */
 const SHRINK_VH = 35;
 const SHRINK = [ENTRY_FRAC, ENTRY_FRAC + SHRINK_VH / TOTAL_VH] as const;
-
-// How far below its resting spot the first photograph starts, so sliding it
-// up into place has somewhere to slide from.
-const ENTRY_OFFSET = "34vh";
 
 function Wordmark({ progress }: { progress: ReturnType<typeof useScroll>["scrollYProgress"] }) {
   const drift = WORDMARK_DEPTH * DRIFT;
@@ -127,32 +134,11 @@ function Wordmark({ progress }: { progress: ReturnType<typeof useScroll>["scroll
         z: 0,
       }}
     >
-      {/*
-        Stacked on two lines and sized against BOTH viewport axes, because the
-        title has to clear the photograph's height without running off the
-        sides — and those two pull in opposite directions.
-
-        Measured rather than estimated: "Beyond" is the wider word at 3.152em
-        with this tracking. So 30vw of type is 94.6vw wide, which fits with a
-        little air. Two lines at 0.9 leading come to 1.8x the font size, so
-        46vh of type stands 82.8vh tall against the photograph's 80vh.
-
-        The leading is 0.9 rather than the 0.82 this had while it was a single
-        line: at 0.82 the only sizes tall enough to beat the photograph were
-        also too wide for the screen, and "Beyond" got guillotined mid-word.
-        Both limits are satisfiable at every desktop ratio down to about 1.4:1,
-        which covers 16:9 and 16:10; below that the width wins and the title
-        comes in a little shorter than the photograph rather than clipped.
-      */}
       <span
-        className="font-display block font-medium leading-[0.9] tracking-[-0.04em] text-foreground text-[min(46vh,30vw)]"
+        className="font-display block font-medium leading-[0.82] tracking-[-0.04em] text-foreground text-[clamp(3rem,13.5vw,17rem)]"
         style={{ textRendering: "geometricPrecision" }}
       >
-        {WORDMARK.split(" ").map((word) => (
-          <span key={word} className="block">
-            {word}
-          </span>
-        ))}
+        {WORDMARK}
       </span>
     </motion.div>
   );
@@ -165,9 +151,12 @@ function Frame({ progress }: { progress: ReturnType<typeof useScroll>["scrollYPr
   // then holds at rest for good — clamp means nothing after ENTRY_FRAC ever
   // reads anything but "0vh", so the frame cannot drift again once it has
   // arrived, no matter how far the rest of the section scrolls.
-  const y = useTransform(progress, [0, ENTRY_FRAC], [ENTRY_OFFSET, "0vh"], {
-    clamp: true,
-  });
+  const y = useTransform(
+    progress,
+    [PHOTO_START, ENTRY_FRAC],
+    [ENTRY_OFFSET, "0vh"],
+    { clamp: true },
+  );
 
   useMotionValueEvent(progress, "change", (p) => {
     if (p <= ENTRY_FRAC) {
