@@ -547,11 +547,25 @@ const maskedWord = {
     Leaving is upward, not a rewind of the entrance: the outgoing copy keeps
     travelling the same direction it came in and exits through the top of its
     own line mask, so a swap reads as one continuous roll rather than a bounce.
-    Faster than the entrance so the rail is not empty for long.
+
+    It has to clear FAST, because the incoming copy no longer waits for it —
+    the two now animate over the top of each other. The old easing was
+    [0.7, 0, 0.84, 0], which is nearly flat for its first half: the outgoing
+    words sat still for ~300ms while the incoming ones, on a front-loaded
+    ease, had already rolled into place. Both titles were legible on the same
+    lines at once. This ease moves immediately instead.
+
+    The opacity fade is the belt to that braces: it runs out well before the
+    roll finishes, so whatever overlap is left reads as a dissolve rather than
+    as two headlines stacked on each other.
   */
   exit: {
     y: "-115%",
-    transition: { duration: 0.6, ease: [0.7, 0, 0.84, 0] as const },
+    opacity: 0,
+    transition: {
+      y: { duration: 0.45, ease: [0.4, 0, 0.2, 1] as const },
+      opacity: { duration: 0.22, ease: "linear" as const },
+    },
   },
 };
 
@@ -788,11 +802,21 @@ function ProjectGrid() {
           <div className="hidden md:block">
             <div className="sticky top-[36vh]">
               {/*
-                mode="wait" so the outgoing copy clears the top of its masks
-                before the incoming copy rolls up from the bottom — the two
-                never overlap mid-swap. Keying on the id restarts the stagger.
+                popLayout, not "wait". Waiting made the swap strictly serial —
+                the outgoing copy had to clear its masks before the incoming
+                one started — which measured 1582ms end to end. The projects
+                are only 594px apart, so even a leisurely 500px/s scroll gives
+                a swap 1188ms, and the rail could never catch up.
+
+                Overlapping the two halves cuts that to roughly the longer of
+                them. popLayout rather than plain simultaneous mode because
+                the outgoing copy has to leave the layout flow while it
+                animates out; left in flow it would push the incoming copy
+                down the rail as they crossed.
+
+                Keying on the id is what restarts the stagger.
               */}
-              <AnimatePresence mode="wait">
+              <AnimatePresence mode="popLayout">
                 <motion.div
                   key={activeProject.id}
                   initial="hidden"
