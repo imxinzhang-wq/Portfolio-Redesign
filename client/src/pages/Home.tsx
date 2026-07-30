@@ -778,11 +778,7 @@ function ProjectGrid() {
       */
       style={{ ["--foreground" as string]: "40 43% 93%" }}
     >
-      <div className="max-w-[1800px] mx-auto px-6 md:px-10 py-24 md:py-[28vh]">
-        <h2 className="text-4xl font-display font-medium tracking-tighter text-foreground mb-16 md:hidden">
-          Projects
-        </h2>
-
+      <div className="max-w-[1800px] mx-auto px-6 md:px-10 pt-24 pb-40 md:py-[28vh]">
         {/*
           The rail is capped at the width of the copy itself and everything
           left over goes to the image column. Stacking the year above the title
