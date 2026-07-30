@@ -310,7 +310,7 @@ function Navbar() {
             beats inheriting it from a parent. tracking-tighter does inherit,
             so it stays here.
           */}
-          <div className="hidden md:flex gap-10 font-display font-regular text-base tracking-tighter text-white">
+          <div className="hidden md:flex gap-10 font-display font-normal text-base tracking-tighter text-white">
             <button
               onClick={() => handleNavClick("work")}
               className="uppercase"
@@ -346,21 +346,21 @@ function Navbar() {
           <div className="bg-card/90 backdrop-blur-xl border border-border rounded-2xl p-6 flex flex-col gap-6 shadow-[0_8px_32px_rgba(0,0,0,0.04)]">
             <button
               onClick={() => handleNavClick("work")}
-              className="text-base font-display font-regular text-foreground text-left"
+              className="text-base font-display font-normal text-foreground text-left"
               data-testid="link-work-mobile"
             >
               Work
             </button>
             <button
               onClick={() => handleNavClick("beyond")}
-              className="text-base font-display font-regular text-foreground text-left"
+              className="text-base font-display font-normal text-foreground text-left"
               data-testid="link-beyond-mobile"
             >
               Beyond Design
             </button>
             <button
               onClick={() => handleNavClick("contact")}
-              className="text-base font-display font-regular text-foreground text-left"
+              className="text-base font-display font-normal text-foreground text-left"
               data-testid="link-contact-mobile"
             >
               Contact
@@ -860,7 +860,7 @@ function Footer() {
         page's centre line. Spaced apart it would only look centred if the
         year and the byline happened to be the same width, which they are not.
       */}
-      <div className="grid grid-cols-3 items-center font-display font-regular text-sm tracking-tighter text-foreground">
+      <div className="grid grid-cols-3 items-center font-display font-normal text-sm tracking-tighter text-foreground">
         <span className="tabular-nums">{new Date().getFullYear()}</span>
         <a
           href="https://www.linkedin.com/in/imxinzhang/"
