@@ -67,7 +67,8 @@ const PHOTOS = SOURCES;
 
 const WORDMARK = "Beyond Design";
 
-const WORDMARK_TOP = "-14%";
+const WORDMARK_TOP_VH = -14;
+const WORDMARK_TOP = `${WORDMARK_TOP_VH}%`;
 const WORDMARK_END = 0.42;
 
 /*
@@ -207,6 +208,32 @@ const ENTRY_FRAC = ENTRY_VH / PIN_VH;
 // to, so the two are the same window by construction.
 const SHRINK = [SLOW_START_VH / PIN_VH, SLOW_END_VH / PIN_VH] as const;
 
+/*
+  Where the nav's "Beyond Design" link should land: the scroll position at
+  which the title is centred on screen, full-size, before the crawl starts
+  shrinking it. Landing at the track's start instead — the obvious target —
+  shows nothing at all, since the title only enters after TEXT_LEAD_VH.
+
+  Runs the Wordmark's own y formula backwards. `offsetHeight` (not a client
+  rect) because it ignores the live `scale` transform, so it reads as the
+  title's full, unshrunk height no matter where the page currently sits —
+  the same height the title actually has at the scale-1 target this solves
+  for.
+*/
+export function getBeyondCenterScrollTop(trackEl: HTMLElement): number | null {
+  const wordmark = trackEl.querySelector<HTMLElement>("[data-wordmark]");
+  if (!wordmark) return null;
+
+  const vh = window.innerHeight;
+  const desiredTopVh = ((vh - wordmark.offsetHeight) / 2) * (100 / vh);
+  const targetEased =
+    (WORDMARK_TOP_VH + TEXT_OFFSET_VH - desiredTopVh) / TEXT_SPEED;
+  const realScrollVh = Math.max(0, Math.min(PIN_VH, unEased(targetEased)));
+
+  const trackTop = window.scrollY + trackEl.getBoundingClientRect().top;
+  return trackTop + (realScrollVh * vh) / 100;
+}
+
 function Wordmark({ progress }: { progress: ReturnType<typeof useScroll>["scrollYProgress"] }) {
   /*
     One rate all the way through, applied to eased scroll rather than real
@@ -238,6 +265,7 @@ function Wordmark({ progress }: { progress: ReturnType<typeof useScroll>["scroll
       }}
     >
       <span
+        data-wordmark
         className="font-display block font-medium leading-[0.82] tracking-[-0.04em] text-foreground text-[clamp(3rem,13.5vw,17rem)]"
         style={{ textRendering: "geometricPrecision" }}
       >

@@ -8,7 +8,7 @@ import {
 } from "framer-motion";
 import { Fragment, useRef, useEffect, useState } from "react";
 
-import Gallery from "@/components/Gallery";
+import Gallery, { getBeyondCenterScrollTop } from "@/components/Gallery";
 
 import project1 from "@assets/collection.jpg";
 import project2 from "@assets/Darmi_home.jpg";
@@ -274,13 +274,29 @@ function Navbar() {
 
   /*
     Scroll a section into view. Everything lands 100px below the viewport top
-    except WORK: the projects section opens with 28vh of padding above its
-    first photograph, so aligning its top edge leaves that photograph — Darmi
-    — sitting near the bottom of the screen with the copy rail still empty.
+    except WORK and BEYOND DESIGN, which both need more than their section's
+    top edge to land somewhere worth looking at.
+
+    WORK: the projects section opens with 28vh of padding above its first
+    photograph, so aligning its top edge leaves that photograph — Darmi —
+    sitting near the bottom of the screen with the copy rail still empty.
     Centring the frame itself puts it where the rail expects it, since the
     rail picks whichever frame's centre is nearest the viewport centre.
+
+    BEYOND DESIGN: the section's top edge is where the pinned track starts,
+    before the title has scrolled in at all — the title only enters after
+    TEXT_LEAD_VH of scroll, so landing there shows an empty screen. Gallery
+    exports the scroll position where the title is actually centred.
   */
   const scrollToSection = (id: string) => {
+    if (id === "beyond") {
+      const track = document.getElementById("beyond");
+      const top = track && getBeyondCenterScrollTop(track);
+      if (top != null) {
+        window.scrollTo({ top, behavior: "smooth" });
+        return;
+      }
+    }
     if (id === "work") {
       const frame =
         document.querySelector<HTMLElement>("#work [data-project-frame]");
@@ -911,7 +927,7 @@ function Footer() {
       data-bg-color={SECTION_BG.dust}
       className="min-h-screen flex flex-col justify-end px-6 md:px-12 pb-10"
     >
-      <div className="mb-[16vh]">
+      <div className="mb-[20vh]">
         <p className="text-base text-foreground mb-4">Say hello</p>
         <a
           href="mailto:about.dala@gmail.com"
