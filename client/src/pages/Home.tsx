@@ -143,7 +143,7 @@ function CustomCursor() {
         a pointer, and once there are words to read the pointer is just noise.
       */}
       <motion.div
-        className="fixed top-0 left-0 pointer-events-none z-[9999] whitespace-nowrap rounded-full bg-foreground px-4 py-2 text-background text-[10px] font-bold uppercase tracking-[0.2em]"
+        className="fixed top-0 left-0 pointer-events-none z-[9999] whitespace-nowrap rounded-full bg-foreground px-6 py-3 text-background text-xs font-bold uppercase tracking-[0.2em]"
         style={{
           x: mouseX,
           y: mouseY,
@@ -698,7 +698,7 @@ function ProjectFrame({
   return (
     <Link
       href={`/project/${project.id}`}
-      className="group block"
+      className="group block cursor-none"
       data-cursor-label="View"
     >
       {/* Mobile only: the rail cannot be pinned on a narrow screen, so each
