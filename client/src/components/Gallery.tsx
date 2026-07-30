@@ -135,30 +135,52 @@ const PHOTO_START = TEXT_LEAD_VH / PIN_VH;
 const ENTRY_FRAC = ENTRY_VH / PIN_VH;
 
 /*
-  The shrink, as an absolute position in the scroll rather than something
-  pegged to the photograph's arrival. It has to land inside the window where
-  the title is actually on screen — it rises at TEXT_SPEED and is clear of the
-  top by about 93vh — and the photograph does not arrive until 146vh, so
-  hanging the shrink off ENTRY_FRAC put it entirely after the title had left.
+  ── The title's hold ──────────────────────────────────────────────────────
+  The title does not climb straight through and out. It rises, parks near the
+  top of the screen, and sits there shrinking very slowly while the
+  photograph carries on up past it; once it is small it resumes and leaves.
+
+  TEXT_PARK_VH is the y it holds at. With WORDMARK_TOP at -14vh, 26vh puts
+  the type's top edge 12vh down the screen.
+
+  The other two are derived, not typed, so the three stay consistent when the
+  speeds are tuned:
+    - TEXT_RISE_VH — the scroll the climb to the park takes, which is just
+      the distance covered at TEXT_SPEED.
+    - TEXT_HOLD_VH — whatever is left until the photograph lands. Ending the
+      hold exactly on ENTRY_VH is what makes the title finish shrinking on
+      the same frame the photograph settles, so it is done being interesting
+      right as it starts to leave.
+
+  The shrink runs across the hold, which is the whole point of the hold: it
+  is the one thing still moving while the type sits still.
 */
-const SHRINK_START_VH = 45;
-const SHRINK_VH = 40;
-const SHRINK = [
-  SHRINK_START_VH / PIN_VH,
-  (SHRINK_START_VH + SHRINK_VH) / PIN_VH,
-] as const;
+const TEXT_PARK_VH = 26;
+const TEXT_RISE_VH = (TEXT_OFFSET_VH - TEXT_PARK_VH) / TEXT_SPEED;
+const TEXT_HOLD_VH = ENTRY_VH - TEXT_RISE_VH;
+const SHRINK = [TEXT_RISE_VH / PIN_VH, ENTRY_FRAC] as const;
 
 function Wordmark({ progress }: { progress: ReturnType<typeof useScroll>["scrollYProgress"] }) {
   /*
-    Starts TEXT_OFFSET_VH below its resting place and climbs at TEXT_SPEED
-    times the scroll rate, in vh so the rate holds at any viewport height.
-    Unlike the photograph this never clamps: it keeps going past rest and off
-    the top of the screen while the photographs are still cycling below.
+    Three phases: climb from TEXT_OFFSET_VH at TEXT_SPEED, hold at
+    TEXT_PARK_VH, then carry on from the park at the same speed and off the
+    top of the screen. Everything is in vh so the rates hold at any viewport
+    height.
+
+    Resuming from TEXT_PARK_VH rather than from where an uninterrupted climb
+    would have reached is what makes the hold a hold: the scroll spent parked
+    is not paid back afterwards, so the type leaves from where it stopped
+    instead of jumping to catch up.
   */
-  const y = useTransform(
-    progress,
-    (p) => `${TEXT_OFFSET_VH - TEXT_SPEED * p * PIN_VH}vh`,
-  );
+  const y = useTransform(progress, (p) => {
+    const scrolled = p * PIN_VH;
+    if (scrolled < TEXT_RISE_VH) {
+      return `${TEXT_OFFSET_VH - TEXT_SPEED * scrolled}vh`;
+    }
+    const afterHold = scrolled - (TEXT_RISE_VH + TEXT_HOLD_VH);
+    if (afterHold <= 0) return `${TEXT_PARK_VH}vh`;
+    return `${TEXT_PARK_VH - TEXT_SPEED * afterHold}vh`;
+  });
   const scale = useTransform(progress, [...SHRINK], [1, WORDMARK_END], {
     clamp: true,
   });
