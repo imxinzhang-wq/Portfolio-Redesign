@@ -82,7 +82,7 @@ const WORDMARK_END = 0.42;
   The title is the nearer, faster element, so it is the larger of the two.
 */
 const TEXT_SPEED = 1.15;
-const PHOTO_SPEED = 0.9;
+const PHOTO_SPEED = 0.87;
 
 /*
   How far below its resting place each element begins. Both start clear of the
