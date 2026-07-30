@@ -7,54 +7,63 @@ import {
 import { useEffect, useRef, useState } from "react";
 
 /*
-  Every photograph ships as WebP at three widths, and the browser is told what
-  each plate actually renders at so it can pick one. The single 1200px JPEG this
-  replaces was between one and seven times larger than the box it went into,
-  depending on the slot, and the nine of them landed as 3.19MB the moment the
-  gallery came into view.
+  Every photograph ships as WebP at three sizes, named `film-N-WxH.webp`, and
+  the browser is told what each one actually renders at so it can pick.
 
-  The JPEGs/JPGs stay in the repository as the masters the variants are
-  derived from; nothing imports them, so they are not built.
+  The variants are generated to fixed HEIGHTS — 800, 1200 and 1600 — not fixed
+  widths, because height is the dimension the gallery pins down: every frame is
+  80vh tall and the width follows from the photograph. Sizing them by width
+  instead is what made the landscape ones soft. A 2451x1600 photograph rendered
+  to 960px wide is only 626px tall, and the frame wants 720 CSS px at a 900px
+  viewport — so it was being upscaled before a retina screen was even in the
+  picture.
 
-  Numbers are the ones the photographs were uploaded under, gaps and all —
-  referring to one by the number it already has beats keeping a mapping in your
-  head. They are read off the filenames rather than listed, so adding a
-  photograph is a matter of dropping its three variants in.
+  Both dimensions are in the filename because both are needed: the width feeds
+  srcSet's `w` descriptors, and the pair gives the aspect ratio, which now
+  differs per photograph and decides how wide its frame is. Encoding it in the
+  name keeps the set self-describing, so adding a photograph is still a matter
+  of dropping its three variants in — no manifest to keep in sync.
+
+  1600 is the ceiling because that is roughly the masters' own height; nothing
+  is upscaled past its source. The JPEGs/JPGs stay in the repository as those
+  masters; nothing imports them, so they are not built.
 */
 const VARIANTS = import.meta.glob<string>(
-  "../../../attached_assets/film-*-*.webp",
+  "../../../attached_assets/film-*-*x*.webp",
   { eager: true, query: "?url", import: "default" },
 );
 
-type Variant = { width: number; url: string };
+type Variant = { width: number; height: number; url: string };
 
 const SOURCES = (() => {
   const byNumber: Record<string, Variant[]> = {};
   for (const [path, url] of Object.entries(VARIANTS)) {
-    const match = path.match(/film-(\d+)-(\d+)\.webp$/);
+    const match = path.match(/film-(\d+)-(\d+)x(\d+)\.webp$/);
     if (!match) continue;
-    (byNumber[match[1]] ??= []).push({ width: Number(match[2]), url });
+    (byNumber[match[1]] ??= []).push({
+      width: Number(match[2]),
+      height: Number(match[3]),
+      url,
+    });
   }
   return Object.keys(byNumber)
     .sort((a, b) => Number(a) - Number(b))
     .map((number) => {
-      const widths = byNumber[number].sort(
+      const sizes = byNumber[number].sort(
         (a: Variant, b: Variant) => a.width - b.width,
       );
+      const largest = sizes[sizes.length - 1];
       return {
         number,
-        srcSet: widths.map((v: Variant) => `${v.url} ${v.width}w`).join(", "),
-        // The middle width as the fallback for anything that cannot read srcSet.
-        src: widths[Math.floor(widths.length / 2)].url,
+        ratio: largest.width / largest.height,
+        srcSet: sizes.map((v: Variant) => `${v.url} ${v.width}w`).join(", "),
+        // The middle size as the fallback for anything that cannot read srcSet.
+        src: sizes[Math.floor(sizes.length / 2)].url,
       };
     });
 })();
 
-// Portraits only, every one cropped to exactly 3:4, so every plate in the
-// sequence is the same shape and only the photo inside it changes.
-const PORTRAIT = 3 / 4;
-
-const PHOTOS = SOURCES.map((source) => ({ ...source, ratio: PORTRAIT }));
+const PHOTOS = SOURCES;
 
 const WORDMARK = "Beyond Design";
 
@@ -254,33 +263,43 @@ function Frame({ progress }: { progress: ReturnType<typeof useScroll>["scrollYPr
       style={{ y }}
     >
       {/*
-        All nine are mounted and stacked, and the swap is a plain opacity
-        flip with no transition on it — a hard cut on the frame the scroll
-        crosses the boundary.
+        All ten are mounted and stacked, and the swap is a plain opacity flip
+        with no transition on it — a hard cut on the frame the scroll crosses
+        the boundary.
 
         Mounting them all is what makes the cut clean rather than merely
         instant: swapping one <img>'s src would hit the network on first
         showing, and at this speed that is a blank frame where the photograph
-        should be. Nine 640px WebPs decoded up front costs less than that.
+        should be. Decoding ten up front costs less than that.
+
+        Each is its own size rather than sharing one frame: the height is
+        fixed at 80vh so they still read as a set, but the width follows the
+        photograph's own ratio, so nothing is cropped. A shared 3:4 box meant
+        the four landscape photographs lost most of their width to a
+        centre-crop.
+
+        max-width is the one thing that can override the fixed height — a
+        landscape frame is about 1.5x its height, so on a viewport narrower
+        than roughly 1.4:1 it would otherwise run off the sides. There it
+        shrinks to fit instead, which is the better failure.
       */}
-      <div
-        className="relative max-w-[90vw]"
-        style={{ height: "80vh", aspectRatio: String(PORTRAIT) }}
-      >
-        {PHOTOS.map((photo, i) => (
-          <img
-            key={photo.number}
-            src={photo.src}
-            srcSet={photo.srcSet}
-            sizes="min(60vh, 90vw)"
-            alt=""
-            aria-hidden
-            decoding="async"
-            className="absolute inset-0 h-full w-full rounded-[8px] object-cover"
-            style={{ opacity: i === index ? 1 : 0 }}
-          />
-        ))}
-      </div>
+      {PHOTOS.map((photo, i) => (
+        <img
+          key={photo.number}
+          src={photo.src}
+          srcSet={photo.srcSet}
+          sizes={`calc(80vh * ${photo.ratio.toFixed(4)})`}
+          alt=""
+          aria-hidden
+          decoding="async"
+          className="absolute max-h-[80vh] max-w-[90vw] rounded-[8px]"
+          style={{
+            height: "80vh",
+            aspectRatio: String(photo.ratio),
+            opacity: i === index ? 1 : 0,
+          }}
+        />
+      ))}
     </motion.div>
   );
 }
@@ -338,19 +357,25 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
           <h2 className="font-display mb-10 text-center text-[13vw] font-medium leading-[0.9] tracking-[-0.04em] text-foreground">
             {WORDMARK}
           </h2>
-          <div className="grid grid-cols-2 gap-3">
+          {/*
+            One column rather than two. The photographs no longer share an
+            aspect ratio, and a grid of mixed ratios either crops them back
+            into line — the thing this is meant to stop — or leaves ragged
+            gaps down the columns.
+          */}
+          <div className="flex flex-col gap-3">
             {PHOTOS.map((photo) => (
               <img
                 key={photo.number}
                 src={photo.src}
                 srcSet={photo.srcSet}
-                sizes="(min-width: 28rem) 13rem, 45vw"
+                sizes="min(28rem, 90vw)"
                 alt=""
                 aria-hidden
                 loading="lazy"
                 decoding="async"
-                className="w-full rounded-[6px] object-cover"
-                style={{ aspectRatio: String(PORTRAIT) }}
+                className="w-full rounded-[6px]"
+                style={{ aspectRatio: String(photo.ratio) }}
               />
             ))}
           </div>
