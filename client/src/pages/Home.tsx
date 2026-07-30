@@ -28,6 +28,10 @@ import header3Webm from "@assets/header3.webm";
 const SECTION_BG = {
   canvas: "#f5f0e6",
   ink: "#1a1a1a",
+  // Deeper than `ink`, for the projects section. Not pure #000: against the
+  // rounded image frames a true black reads as a hole rather than a surface,
+  // and it leaves nowhere to go for anything that needs to sit darker still.
+  void: "#0a0a0a",
   mist: "#dde2e9",
 } as const;
 
@@ -106,30 +110,31 @@ function CustomCursor() {
 
   return (
     <>
+      {/*
+        One solid dot, standing in for the pointer the page hides with
+        `cursor-none`. The outer ring it used to travel with is gone.
+
+        White with `difference` rather than ink with `multiply`. Multiply can
+        only ever darken, so against the projects section's near-black the old
+        cursor was mathematically invisible — multiplying a value of 10 by
+        anything leaves it at 10 or below. Difference inverts whatever is
+        behind it instead, which reads as near-black on the cream sections and
+        near-white on the dark one, with no per-section switching to keep in
+        sync.
+
+        It still steps aside for the label: on the header's photographs the
+        pill replaces the dot rather than sitting next to it.
+      */}
       <motion.div
-        className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full border border-foreground/30 mix-blend-multiply"
+        className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full bg-white mix-blend-difference"
         style={{
-          width: hovering ? 56 : 36,
-          height: hovering ? 56 : 36,
-          x: mouseX,
-          y: mouseY,
-          translateX: hovering ? "-28px" : "-18px",
-          translateY: hovering ? "-28px" : "-18px",
-          opacity: visible && !label ? 1 : 0,
-          transition:
-            "width 0.3s ease, height 0.3s ease, translate 0.3s ease, opacity 0.3s ease",
-        }}
-      />
-      <motion.div
-        className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full bg-foreground mix-blend-multiply"
-        style={{
-          width: hovering ? 6 : 5,
-          height: hovering ? 6 : 5,
+          width: hovering ? 16 : 10,
+          height: hovering ? 16 : 10,
           x: dotX,
           y: dotY,
           translateX: "-50%",
           translateY: "-50%",
-          opacity: visible && !label ? 0.7 : 0,
+          opacity: visible && !label ? 1 : 0,
           transition: "width 0.2s ease, height 0.2s ease, opacity 0.3s ease",
         }}
       />
@@ -246,7 +251,7 @@ function Navbar() {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    const DARK_COLORS = new Set<string>([SECTION_BG.ink]);
+    const DARK_COLORS = new Set<string>([SECTION_BG.ink, SECTION_BG.void]);
     const handleScroll = () => {
       const sections = Array.from(
         document.querySelectorAll<HTMLElement>("[data-bg-color]"),
@@ -781,7 +786,19 @@ function ProjectGrid() {
       colour change lives on the page wrapper, and a background here would show
       as a hard edge sliding up the screen instead of a crossfade.
     */
-    <section id="work" data-bg-color={SECTION_BG.canvas} className="relative">
+    <section
+      id="work"
+      data-bg-color={SECTION_BG.void}
+      className="relative"
+      /*
+        The section is dark, so its text has to invert. Overriding --foreground
+        for the subtree flips every text-foreground, /70 and /50 in one place
+        — the copy rail, the mobile blocks and the heading all read it — rather
+        than hardcoding a light colour at each of them and leaving the opacity
+        steps to be re-derived by hand.
+      */
+      style={{ ["--foreground" as string]: "40 43% 93%" }}
+    >
       <div className="max-w-[1800px] mx-auto px-6 md:px-10 py-24 md:py-[28vh]">
         <h2 className="text-4xl font-display font-medium tracking-tighter text-foreground mb-16 md:hidden">
           Projects
