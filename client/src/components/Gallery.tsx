@@ -367,6 +367,7 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
         and reported 0.42 at the top of the track.
       */
       <section
+        id="beyond"
         ref={trackRef}
         data-bg-color={bgColor}
         className="relative px-6 py-24"
@@ -408,6 +409,7 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
       colour swap, and a background here would slide up the screen as a hard edge.
     */
     <section
+      id="beyond"
       ref={trackRef}
       data-bg-color={bgColor}
       className="relative"

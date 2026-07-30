@@ -269,122 +269,162 @@ export default function Home() {
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDark, setIsDark] = useState(false);
 
-  useEffect(() => {
-    const DARK_COLORS = new Set<string>([SECTION_BG.ink, SECTION_BG.void]);
-    const handleScroll = () => {
-      const sections = Array.from(
-        document.querySelectorAll<HTMLElement>("[data-bg-color]"),
-      );
-      const midpoint = window.innerHeight * 0.5;
-      let active = sections[0];
-      for (const s of sections) {
-        if (s.getBoundingClientRect().top <= midpoint) active = s;
+  /*
+    Scroll a section into view. Everything lands 100px below the viewport top
+    except WORK: the projects section opens with 28vh of padding above its
+    first photograph, so aligning its top edge leaves that photograph — Darmi
+    — sitting near the bottom of the screen with the copy rail still empty.
+    Centring the frame itself puts it where the rail expects it, since the
+    rail picks whichever frame's centre is nearest the viewport centre.
+  */
+  const scrollToSection = (id: string) => {
+    if (id === "work") {
+      const frame =
+        document.querySelector<HTMLElement>("#work [data-project-frame]");
+      if (frame) {
+        /*
+          offsetTop, not getBoundingClientRect: the frame enters on a
+          `y: 40 → 0` transform, and a rect measured mid-flight bakes that
+          offset into the target, leaving the photograph 40px high once the
+          animation settles. Layout offsets ignore transforms, so they
+          describe where the frame is going to come to rest.
+        */
+        let top = 0;
+        for (
+          let node: HTMLElement | null = frame;
+          node;
+          node = node.offsetParent as HTMLElement | null
+        ) {
+          top += node.offsetTop;
+        }
+        window.scrollTo({
+          top: top - (window.innerHeight - frame.offsetHeight) / 2,
+          behavior: "smooth",
+        });
+        return;
       }
-      setIsDark(DARK_COLORS.has(active?.dataset.bgColor ?? ""));
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    }
+    const el = document.getElementById(id);
+    if (el)
+      window.scrollTo({
+        top: el.getBoundingClientRect().top + window.scrollY - 100,
+        behavior: "smooth",
+      });
+  };
 
   const handleNavClick = (id: string) => {
     setIsMenuOpen(false);
     if (window.location.hash !== "#/") {
       window.location.hash = "#/";
-      setTimeout(() => {
-        const el = document.getElementById(id);
-        if (el)
-          window.scrollTo({
-            top: el.getBoundingClientRect().top + window.scrollY - 100,
-            behavior: "smooth",
-          });
-      }, 100);
+      setTimeout(() => scrollToSection(id), 100);
     } else {
-      const el = document.getElementById(id);
-      if (el)
-        window.scrollTo({
-          top: el.getBoundingClientRect().top + window.scrollY - 100,
-          behavior: "smooth",
-        });
+      scrollToSection(id);
     }
   };
 
-  const logoColor = isDark ? "text-white" : "text-foreground";
-  const linkColor = isDark ? "text-white/60" : "text-muted-foreground";
-  const linkHover = isDark ? "hover:text-white" : "hover:text-foreground";
-  const barColor = isDark ? "bg-white" : "bg-foreground";
-
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 flex justify-center px-8 py-6 pointer-events-none">
-      <motion.nav
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="pointer-events-auto flex items-center justify-between w-full py-5"
-      >
-        <button
-          onClick={() => {
-            setIsMenuOpen(false);
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
-          className={`text-base font-display font-bold tracking-tighter uppercase relative z-20 transition-colors duration-500 ${logoColor}`}
-          data-testid="link-home"
-        >
-          Xin Zhang
-        </button>
+    <>
+      {/*
+        The bar inverts whatever it crosses instead of being told which
+        sections are dark. `difference` against white gives near-black type on
+        the cream sections and cream type on the near-black one, and it keeps
+        working over the photographs — the old light/dark switch read only the
+        section's declared colour, so type could still land on a bright frame.
 
-        <button
-          className="md:hidden relative z-20 p-2 -mr-2"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        The blend sits on this fixed wrapper, not on the <nav> inside it:
+        fixed positioning creates a stacking context, which would confine the
+        blend to this element's own (transparent) contents and leave the type
+        plain white.
+      */}
+      <div className="fixed top-0 left-0 right-0 z-50 flex justify-center px-8 py-6 pointer-events-none mix-blend-difference">
+        <motion.nav
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="pointer-events-auto flex items-center justify-between w-full py-5 text-white"
         >
-          <div className="flex flex-col gap-1.5 w-5">
-            <span
-              className={`h-0.5 transition-all duration-300 ${barColor} ${isMenuOpen ? "rotate-45 translate-y-2" : ""}`}
-            />
-            <span
-              className={`h-0.5 transition-all duration-300 ${barColor} ${isMenuOpen ? "opacity-0" : ""}`}
-            />
-            <span
-              className={`h-0.5 transition-all duration-300 ${barColor} ${isMenuOpen ? "-rotate-45 -translate-y-2" : ""}`}
-            />
+          <button
+            onClick={() => {
+              setIsMenuOpen(false);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="text-base font-display font-bold tracking-tighter uppercase relative z-20"
+            data-testid="link-home"
+          >
+            Xin Zhang
+          </button>
+
+          <button
+            className="md:hidden relative z-20 p-2 -mr-2"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            <div className="flex flex-col gap-1.5 w-5">
+              <span
+                className={`h-0.5 bg-white transition-all duration-300 ${isMenuOpen ? "rotate-45 translate-y-2" : ""}`}
+              />
+              <span
+                className={`h-0.5 bg-white transition-all duration-300 ${isMenuOpen ? "opacity-0" : ""}`}
+              />
+              <span
+                className={`h-0.5 bg-white transition-all duration-300 ${isMenuOpen ? "-rotate-45 -translate-y-2" : ""}`}
+              />
+            </div>
+          </button>
+
+          <div className="hidden md:flex gap-10 eyebrow font-display font-bold text-white/70">
+            <button
+              onClick={() => handleNavClick("work")}
+              className="transition-colors duration-300 hover:text-white"
+              data-testid="link-work"
+            >
+              WORK
+            </button>
+            <button
+              onClick={() => handleNavClick("beyond")}
+              className="transition-colors duration-300 hover:text-white"
+              data-testid="link-beyond"
+            >
+              BEYOND DESIGN
+            </button>
+            <button
+              onClick={() => handleNavClick("about")}
+              className="transition-colors duration-300 hover:text-white"
+              data-testid="link-about"
+            >
+              ABOUT
+            </button>
+            <button
+              onClick={() => handleNavClick("contact")}
+              className="transition-colors duration-300 hover:text-white"
+              data-testid="link-contact"
+            >
+              CONTACT
+            </button>
           </div>
-        </button>
+        </motion.nav>
+      </div>
 
-        <div
-          className={`hidden md:flex gap-10 eyebrow font-display font-bold transition-colors duration-500 ${linkColor}`}
-        >
-          <button
-            onClick={() => handleNavClick("work")}
-            className={`transition-colors duration-300 ${linkHover}`}
-            data-testid="link-work"
-          >
-            WORK
-          </button>
-          <button
-            onClick={() => handleNavClick("about")}
-            className={`transition-colors duration-300 ${linkHover}`}
-            data-testid="link-about"
-          >
-            ABOUT
-          </button>
-          <button
-            onClick={() => handleNavClick("contact")}
-            className={`transition-colors duration-300 ${linkHover}`}
-            data-testid="link-contact"
-          >
-            CONTACT
-          </button>
-        </div>
-
-        {isMenuOpen && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-card/90 backdrop-blur-xl border border-border rounded-2xl p-6 flex flex-col gap-6 shadow-[0_8px_32px_rgba(0,0,0,0.04)] md:hidden">
+      {/*
+        The mobile menu is a sibling of the blended bar rather than a child of
+        it: it is an opaque card, and inverting it along with the type would
+        turn it inside out.
+      */}
+      {isMenuOpen && (
+        <div className="fixed top-24 left-0 right-0 z-50 px-8 md:hidden">
+          <div className="bg-card/90 backdrop-blur-xl border border-border rounded-2xl p-6 flex flex-col gap-6 shadow-[0_8px_32px_rgba(0,0,0,0.04)]">
             <button
               onClick={() => handleNavClick("work")}
               className="text-sm font-display font-bold uppercase tracking-[0.25em] text-foreground text-left"
               data-testid="link-work-mobile"
             >
               WORK
+            </button>
+            <button
+              onClick={() => handleNavClick("beyond")}
+              className="text-sm font-display font-bold uppercase tracking-[0.25em] text-foreground text-left"
+              data-testid="link-beyond-mobile"
+            >
+              BEYOND DESIGN
             </button>
             <button
               onClick={() => handleNavClick("about")}
@@ -401,9 +441,9 @@ function Navbar() {
               CONTACT
             </button>
           </div>
-        )}
-      </motion.nav>
-    </div>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -741,6 +781,7 @@ function ProjectFrame({
             (frameRef as { current: HTMLDivElement | null }).current = el;
             onActivate(el);
           }}
+          data-project-frame
           className="relative w-full aspect-[16/9] overflow-hidden rounded-[32px] bg-white/5"
         >
           <motion.img
