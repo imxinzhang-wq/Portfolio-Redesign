@@ -301,27 +301,33 @@ function Navbar() {
             keeping the class and overriding each part would leave the next
             reader wondering which of them still applied.
 
-            Full white rather than white/70, so hover can no longer be a
-            colour step; it is opacity instead.
+            Full white rather than white/70. There is no hover state at all
+            now — the cursor dot growing over interactive elements is the
+            affordance, site-wide.
+
+            `uppercase` sits on each button rather than on this row, because
+            Tailwind's preflight sets text-transform:none on button and that
+            beats inheriting it from a parent. tracking-tighter does inherit,
+            so it stays here.
           */}
-          <div className="hidden md:flex gap-10 font-display font-bold text-base text-white">
+          <div className="hidden md:flex gap-10 font-display font-bold text-base tracking-tighter text-white">
             <button
               onClick={() => handleNavClick("work")}
-              className="transition-opacity duration-300 hover:opacity-60"
+              className="uppercase"
               data-testid="link-work"
             >
               Work
             </button>
             <button
               onClick={() => handleNavClick("beyond")}
-              className="transition-opacity duration-300 hover:opacity-60"
+              className="uppercase"
               data-testid="link-beyond"
             >
               Beyond Design
             </button>
             <button
               onClick={() => handleNavClick("contact")}
-              className="transition-opacity duration-300 hover:opacity-60"
+              className="uppercase"
               data-testid="link-contact"
             >
               Contact
@@ -846,7 +852,7 @@ function Footer() {
         <p className="text-base text-foreground mb-4">Say hello</p>
         <a
           href="mailto:about.dala@gmail.com"
-          className="block font-display font-medium tracking-tight leading-[1.05] text-foreground text-[clamp(2rem,7vw,7rem)] hover:opacity-60 transition-opacity"
+          className="block font-display font-medium tracking-tight leading-[1.05] text-foreground text-[clamp(2rem,7vw,7rem)]"
           data-testid="link-email"
         >
           about.dala@gmail.com
@@ -864,7 +870,7 @@ function Footer() {
           href="https://www.linkedin.com/in/imxinzhang/"
           target="_blank"
           rel="noopener noreferrer"
-          className="justify-self-center font-bold tracking-wide hover:opacity-60 transition-opacity"
+          className="justify-self-center font-bold tracking-wide"
         >
           LINKEDIN
         </a>

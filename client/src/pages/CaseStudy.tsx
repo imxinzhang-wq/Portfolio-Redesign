@@ -441,7 +441,7 @@ export default function CaseStudy() {
         <main className="relative z-10 flex-1 flex flex-col">
           <nav className="px-6 md:px-12 py-12 max-w-7xl mx-auto w-full">
             <Link href="/">
-              <a className="inline-flex items-center gap-2 eyebrow font-mono hover:opacity-60 transition-opacity cursor-none">
+              <a className="inline-flex items-center gap-2 eyebrow font-mono cursor-none">
                 <ArrowLeft className="w-4 h-4" /> Home
               </a>
             </Link>
@@ -494,7 +494,7 @@ export default function CaseStudy() {
         {/* Navigation */}
         <nav className="px-6 md:px-12 py-12 max-w-7xl mx-auto flex items-center justify-between">
           <Link href="/">
-            <a className="inline-flex items-center gap-2 eyebrow font-mono hover:opacity-60 transition-opacity cursor-none">
+            <a className="inline-flex items-center gap-2 eyebrow font-mono cursor-none">
               <ArrowLeft className="w-4 h-4" /> Home
             </a>
           </Link>
@@ -923,7 +923,7 @@ export default function CaseStudy() {
                   <span className="eyebrow font-mono text-muted-foreground">
                     Up Next
                   </span>
-                  <span className="text-3xl font-display font-medium group-hover:text-foreground/60 transition-colors">
+                  <span className="text-3xl font-display font-medium">
                     {nextProject.title}
                   </span>
                 </a>
@@ -931,7 +931,7 @@ export default function CaseStudy() {
             )}
             <button 
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="eyebrow font-mono font-bold hover:opacity-50 transition-opacity flex items-center gap-2"
+              className="eyebrow font-mono font-bold flex items-center gap-2"
             >
               Back to Top <ArrowUpRight className="w-4 h-4" />
             </button>
