@@ -80,30 +80,49 @@ function CustomCursor() {
   const [visible, setVisible] = useState(false);
   // Set by [data-cursor-label] elements; swaps the ring for a text label.
   const [label, setLabel] = useState<string | null>(null);
+  const [labelSize, setLabelSize] = useState<string | null>(null);
+  const pointer = useRef<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
+    /*
+      Hit-test whatever is under the pointer right now. Reading the element
+      from the coordinates rather than an event's target is what lets scroll
+      reuse this: a scroll moves the page under a stationary cursor, so the
+      element changes without any mouse event to carry a new target.
+    */
+    const syncToPointer = () => {
+      const at = pointer.current;
+      if (!at) return;
+      const el = document.elementFromPoint(at.x, at.y) as HTMLElement | null;
+      if (!el) {
+        setLabel(null);
+        setLabelSize(null);
+        setHovering(false);
+        return;
+      }
+      const labelled = el.closest<HTMLElement>("[data-cursor-label]");
+      setLabel(labelled?.dataset.cursorLabel ?? null);
+      setLabelSize(labelled?.dataset.cursorLabelSize ?? null);
+      setHovering(!!el.closest("a, button, [role='button'], .group"));
+    };
+
     const move = (e: MouseEvent) => {
+      pointer.current = { x: e.clientX, y: e.clientY };
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
       dotX.set(e.clientX);
       dotY.set(e.clientY);
       setVisible(true);
+      syncToPointer();
     };
     const leave = () => setVisible(false);
 
-    const checkHover = (e: MouseEvent) => {
-      const el = e.target as HTMLElement;
-      const labelled = el.closest<HTMLElement>("[data-cursor-label]");
-      setLabel(labelled?.dataset.cursorLabel ?? null);
-      setHovering(!!el.closest("a, button, [role='button'], .group"));
-    };
-
     window.addEventListener("mousemove", move);
-    window.addEventListener("mousemove", checkHover);
+    window.addEventListener("scroll", syncToPointer, { passive: true });
     document.documentElement.addEventListener("mouseleave", leave);
     return () => {
       window.removeEventListener("mousemove", move);
-      window.removeEventListener("mousemove", checkHover);
+      window.removeEventListener("scroll", syncToPointer);
       document.documentElement.removeEventListener("mouseleave", leave);
     };
   }, [mouseX, mouseY, dotX, dotY]);
@@ -143,7 +162,9 @@ function CustomCursor() {
         a pointer, and once there are words to read the pointer is just noise.
       */}
       <motion.div
-        className="fixed top-0 left-0 pointer-events-none z-[9999] whitespace-nowrap rounded-full bg-foreground px-6 py-3 text-background text-xs font-bold uppercase tracking-[0.2em]"
+        className={`fixed top-0 left-0 pointer-events-none z-[9999] whitespace-nowrap rounded-full bg-foreground text-background font-bold uppercase tracking-[0.2em] ${
+          labelSize === "sm" ? "px-4 py-2 text-[10px]" : "px-6 py-3 text-xs"
+        }`}
         style={{
           x: mouseX,
           y: mouseY,
@@ -406,6 +427,7 @@ function InlineHeaderImage({
     <span
       tabIndex={0}
       data-cursor-label={label}
+      data-cursor-label-size="sm"
       className="relative inline-block h-[1.1em] w-[0.825em] hover:w-[1.4667em] focus:w-[1.4667em] focus:outline-none mx-[0.16em] overflow-hidden rounded-[16px] bg-foreground/10 transition-[width] duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
       style={{ verticalAlign: "-0.257em" }}
       data-testid={`img-inline-${label.toLowerCase().replace(/\s+/g, "-")}`}
@@ -455,6 +477,7 @@ function InlineHeaderVideo({
     <span
       tabIndex={0}
       data-cursor-label={label}
+      data-cursor-label-size="sm"
       onMouseEnter={startLooping}
       onMouseLeave={() => setLooping(false)}
       onFocus={startLooping}
