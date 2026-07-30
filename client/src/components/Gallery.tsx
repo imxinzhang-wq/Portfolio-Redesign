@@ -400,32 +400,44 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
         data-bg-color={bgColor}
         className="relative px-6 py-24"
       >
-        <div className="mx-auto max-w-md">
-          <h2 className="font-display mb-10 text-center text-[13vw] font-medium leading-[0.9] tracking-[-0.04em] text-foreground">
-            {WORDMARK}
-          </h2>
-          {/*
-            One column rather than two. The photographs no longer share an
-            aspect ratio, and a grid of mixed ratios either crops them back
-            into line — the thing this is meant to stop — or leaves ragged
-            gaps down the columns.
-          */}
-          <div className="flex flex-col gap-3">
-            {PHOTOS.map((photo) => (
+        <h2 className="font-display mb-10 text-center text-[13vw] font-medium leading-[0.9] tracking-[-0.04em] text-foreground">
+          {WORDMARK}
+        </h2>
+        {/*
+          A horizontal, page-at-a-time carousel rather than the old vertical
+          stack: each photograph is cropped to a fixed 3:4 card, scroll-snapped
+          to the centre of the screen, with the neighbouring cards' edges left
+          peeking on either side so the sequence reads as swipeable.
+
+          -mx-6 cancels the section's own side padding so the row can bleed
+          to the viewport edge — the peeking slivers need that width, which a
+          contained max-w-md wrapper (used for everything else on this
+          branch) would clip.
+
+          The side padding is 14vw (rather than 0) so the first and last
+          cards can still be scrolled to centre: scroll-snap needs room either
+          side of the ends to align them the same way it aligns the middle
+          ones.
+        */}
+        <div className="no-scrollbar -mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-[14vw] pb-2">
+          {PHOTOS.map((photo) => (
+            <div
+              key={photo.number}
+              className="shrink-0 snap-center overflow-hidden rounded-[6px]"
+              style={{ width: "72vw", aspectRatio: "3 / 4" }}
+            >
               <img
-                key={photo.number}
                 src={photo.src}
                 srcSet={photo.srcSet}
-                sizes="min(28rem, 90vw)"
+                sizes="72vw"
                 alt=""
                 aria-hidden
                 loading="lazy"
                 decoding="async"
-                className="w-full rounded-[6px]"
-                style={{ aspectRatio: String(photo.ratio) }}
+                className="h-full w-full object-cover"
               />
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </section>
     );
