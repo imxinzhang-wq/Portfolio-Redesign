@@ -15,7 +15,7 @@ import CustomCursor from "@/components/CustomCursor";
   comes off the trees above and the grass below — so there is nothing for an
   object-position to improve on here.
 */
-import project2Cover from "@assets/Darmi_home.jpg";
+import project2Cover from "@assets/Darmi_home-2640x1971.webp";
 import project1Cover from "@assets/Collection_Cover.jpg"; 
 import project3Cover from "@assets/Airbnb_Cover_1774813459702.jpg";
 import collectionCreateGif from "@assets/Collection-create_1774547429730.gif";
