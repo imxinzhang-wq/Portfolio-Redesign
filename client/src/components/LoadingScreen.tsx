@@ -34,7 +34,7 @@ const BLOCKING_ASSETS = [header1, header2];
 */
 const WARM_ASSETS = [project2, project1, project3];
 
-const WORDMARK = "XIN ZHANG";
+const WORDMARK = "Xin Zhang";
 
 /*
   The floor exists so a warm cache doesn't produce a 100ms flash of a screen
@@ -76,7 +76,6 @@ function preload(src: string, priority: "high" | "low" = "high") {
 
 export default function LoadingScreen() {
   const [done, setDone] = useState(false);
-  const [progress, setProgress] = useState(0);
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
@@ -93,28 +92,19 @@ export default function LoadingScreen() {
       }, remaining);
     };
 
+    const assets = Promise.all(BLOCKING_ASSETS.map((src) => preload(src))).then(
+      () => {
+        WARM_ASSETS.forEach((src) => preload(src, "low"));
+      },
+    );
+
     /*
-      The webfonts count as a unit of work alongside the images, both for the
-      wait and for the bar: revealing the page before Outfit and Manrope
-      resolve swaps the entire headline a beat after it appears, and with
-      only two images to track the bar would otherwise move in halves.
+      The webfonts are part of the wait too: revealing the page before Outfit
+      and Manrope resolve swaps the entire headline a beat after it appears.
       `document.fonts` is universal in the browsers this site targets; the
       optional chain keeps a headless/older runtime from stalling here.
     */
-    const steps = BLOCKING_ASSETS.length + 1;
-    let loaded = 0;
-    const tick = () => {
-      loaded += 1;
-      if (!cancelled) setProgress(loaded / steps);
-    };
-
-    const assets = Promise.all(
-      BLOCKING_ASSETS.map((src) => preload(src).then(tick)),
-    ).then(() => {
-      WARM_ASSETS.forEach((src) => preload(src, "low"));
-    });
-
-    const fonts = (document.fonts?.ready ?? Promise.resolve()).then(tick);
+    const fonts = document.fonts?.ready ?? Promise.resolve();
 
     Promise.all([assets, fonts]).then(finish);
 
@@ -168,53 +158,43 @@ export default function LoadingScreen() {
           aria-live="polite"
           data-testid="loading-screen"
         >
-          <div className="flex flex-col items-center gap-5">
-            {/*
-              Matches the navbar wordmark's face and weight at a smaller size
-              — the loader is showing the same signature the bar carries, not
-              a splash headline.
+          {/*
+            Deliberately identical to the navbar wordmark — same face, size,
+            weight and tracking, down to the class list. It is the same mark
+            arriving early, so the reveal reads as it settling into the
+            corner rather than as two different pieces of type.
 
-              aria-label on the row plus aria-hidden on the pieces: split
-              text reads out letter by letter otherwise.
-            */}
-            <div
-              className="flex font-display text-sm font-bold uppercase tracking-[0.35em] text-foreground"
-              aria-label={WORDMARK}
-            >
-              {letters.map((letter, i) => (
-                <motion.span
-                  key={`${letter}-${i}`}
-                  aria-hidden="true"
-                  // A space has no glyph to animate; give it width and let it be.
-                  className={letter === " " ? "w-[0.5em]" : ""}
-                  initial={
-                    reduceMotion ? { opacity: 0 } : { opacity: 0, y: "0.5em" }
-                  }
-                  animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
-                  transition={{
-                    duration: 0.5,
-                    delay: (LEAD_MS + i * STAGGER_MS) / 1000,
-                    ease: [0.23, 1, 0.32, 1],
-                  }}
-                >
-                  {letter === " " ? " " : letter}
-                </motion.span>
-              ))}
-            </div>
+            Nothing accompanies it. The wait is short enough that a progress
+            indicator would only be drawing attention to a wait nobody had
+            started minding.
 
-            {/*
-              A hairline that fills as the covers arrive. Deliberately quiet —
-              it answers "is anything happening" without turning the screen
-              into a progress dialog.
-            */}
-            <div className="h-px w-24 overflow-hidden bg-foreground/10">
-              <motion.div
-                className="h-full origin-left bg-foreground/40"
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: Math.max(progress, 0.08) }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-              />
-            </div>
+            aria-label on the row plus aria-hidden on the pieces: split text
+            reads out letter by letter otherwise.
+          */}
+          <div
+            className="flex text-xl font-display font-bold tracking-tighter uppercase text-foreground"
+            aria-label={WORDMARK}
+          >
+            {letters.map((letter, i) => (
+              <motion.span
+                key={`${letter}-${i}`}
+                aria-hidden="true"
+                // A space has no glyph to animate; give it width and let it
+                // be. Sized against the tight tracking the navbar uses.
+                className={letter === " " ? "w-[0.26em]" : ""}
+                initial={
+                  reduceMotion ? { opacity: 0 } : { opacity: 0, y: "0.5em" }
+                }
+                animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.5,
+                  delay: (LEAD_MS + i * STAGGER_MS) / 1000,
+                  ease: [0.23, 1, 0.32, 1],
+                }}
+              >
+                {letter === " " ? " " : letter}
+              </motion.span>
+            ))}
           </div>
         </motion.div>
       )}
