@@ -74,6 +74,55 @@ const MOCK_PROJECTS = [
   },
 ];
 
+/*
+  Section snapping. How near you have to come to rest before the page corrects
+  itself, and how far off the stop is close enough to call it arrived.
+  SNAP_RADIUS_PX is the feel dial: larger catches more scrolls, but the further
+  it can pull you the more the correction reads as a jump rather than a settle.
+*/
+const SNAP_RADIUS_PX = 120;
+const SNAP_EPSILON_PX = 2;
+const SCROLL_END_DEBOUNCE_MS = 120;
+const PROGRAMMATIC_SCROLL_MS = 1000;
+
+/*
+  An element's position in document coordinates.
+
+  offsetTop, not getBoundingClientRect: the project frames enter on a
+  `y: 40 → 0` transform, and a rect measured mid-flight bakes that 40px into
+  the answer — which is exactly how a correctly-centred frame can be made to
+  look 40px off. Layout offsets ignore transforms, so they describe where the
+  element is going to come to rest.
+*/
+function documentTop(el: HTMLElement) {
+  let top = 0;
+  for (
+    let node: HTMLElement | null = el;
+    node;
+    node = node.offsetParent as HTMLElement | null
+  ) {
+    top += node.offsetTop;
+  }
+  return top;
+}
+
+// Where a project frame reads centred — the same position the copy rail
+// treats as that frame's turn, since the rail picks whichever frame's centre
+// is nearest the viewport centre.
+const frameCenterScrollTop = (frame: HTMLElement) =>
+  documentTop(frame) - (window.innerHeight - frame.offsetHeight) / 2;
+
+/*
+  Any scroll the page starts on the visitor's behalf — nav clicks, the logo.
+  Snapping stands down while one is in flight so an arrival is never
+  second-guessed, and the claim is dropped the moment a hand touches the page.
+*/
+let programmaticScrollUntil = 0;
+function smoothScrollTo(top: number) {
+  programmaticScrollUntil = Date.now() + PROGRAMMATIC_SCROLL_MS;
+  window.scrollTo({ top, behavior: "smooth" });
+}
+
 export default function Home() {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -133,6 +182,102 @@ export default function Home() {
     };
   }, []);
 
+  /*
+    Section snapping. Four stops: each project frame centred, and the gallery
+    at the point where its wordmark reads centred.
+
+    This is deliberately a correction *after* scrolling has stopped, never
+    during one — nothing here listens to wheel or touch, which is what would
+    otherwise fight trackpad momentum. And it only fires when you have already
+    come to rest within SNAP_RADIUS_PX of a stop, so the page never travels far
+    enough for the correction to read as a jump.
+
+    That last part is why this is JS and not `scroll-snap-type: y proximity`:
+    how near you have to be before proximity fires is the browser's to decide
+    and is not exposed to CSS, so a stop 300px away still drags you 300px. CSS
+    could make that travel animated; it could not make it short.
+  */
+  useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 768px)");
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    // Measured fresh on every settle rather than cached: both positions depend
+    // on viewport height and on layout that is still arriving (fonts, images),
+    // and a settle is far too rare for the reads to cost anything.
+    const stops = () => {
+      const out: number[] = [];
+      document
+        .querySelectorAll<HTMLElement>("#work [data-project-frame]")
+        .forEach((frame) => out.push(frameCenterScrollTop(frame)));
+      const track = document.getElementById("beyond");
+      const beyond = track && getBeyondCenterScrollTop(track);
+      if (beyond != null) out.push(beyond);
+      return out;
+    };
+
+    const settle = () => {
+      if (!desktop.matches || reduced.matches) return;
+      if (Date.now() < programmaticScrollUntil) return;
+
+      const y = window.scrollY;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      let nearest: number | null = null;
+      for (const stop of stops()) {
+        // Clamped, so a stop that would sit past the end of the document does
+        // not read as unreachably far away and quietly disable itself.
+        const target = Math.min(Math.max(stop, 0), max);
+        if (nearest === null || Math.abs(target - y) < Math.abs(nearest - y)) {
+          nearest = target;
+        }
+      }
+      if (nearest === null) return;
+
+      const distance = Math.abs(nearest - y);
+      if (distance <= SNAP_EPSILON_PX || distance > SNAP_RADIUS_PX) return;
+      /*
+        Not smoothScrollTo: this one must not claim the scroll. Our own smooth
+        scroll fires another scroll-end when it lands, and letting that re-entry
+        run is what confirms the stop — it measures the distance again, finds it
+        inside SNAP_EPSILON_PX, and stops. A claim here would instead suppress
+        whatever the visitor did next for a full second.
+      */
+      window.scrollTo({ top: nearest, behavior: "smooth" });
+    };
+
+    /*
+      `scrollend` is the real signal and fires once momentum has fully died —
+      it is what keeps this from firing mid-flick. Safari does not have it yet,
+      so there a debounce on `scroll` says the same thing a beat later.
+    */
+    const hasScrollEnd = "onscrollend" in window;
+    let timer: ReturnType<typeof setTimeout>;
+    const handleScroll = () => {
+      clearTimeout(timer);
+      timer = setTimeout(settle, SCROLL_END_DEBOUNCE_MS);
+    };
+
+    // A hand on the page ends any claim a nav click had on it, so interrupting
+    // a nav scroll leaves you snapping normally rather than inert.
+    const release = () => {
+      programmaticScrollUntil = 0;
+    };
+
+    if (hasScrollEnd) window.addEventListener("scrollend", settle);
+    else window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("wheel", release, { passive: true });
+    window.addEventListener("touchstart", release, { passive: true });
+    window.addEventListener("keydown", release);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("scrollend", settle);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("wheel", release);
+      window.removeEventListener("touchstart", release);
+      window.removeEventListener("keydown", release);
+    };
+  }, []);
+
   return (
     <div
       ref={wrapperRef}
@@ -189,17 +334,14 @@ function Navbar() {
       // own bottom edge, so "the top of #contact minus 100" — everyone
       // else's rule — lands short of the actual bottom of the document and
       // clips it. The scrollable max is exact regardless of section height.
-      window.scrollTo({
-        top: document.documentElement.scrollHeight - window.innerHeight,
-        behavior: "smooth",
-      });
+      smoothScrollTo(document.documentElement.scrollHeight - window.innerHeight);
       return;
     }
     if (id === "beyond") {
       const track = document.getElementById("beyond");
       const top = track && getBeyondCenterScrollTop(track);
       if (top != null) {
-        window.scrollTo({ top, behavior: "smooth" });
+        smoothScrollTo(top);
         return;
       }
     }
@@ -207,34 +349,15 @@ function Navbar() {
       const frame =
         document.querySelector<HTMLElement>("#work [data-project-frame]");
       if (frame) {
-        /*
-          offsetTop, not getBoundingClientRect: the frame enters on a
-          `y: 40 → 0` transform, and a rect measured mid-flight bakes that
-          offset into the target, leaving the photograph 40px high once the
-          animation settles. Layout offsets ignore transforms, so they
-          describe where the frame is going to come to rest.
-        */
-        let top = 0;
-        for (
-          let node: HTMLElement | null = frame;
-          node;
-          node = node.offsetParent as HTMLElement | null
-        ) {
-          top += node.offsetTop;
-        }
-        window.scrollTo({
-          top: top - (window.innerHeight - frame.offsetHeight) / 2,
-          behavior: "smooth",
-        });
+        // Same target the snap effect uses for this frame, from the same
+        // helper — a nav click and a settle must not disagree by a pixel, or
+        // arriving from the nav would be followed by a small correction.
+        smoothScrollTo(frameCenterScrollTop(frame));
         return;
       }
     }
     const el = document.getElementById(id);
-    if (el)
-      window.scrollTo({
-        top: el.getBoundingClientRect().top + window.scrollY - 100,
-        behavior: "smooth",
-      });
+    if (el) smoothScrollTo(el.getBoundingClientRect().top + window.scrollY - 100);
   };
 
   const handleNavClick = (id: string) => {
@@ -270,7 +393,7 @@ function Navbar() {
           <button
             onClick={() => {
               setIsMenuOpen(false);
-              window.scrollTo({ top: 0, behavior: "smooth" });
+              smoothScrollTo(0);
             }}
             className="text-xl font-display font-bold tracking-tighter uppercase relative z-20"
             data-testid="link-home"
