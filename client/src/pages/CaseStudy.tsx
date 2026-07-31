@@ -4,6 +4,7 @@ import { Link, useRoute } from "wouter";
 import { useEffect, useState } from "react";
 
 import CustomCursor from "@/components/CustomCursor";
+import CaseMedia from "@/components/CaseMedia";
 
 /*
   The same phone-in-hand shot the Darmi card on the home page uses, rather
@@ -18,11 +19,11 @@ import CustomCursor from "@/components/CustomCursor";
 import project2Cover from "@assets/Darmi_home-2640x1971.webp";
 import project1Cover from "@assets/Collection_Cover.jpg"; 
 import project3Cover from "@assets/Airbnb_Cover_1774813459702.jpg";
-import collectionCreateGif from "@assets/Collection-create_1774547429730.gif";
-import collectionGif from "@assets/Collection_1774547429731.gif";
+import collectionCreateGif from "@assets/Collection-create_1774547429730.mp4";
+import collectionGif from "@assets/Collection_1774547429731.mp4";
 import creationJpg from "@assets/creation_1774547429731.jpg";
-import airbnbSol1 from "@assets/s-blob-v1-IMAGE-DuANVKTdceA_1774776952323.jpg";
-import airbnbSol2 from "@assets/s-blob-v1-IMAGE-QKfUHNi0kV8_1774776952324.jpg";
+import airbnbSol1 from "@assets/s-blob-v1-IMAGE-DuANVKTdceA_1774776952323.mp4";
+import airbnbSol2 from "@assets/s-blob-v1-IMAGE-QKfUHNi0kV8_1774776952324.mp4";
 import airbnbBefore from "@assets/Before_1774777767520.png";
 import airbnbSearch from "@assets/Search_1774780857668.png";
 import airbnbPdp from "@assets/PDP_1774780857668.png";
@@ -37,10 +38,10 @@ import darmiProcess4 from "@assets/UI-2_1774794598190.png";
 import darmiHome from "@assets/1_1783502380043.png";
 import darmiAdd from "@assets/2_1783502380046.png";
 import darmiInsights from "@assets/3_1783502380047.png";
-import directionImage1 from "@assets/direction-1_1775590476908.jpg";
-import directionImage2 from "@assets/direction-2_1775590476909.jpg";
-import taggingSolution1 from "@assets/s-blob-v1-IMAGE-1zvtK2jYAdI_1775589728784.jpg";
-import taggingSolution2 from "@assets/s-blob-v1-IMAGE-7igf2FntVFI_1775589728784.jpg";
+import directionImage1 from "@assets/direction-1_1775590476908.mp4";
+import directionImage2 from "@assets/direction-2_1775590476909.mp4";
+import taggingSolution1 from "@assets/s-blob-v1-IMAGE-1zvtK2jYAdI_1775589728784.mp4";
+import taggingSolution2 from "@assets/s-blob-v1-IMAGE-7igf2FntVFI_1775589728784.mp4";
 import problemImage1 from "@assets/problem-1_1775593076054.jpg";
 import problemImage2 from "@assets/problem-2_1775593076055.png";
 import taggingCover from "@assets/tagging_cover_1775594426781.jpeg";
@@ -569,7 +570,7 @@ export default function CaseStudy() {
             transition={{ duration: 1.2, delay: 0.2 }}
             className="w-full aspect-[2/1] overflow-hidden rounded-[32px]"
           >
-            <img
+            <CaseMedia
               src={project.image}
               alt={project.title}
               className="w-full h-full object-cover"
@@ -604,7 +605,7 @@ export default function CaseStudy() {
               {section.type === "image" && (
                 <div className="w-full space-y-4 my-8">
                   <div className="w-full overflow-hidden">
-                    <img
+                    <CaseMedia
                       src={section.url}
                       alt={section.caption}
                       className="w-full h-auto object-cover"
@@ -665,7 +666,7 @@ export default function CaseStudy() {
                           </div>
                         </div>
                         <div className={`lg:col-span-7 w-full overflow-hidden ${section.borderless ? '' : 'rounded-[40px] border-2 border-line bg-surface p-2'}`}>
-                          <img
+                          <CaseMedia
                             src={concept.image}
                             alt={concept.title}
                             className={`w-full h-auto object-cover ${section.borderless ? '' : 'rounded-[32px]'} ${concept.imageClassName || ''}`}
@@ -689,7 +690,7 @@ export default function CaseStudy() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-start">
                     {section.images.map((img: string, i: number) => (
                       <div key={i} className="w-full overflow-hidden rounded-[40px] border-2 border-line bg-surface p-2">
-                        <img
+                        <CaseMedia
                           src={img}
                           alt={`Solution image ${i + 1}`}
                           className="w-full h-auto rounded-[32px] object-cover"
@@ -705,7 +706,7 @@ export default function CaseStudy() {
                   <div className="flex flex-col md:flex-row justify-center gap-6 items-start">
                     {section.images.map((img: string, i: number) => (
                       <div key={i} className={`w-full md:w-[calc((100%-3rem)/3)] shrink-0 overflow-hidden rounded-[40px] border-2 border-line bg-surface p-2 flex flex-col justify-start ${section.fixedHeight ? 'aspect-[360/780]' : ''}`}>
-                        <img
+                        <CaseMedia
                           src={img}
                           alt={`Gallery image ${i + 1}`}
                           className={`w-full ${section.fixedHeight ? 'h-full object-cover' : 'h-auto'} rounded-[32px]`}
@@ -730,7 +731,7 @@ export default function CaseStudy() {
                   </div>
                   <div className="w-full md:w-1/2">
                     <div className="overflow-hidden w-full">
-                      <img
+                      <CaseMedia
                         src={section.imageUrl}
                         alt={section.imageCaption}
                         className="w-full h-auto object-cover"
@@ -867,7 +868,7 @@ export default function CaseStudy() {
                         </div>
                         <div className="w-full md:w-[65%] rounded-[24px] overflow-hidden bg-surface">
                           <div className="w-full aspect-[4/3] relative overflow-hidden">
-                            <img 
+                            <CaseMedia 
                               src={step.image} 
                               alt={step.title} 
                               className="absolute inset-0 w-full h-full object-cover"
