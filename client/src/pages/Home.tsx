@@ -2,8 +2,6 @@ import { Link } from "wouter";
 import {
   AnimatePresence,
   motion,
-  useMotionValueEvent,
-  useReducedMotion,
   useScroll,
   useTransform,
 } from "framer-motion";
@@ -75,30 +73,6 @@ const MOCK_PROJECTS = [
     image: project3,
   },
 ];
-
-/*
-  An element's position in document coordinates.
-
-  offsetTop, not getBoundingClientRect: the project frames enter on a
-  `y: 40 → 0` transform, and a rect measured mid-flight bakes that 40px into
-  the answer — which is exactly how a correctly-centred frame can be made to
-  look 40px off. Layout offsets ignore transforms, so they describe where the
-  element is going to come to rest.
-*/
-function documentTop(el: HTMLElement) {
-  let top = 0;
-  for (
-    let node: HTMLElement | null = el;
-    node;
-    node = node.offsetParent as HTMLElement | null
-  ) {
-    top += node.offsetTop;
-  }
-  return top;
-}
-
-const smoothScrollTo = (top: number) =>
-  window.scrollTo({ top, behavior: "smooth" });
 
 export default function Home() {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -194,10 +168,11 @@ function Navbar() {
     except WORK, BEYOND DESIGN and CONTACT, which each need something other
     than their section's top edge to land somewhere worth looking at.
 
-    WORK: on wide screens the projects are a pinned pager, and the pin
-    engages exactly at the pager wrapper's top edge — landing there shows the
-    first project already composed. On narrow screens the pager does not
-    render and the generic rule below is the right one.
+    WORK: the projects section opens with 28vh of padding above its first
+    photograph, so aligning its top edge leaves that photograph — Darmi —
+    sitting near the bottom of the screen with the copy rail still empty.
+    Centring the frame itself puts it where the rail expects it, since the
+    rail picks whichever frame's centre is nearest the viewport centre.
 
     BEYOND DESIGN: the section's top edge is where the pinned track starts,
     before the title has scrolled in at all — the title only enters after
@@ -214,30 +189,52 @@ function Navbar() {
       // own bottom edge, so "the top of #contact minus 100" — everyone
       // else's rule — lands short of the actual bottom of the document and
       // clips it. The scrollable max is exact regardless of section height.
-      smoothScrollTo(document.documentElement.scrollHeight - window.innerHeight);
+      window.scrollTo({
+        top: document.documentElement.scrollHeight - window.innerHeight,
+        behavior: "smooth",
+      });
       return;
     }
     if (id === "beyond") {
       const track = document.getElementById("beyond");
       const top = track && getBeyondCenterScrollTop(track);
       if (top != null) {
-        smoothScrollTo(top);
+        window.scrollTo({ top, behavior: "smooth" });
         return;
       }
     }
     if (id === "work") {
-      const pin = document.querySelector<HTMLElement>(
-        "#work [data-projects-pin]",
-      );
-      // offsetParent is null when the pager is display:none (narrow screens),
-      // where the generic top-minus-100 rule is the right landing anyway.
-      if (pin && pin.offsetParent !== null) {
-        smoothScrollTo(documentTop(pin));
+      const frame =
+        document.querySelector<HTMLElement>("#work [data-project-frame]");
+      if (frame) {
+        /*
+          offsetTop, not getBoundingClientRect: the frame enters on a
+          `y: 40 → 0` transform, and a rect measured mid-flight bakes that
+          offset into the target, leaving the photograph 40px high once the
+          animation settles. Layout offsets ignore transforms, so they
+          describe where the frame is going to come to rest.
+        */
+        let top = 0;
+        for (
+          let node: HTMLElement | null = frame;
+          node;
+          node = node.offsetParent as HTMLElement | null
+        ) {
+          top += node.offsetTop;
+        }
+        window.scrollTo({
+          top: top - (window.innerHeight - frame.offsetHeight) / 2,
+          behavior: "smooth",
+        });
         return;
       }
     }
     const el = document.getElementById(id);
-    if (el) smoothScrollTo(el.getBoundingClientRect().top + window.scrollY - 100);
+    if (el)
+      window.scrollTo({
+        top: el.getBoundingClientRect().top + window.scrollY - 100,
+        behavior: "smooth",
+      });
   };
 
   const handleNavClick = (id: string) => {
@@ -273,7 +270,7 @@ function Navbar() {
           <button
             onClick={() => {
               setIsMenuOpen(false);
-              smoothScrollTo(0);
+              window.scrollTo({ top: 0, behavior: "smooth" });
             }}
             className="text-xl font-display font-bold tracking-tighter uppercase relative z-20"
             data-testid="link-home"
@@ -664,11 +661,13 @@ function ProjectCopy({
   );
 }
 
-/*
-  The narrow-screen card: copy above its image, scrolled naturally. Wide
-  screens use the pinned pager instead, so this never renders there.
-*/
-function ProjectFrame({ project }: { project: Project }) {
+function ProjectFrame({
+  project,
+  onActivate,
+}: {
+  project: Project;
+  onActivate: (el: HTMLDivElement | null) => void;
+}) {
   const frameRef = useRef<HTMLDivElement>(null);
 
   // Scroll-linked parallax: track the frame from the moment it enters the
@@ -690,7 +689,9 @@ function ProjectFrame({ project }: { project: Project }) {
       className="group block cursor-none"
       data-cursor-label="View"
     >
-      <div className="mb-8">
+      {/* Mobile only: the rail cannot be pinned on a narrow screen, so each
+          image carries its own copy above it. */}
+      <div className="md:hidden mb-8">
         <ProjectCopy project={project} inView />
       </div>
 
@@ -701,8 +702,12 @@ function ProjectFrame({ project }: { project: Project }) {
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
       >
         <div
-          ref={frameRef}
-          className="relative w-full aspect-[16/9] overflow-hidden rounded-xl bg-white/5"
+          ref={(el) => {
+            (frameRef as { current: HTMLDivElement | null }).current = el;
+            onActivate(el);
+          }}
+          data-project-frame
+          className="relative w-full aspect-[16/9] overflow-hidden rounded-xl md:rounded-[32px] bg-white/5"
         >
           <motion.img
             src={project.image}
@@ -716,42 +721,41 @@ function ProjectFrame({ project }: { project: Project }) {
   );
 }
 
-/*
-  How much scroll advances one project while the section is pinned. This is
-  the flick dial: the whole of "one page" is this many vh of ordinary
-  scrolling, so smaller means a lighter flick carries you to the next project.
-  It is also the only sense in which paging exists — the scroll itself is
-  never touched.
-*/
-const PROJECT_PAGE_VH = 65;
-
 function ProjectGrid() {
   const visibleProjects = MOCK_PROJECTS.filter((p) => !p.hidden);
   const [activeIndex, setActiveIndex] = useState(0);
-  const pinRef = useRef<HTMLDivElement>(null);
-  const prefersReduced = useReducedMotion();
+  const frames = useRef<(HTMLDivElement | null)[]>([]);
 
   /*
-    Which project the pager is showing. The pinned wrapper is
-    PROJECT_PAGE_VH per project plus one screen for the sticky child, so with
-    this offset pair the progress runs 0→1 across exactly the paged distance;
-    each project owns an equal slice of it. Scroll position is read, never
-    written — all the "snapping" lives in the transition below, which animates
-    the slide column whenever the slice changes. There is no half-scrolled
-    state to stop in, because between two indices nothing is interpolated.
+    Which project the rail is showing. The rail itself never moves, so the only
+    thing scroll decides is whose copy belongs in it: the frame whose centre is
+    closest to the viewport centre wins. Reading positions on scroll (rather
+    than an IntersectionObserver) keeps the answer correct in both directions
+    and while the images are still settling in.
   */
-  const { scrollYProgress } = useScroll({
-    target: pinRef,
-    offset: ["start start", "end end"],
-  });
-  useMotionValueEvent(scrollYProgress, "change", (v) => {
-    setActiveIndex(
-      Math.min(
-        visibleProjects.length - 1,
-        Math.max(0, Math.floor(v * visibleProjects.length)),
-      ),
-    );
-  });
+  useEffect(() => {
+    const handleScroll = () => {
+      const middle = window.innerHeight / 2;
+      let closest = 0;
+      let smallest = Infinity;
+
+      frames.current.forEach((el, i) => {
+        if (!el) return;
+        const box = el.getBoundingClientRect();
+        const distance = Math.abs(box.top + box.height / 2 - middle);
+        if (distance < smallest) {
+          smallest = distance;
+          closest = i;
+        }
+      });
+
+      setActiveIndex(closest);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const activeProject = visibleProjects[activeIndex] ?? visibleProjects[0];
 
@@ -775,44 +779,28 @@ function ProjectGrid() {
       style={{ ["--foreground" as string]: "40 43% 93%" }}
     >
       {/*
-        Narrow screens: the projects flow and scroll naturally, each with its
-        copy above it. The 35vh of tail is the projects half of the handover
-        into the gallery — see the note on the gallery's own narrow-screen
-        lead-in for why the gap is split across the two sections.
+        The 35vh of tail is the projects half of the handover into the
+        gallery — see the note on the gallery's own narrow-screen lead-in for
+        why the gap is split across the two sections rather than paid here in
+        full, and for why it came down from 60. Only the narrow layout needs
+        it: the wide one hands over to a pinned track that opens on an empty
+        screen of its own.
       */}
-      <div className="md:hidden max-w-[1800px] mx-auto px-6 pt-24 pb-[35vh]">
-        <div className="flex flex-col gap-24">
-          {visibleProjects.map((project) => (
-            <ProjectFrame key={project.id} project={project} />
-          ))}
-        </div>
-      </div>
-
-      {/*
-        Wide screens: a pinned pager. The wrapper supplies PROJECT_PAGE_VH of
-        scroll per project; the sticky child holds one composed screen — rail
-        left, image right, centred by layout — and scroll only decides which
-        project it is showing. The scroll itself stays native throughout:
-        after a wheel-hijacking attempt froze the trackpad and two
-        snap-after-the-fact attempts read as jumps, the one approach left is
-        the one the Beyond Design gallery already proves out — pin the
-        section and let scroll drive the content, never the other way round.
-      */}
-      <div
-        ref={pinRef}
-        data-projects-pin
-        className="hidden md:block relative"
-        style={{
-          height: `${visibleProjects.length * PROJECT_PAGE_VH + 100}vh`,
-        }}
-      >
-        <div className="sticky top-0 h-screen flex items-center overflow-hidden">
-          <div className="w-full max-w-[1800px] mx-auto px-10">
-            {/*
-              The rail is capped at the width of the copy itself and
-              everything left over goes to the image column.
-            */}
-            <div className="grid md:grid-cols-[minmax(0,13rem)_minmax(0,1fr)] lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] gap-x-12 items-center">
+      <div className="max-w-[1800px] mx-auto px-6 md:px-10 pt-24 pb-[35vh] md:py-[28vh]">
+        {/*
+          The rail is capped at the width of the copy itself and everything
+          left over goes to the image column. Stacking the year above the title
+          freed the column it used to sit in, so the cap came down from 24rem
+          to 19rem — the copy keeps its measure and the image takes the rest.
+        */}
+        <div className="grid md:grid-cols-[minmax(0,13rem)_minmax(0,1fr)] lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] md:gap-x-12 lg:gap-x-12">
+          {/*
+            The pinned copy rail. Sticky against the whole column, which spans
+            every image, so the text holds one position for the entire section
+            and only its content changes as projects go by.
+          */}
+          <div className="hidden md:block">
+            <div className="sticky top-[36vh]">
               {/*
                 mode="wait" so the outgoing copy clears the top of its masks
                 before the incoming copy rolls up from the bottom — the two
@@ -828,41 +816,19 @@ function ProjectGrid() {
                   <ProjectCopy project={activeProject} />
                 </motion.div>
               </AnimatePresence>
-
-              {/*
-                The pager viewport. All slides live in one column translated
-                by whole slide-heights; the transition is the entire feel of
-                a page turn, and it can never rest between two projects —
-                the column is only ever sent to a whole index.
-              */}
-              <div className="relative w-full aspect-[16/9] overflow-hidden rounded-[32px] bg-white/5">
-                <motion.div
-                  className="absolute inset-0"
-                  animate={{ y: `${-activeIndex * 100}%` }}
-                  transition={
-                    prefersReduced
-                      ? { duration: 0 }
-                      : { duration: 0.7, ease: [0.32, 0.72, 0, 1] }
-                  }
-                >
-                  {visibleProjects.map((project, i) => (
-                    <Link
-                      key={project.id}
-                      href={`/project/${project.id}`}
-                      className="absolute inset-x-0 h-full block cursor-none"
-                      style={{ top: `${i * 100}%` }}
-                      data-cursor-label="View"
-                    >
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        className="w-full h-full object-cover"
-                      />
-                    </Link>
-                  ))}
-                </motion.div>
-              </div>
             </div>
+          </div>
+
+          <div className="flex flex-col gap-24 md:gap-[6vh]">
+            {visibleProjects.map((project, i) => (
+              <ProjectFrame
+                key={project.id}
+                project={project}
+                onActivate={(el) => {
+                  frames.current[i] = el;
+                }}
+              />
+            ))}
           </div>
         </div>
       </div>
