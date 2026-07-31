@@ -86,9 +86,20 @@ const MOCK_PROJECTS = [
   gesture is believed, which is what stops a trackpad's momentum tail from
   reading as a second flick.
 */
-const PAGE_MS = 700;
+const PAGE_MS = 600;
 const PAGE_THRESHOLD_PX = 20;
 const PAGE_QUIET_MS = 120;
+/*
+  How long after a page the wheel stays blocked, on top of the animation
+  itself. This is the one genuinely two-sided dial: a flick's momentum tail
+  outlives the animation, and whatever of it gets through scrolls you off the
+  frame you just landed on. Blocking longer lands more precisely; blocking
+  longer is also, exactly, how long the page ignores a finger that never
+  lifted. It is capped rather than waiting for the wheel to fall silent —
+  a finger resting on a trackpad never falls silent, and waiting for it to is
+  what froze the page.
+*/
+const PAGE_TAIL_MS = 250;
 // How far above the first frame paging takes over, so a flick out of the hero
 // arrives at the photograph instead of half a screen short of it.
 const PAGE_ENTER_RATIO = 0.6;
@@ -235,14 +246,22 @@ export default function Home() {
     let frame = 0;
     /*
       The current gesture: how much wheel it has carried, when it was last fed,
-      and whether it has already spent itself on a page. A gesture ends only
-      after PAGE_QUIET_MS of silence — not when the animation finishes — which
-      is what keeps a trackpad's momentum tail, which can outlast the
-      animation by a good margin, from reading as a second flick.
+      and whether it is still allowed to page. A gesture re-arms only after
+      PAGE_QUIET_MS of silence, which is what keeps a trackpad's momentum tail
+      — which can easily outlast the animation — from reading as a second
+      flick.
+
+      Being un-armed means "do not page", never "do not scroll". Blocking the
+      wheel outside the animation is what froze the trackpad: a finger held on
+      the pad emits events every few ms and so never produces the silence that
+      re-arms, leaving the page unable to move at all for as long as you kept
+      scrolling. The browser gets every event we are not actively animating
+      through.
     */
     let travel = 0;
     let lastWheelAt = 0;
-    let spent = false;
+    let armed = true;
+    let pagedAt = -Infinity;
 
     const pageTo = (target: number) => {
       const from = window.scrollY;
@@ -273,15 +292,24 @@ export default function Home() {
       // one; otherwise this event belongs to the gesture already in progress.
       if (now - lastWheelAt > PAGE_QUIET_MS) {
         travel = 0;
-        spent = false;
+        armed = true;
       }
       lastWheelAt = now;
 
-      if (animating || spent) {
-        // Swallow the remainder of a flick rather than queueing it up.
-        // Without this a momentum tail pages two or three frames at once —
-        // and it only takes the tail outlasting the animation by one event.
+      if (animating) {
+        // The one case that must be blocked: a native scroll landing on top of
+        // the tween would fight it frame for frame. It lasts PAGE_MS, and the
+        // page is visibly moving throughout, so nothing reads as stuck.
         event.preventDefault();
+        return;
+      }
+      if (!armed) {
+        // Already paged and the gesture has not ended, so it will not page
+        // again. For a short window it is also swallowed, which is what stops
+        // the tail of the flick from sliding straight back off the frame.
+        if (now < pagedAt + PAGE_MS + PAGE_TAIL_MS) event.preventDefault();
+        // Past that window the browser gets it, whatever the wheel is still
+        // doing. The block is bounded so a held finger cannot be locked out.
         return;
       }
 
@@ -314,10 +342,15 @@ export default function Home() {
       // the gallery below and the hero above stay ordinary scrolling.
       if (next == null) return;
 
-      event.preventDefault();
       travel += Math.abs(event.deltaY);
+      // Under the threshold this is not yet a flick, so it is left alone and
+      // scrolls normally — cancelling it here would make small movements feel
+      // dead while they waited to add up.
       if (travel < PAGE_THRESHOLD_PX) return;
-      spent = true;
+
+      event.preventDefault();
+      armed = false;
+      pagedAt = now;
       pageTo(next);
     };
 
