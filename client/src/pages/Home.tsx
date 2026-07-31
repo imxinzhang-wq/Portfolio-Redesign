@@ -2,6 +2,8 @@ import { Link } from "wouter";
 import {
   AnimatePresence,
   motion,
+  useMotionValueEvent,
+  useReducedMotion,
   useScroll,
   useTransform,
 } from "framer-motion";
@@ -75,45 +77,6 @@ const MOCK_PROJECTS = [
 ];
 
 /*
-  Paged scrolling through the project frames — the feel dials.
-
-  PAGE_MS / pageEase describe the movement itself; they are the whole of how a
-  page feels, since the page never moves any other way while paging is live.
-  PAGE_THRESHOLD_PX is how much wheel a gesture has to carry before it counts
-  as a flick — low enough that any real one clears it instantly, high enough
-  that a stray pixel of trackpad drift does not page the screen.
-  PAGE_QUIET_MS is how long the wheel has to stay silent before the next
-  gesture is believed, which is what stops a trackpad's momentum tail from
-  reading as a second flick.
-*/
-const PAGE_MS = 600;
-const PAGE_THRESHOLD_PX = 20;
-const PAGE_QUIET_MS = 120;
-/*
-  How long after a page the wheel stays blocked, on top of the animation
-  itself. This is the one genuinely two-sided dial: a flick's momentum tail
-  outlives the animation, and whatever of it gets through scrolls you off the
-  frame you just landed on. Blocking longer lands more precisely; blocking
-  longer is also, exactly, how long the page ignores a finger that never
-  lifted. It is capped rather than waiting for the wheel to fall silent —
-  a finger resting on a trackpad never falls silent, and waiting for it to is
-  what froze the page.
-*/
-const PAGE_TAIL_MS = 250;
-// How far above the first frame paging takes over, so a flick out of the hero
-// arrives at the photograph instead of half a screen short of it.
-const PAGE_ENTER_RATIO = 0.6;
-/*
-  Cubic in-out, eased at *both* ends on purpose. An ease-out leaves at four
-  times the average speed — around 60px in the first frame — and however
-  continuous that is on paper, a movement that starts at full tilt is exactly
-  what reads as being thrown rather than carried. In-out peaks at 1.5× instead,
-  so the page gathers speed, travels, and settles.
-*/
-const pageEase = (t: number) =>
-  t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-
-/*
   An element's position in document coordinates.
 
   offsetTop, not getBoundingClientRect: the project frames enter on a
@@ -134,30 +97,8 @@ function documentTop(el: HTMLElement) {
   return top;
 }
 
-// Where a project frame reads centred — the same position the copy rail
-// treats as that frame's turn, since the rail picks whichever frame's centre
-// is nearest the viewport centre.
-const frameCenterScrollTop = (frame: HTMLElement) =>
-  documentTop(frame) - (window.innerHeight - frame.offsetHeight) / 2;
-
-// Any scroll the page starts on the visitor's behalf — nav clicks, the logo.
-// A wheel gesture overrides one in flight: the pager writes scroll positions
-// directly, and an instant write cancels a smooth scroll already running.
 const smoothScrollTo = (top: number) =>
   window.scrollTo({ top, behavior: "smooth" });
-
-// The scroll positions a flick moves between: each project frame centred, then
-// the gallery where its wordmark reads centred. In document order.
-function pageStops() {
-  const stops: number[] = [];
-  document
-    .querySelectorAll<HTMLElement>("#work [data-project-frame]")
-    .forEach((frame) => stops.push(frameCenterScrollTop(frame)));
-  const track = document.getElementById("beyond");
-  const beyond = track && getBeyondCenterScrollTop(track);
-  if (beyond != null) stops.push(beyond);
-  return stops;
-}
 
 export default function Home() {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -218,151 +159,6 @@ export default function Home() {
     };
   }, []);
 
-  /*
-    Paged scrolling across the projects. One flick advances exactly one
-    photograph; the gallery's centred wordmark is the last stop, and past it
-    the page is handed straight back to the browser.
-
-    Two earlier attempts corrected the scroll *after* it had happened — CSS
-    proximity snapping, then a JS correction on `scrollend` — and both read as
-    a jump, because both are a second movement laid on top of the browser's
-    first one. No radius or easing fixes that; the second movement is the
-    defect.
-
-    So this intercepts the wheel and the browser never scrolls at all: it
-    cancels the event, then animates the whole distance itself. There is only
-    ever one movement, which is what makes it a glide rather than a correction,
-    and it is why one flick can carry a full frame — the distance is ours to
-    choose rather than whatever momentum happened to deliver.
-
-    Only the wheel is taken. Keyboard, scrollbar, nav clicks and touch scroll
-    the page exactly as they always did.
-  */
-  useEffect(() => {
-    const desktop = window.matchMedia("(min-width: 768px)");
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-    let animating = false;
-    let frame = 0;
-    /*
-      The current gesture: how much wheel it has carried, when it was last fed,
-      and whether it is still allowed to page. A gesture re-arms only after
-      PAGE_QUIET_MS of silence, which is what keeps a trackpad's momentum tail
-      — which can easily outlast the animation — from reading as a second
-      flick.
-
-      Being un-armed means "do not page", never "do not scroll". Blocking the
-      wheel outside the animation is what froze the trackpad: a finger held on
-      the pad emits events every few ms and so never produces the silence that
-      re-arms, leaving the page unable to move at all for as long as you kept
-      scrolling. The browser gets every event we are not actively animating
-      through.
-    */
-    let travel = 0;
-    let lastWheelAt = 0;
-    let armed = true;
-    let pagedAt = -Infinity;
-
-    const pageTo = (target: number) => {
-      const from = window.scrollY;
-      const distance = target - from;
-      const started = performance.now();
-      animating = true;
-
-      const step = (now: number) => {
-        const t = Math.min((now - started) / PAGE_MS, 1);
-        // Instant writes, deliberately: a smooth write here would hand the
-        // motion back to the browser, and it would also refuse to be
-        // interrupted by the next frame of this same animation.
-        window.scrollTo(0, from + distance * pageEase(t));
-        if (t < 1) {
-          frame = requestAnimationFrame(step);
-        } else {
-          animating = false;
-        }
-      };
-      frame = requestAnimationFrame(step);
-    };
-
-    const handleWheel = (event: WheelEvent) => {
-      if (!desktop.matches || reduced.matches) return;
-
-      const now = performance.now();
-      // A long enough gap means the last gesture is over and this is a new
-      // one; otherwise this event belongs to the gesture already in progress.
-      if (now - lastWheelAt > PAGE_QUIET_MS) {
-        travel = 0;
-        armed = true;
-      }
-      lastWheelAt = now;
-
-      if (animating) {
-        // The one case that must be blocked: a native scroll landing on top of
-        // the tween would fight it frame for frame. It lasts PAGE_MS, and the
-        // page is visibly moving throughout, so nothing reads as stuck.
-        event.preventDefault();
-        return;
-      }
-      if (!armed) {
-        // Already paged and the gesture has not ended, so it will not page
-        // again. For a short window it is also swallowed, which is what stops
-        // the tail of the flick from sliding straight back off the frame.
-        if (now < pagedAt + PAGE_MS + PAGE_TAIL_MS) event.preventDefault();
-        // Past that window the browser gets it, whatever the wheel is still
-        // doing. The block is bounded so a held finger cannot be locked out.
-        return;
-      }
-
-      /*
-        Measured per gesture rather than cached: both depend on viewport
-        height and on layout that arrives late (fonts, images), and a gesture
-        is far too rare for the reads to cost anything.
-      */
-      const stops = pageStops();
-      if (stops.length === 0) return;
-
-      const y = window.scrollY;
-      const down = event.deltaY > 0;
-      /*
-        The zone. It opens a little above the first photograph so a flick out
-        of the hero lands on it rather than half a screen short, and it closes
-        at the gallery's stop — below that the gallery's pinned track is
-        animating frame by frame against scroll position and must be scrolled
-        continuously, never paged.
-      */
-      const enter = stops[0] - window.innerHeight * PAGE_ENTER_RATIO;
-      if (y < enter || y > stops[stops.length - 1] + 1) return;
-
-      // Nearest stop strictly ahead in the direction of travel. The 1px of
-      // slack keeps a stop we are already sitting on from counting as ahead.
-      const next = down
-        ? stops.find((s) => s > y + 1)
-        : [...stops].reverse().find((s) => s < y - 1);
-      // Nothing ahead this way — hand the wheel back untouched, which is how
-      // the gallery below and the hero above stay ordinary scrolling.
-      if (next == null) return;
-
-      travel += Math.abs(event.deltaY);
-      // Under the threshold this is not yet a flick, so it is left alone and
-      // scrolls normally — cancelling it here would make small movements feel
-      // dead while they waited to add up.
-      if (travel < PAGE_THRESHOLD_PX) return;
-
-      event.preventDefault();
-      armed = false;
-      pagedAt = now;
-      pageTo(next);
-    };
-
-    // Non-passive: the whole design rests on being able to cancel the event
-    // before the browser scrolls.
-    window.addEventListener("wheel", handleWheel, { passive: false });
-    return () => {
-      window.removeEventListener("wheel", handleWheel);
-      cancelAnimationFrame(frame);
-    };
-  }, []);
-
   return (
     <div
       ref={wrapperRef}
@@ -398,11 +194,10 @@ function Navbar() {
     except WORK, BEYOND DESIGN and CONTACT, which each need something other
     than their section's top edge to land somewhere worth looking at.
 
-    WORK: the projects section opens with 28vh of padding above its first
-    photograph, so aligning its top edge leaves that photograph — Darmi —
-    sitting near the bottom of the screen with the copy rail still empty.
-    Centring the frame itself puts it where the rail expects it, since the
-    rail picks whichever frame's centre is nearest the viewport centre.
+    WORK: on wide screens the projects are a pinned pager, and the pin
+    engages exactly at the pager wrapper's top edge — landing there shows the
+    first project already composed. On narrow screens the pager does not
+    render and the generic rule below is the right one.
 
     BEYOND DESIGN: the section's top edge is where the pinned track starts,
     before the title has scrolled in at all — the title only enters after
@@ -431,13 +226,13 @@ function Navbar() {
       }
     }
     if (id === "work") {
-      const frame =
-        document.querySelector<HTMLElement>("#work [data-project-frame]");
-      if (frame) {
-        // Same target the snap effect uses for this frame, from the same
-        // helper — a nav click and a settle must not disagree by a pixel, or
-        // arriving from the nav would be followed by a small correction.
-        smoothScrollTo(frameCenterScrollTop(frame));
+      const pin = document.querySelector<HTMLElement>(
+        "#work [data-projects-pin]",
+      );
+      // offsetParent is null when the pager is display:none (narrow screens),
+      // where the generic top-minus-100 rule is the right landing anyway.
+      if (pin && pin.offsetParent !== null) {
+        smoothScrollTo(documentTop(pin));
         return;
       }
     }
@@ -869,13 +664,11 @@ function ProjectCopy({
   );
 }
 
-function ProjectFrame({
-  project,
-  onActivate,
-}: {
-  project: Project;
-  onActivate: (el: HTMLDivElement | null) => void;
-}) {
+/*
+  The narrow-screen card: copy above its image, scrolled naturally. Wide
+  screens use the pinned pager instead, so this never renders there.
+*/
+function ProjectFrame({ project }: { project: Project }) {
   const frameRef = useRef<HTMLDivElement>(null);
 
   // Scroll-linked parallax: track the frame from the moment it enters the
@@ -897,9 +690,7 @@ function ProjectFrame({
       className="group block cursor-none"
       data-cursor-label="View"
     >
-      {/* Mobile only: the rail cannot be pinned on a narrow screen, so each
-          image carries its own copy above it. */}
-      <div className="md:hidden mb-8">
+      <div className="mb-8">
         <ProjectCopy project={project} inView />
       </div>
 
@@ -910,12 +701,8 @@ function ProjectFrame({
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
       >
         <div
-          ref={(el) => {
-            (frameRef as { current: HTMLDivElement | null }).current = el;
-            onActivate(el);
-          }}
-          data-project-frame
-          className="relative w-full aspect-[16/9] overflow-hidden rounded-xl md:rounded-[32px] bg-white/5"
+          ref={frameRef}
+          className="relative w-full aspect-[16/9] overflow-hidden rounded-xl bg-white/5"
         >
           <motion.img
             src={project.image}
@@ -929,41 +716,42 @@ function ProjectFrame({
   );
 }
 
+/*
+  How much scroll advances one project while the section is pinned. This is
+  the flick dial: the whole of "one page" is this many vh of ordinary
+  scrolling, so smaller means a lighter flick carries you to the next project.
+  It is also the only sense in which paging exists — the scroll itself is
+  never touched.
+*/
+const PROJECT_PAGE_VH = 65;
+
 function ProjectGrid() {
   const visibleProjects = MOCK_PROJECTS.filter((p) => !p.hidden);
   const [activeIndex, setActiveIndex] = useState(0);
-  const frames = useRef<(HTMLDivElement | null)[]>([]);
+  const pinRef = useRef<HTMLDivElement>(null);
+  const prefersReduced = useReducedMotion();
 
   /*
-    Which project the rail is showing. The rail itself never moves, so the only
-    thing scroll decides is whose copy belongs in it: the frame whose centre is
-    closest to the viewport centre wins. Reading positions on scroll (rather
-    than an IntersectionObserver) keeps the answer correct in both directions
-    and while the images are still settling in.
+    Which project the pager is showing. The pinned wrapper is
+    PROJECT_PAGE_VH per project plus one screen for the sticky child, so with
+    this offset pair the progress runs 0→1 across exactly the paged distance;
+    each project owns an equal slice of it. Scroll position is read, never
+    written — all the "snapping" lives in the transition below, which animates
+    the slide column whenever the slice changes. There is no half-scrolled
+    state to stop in, because between two indices nothing is interpolated.
   */
-  useEffect(() => {
-    const handleScroll = () => {
-      const middle = window.innerHeight / 2;
-      let closest = 0;
-      let smallest = Infinity;
-
-      frames.current.forEach((el, i) => {
-        if (!el) return;
-        const box = el.getBoundingClientRect();
-        const distance = Math.abs(box.top + box.height / 2 - middle);
-        if (distance < smallest) {
-          smallest = distance;
-          closest = i;
-        }
-      });
-
-      setActiveIndex(closest);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const { scrollYProgress } = useScroll({
+    target: pinRef,
+    offset: ["start start", "end end"],
+  });
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    setActiveIndex(
+      Math.min(
+        visibleProjects.length - 1,
+        Math.max(0, Math.floor(v * visibleProjects.length)),
+      ),
+    );
+  });
 
   const activeProject = visibleProjects[activeIndex] ?? visibleProjects[0];
 
@@ -987,28 +775,44 @@ function ProjectGrid() {
       style={{ ["--foreground" as string]: "40 43% 93%" }}
     >
       {/*
-        The 35vh of tail is the projects half of the handover into the
-        gallery — see the note on the gallery's own narrow-screen lead-in for
-        why the gap is split across the two sections rather than paid here in
-        full, and for why it came down from 60. Only the narrow layout needs
-        it: the wide one hands over to a pinned track that opens on an empty
-        screen of its own.
+        Narrow screens: the projects flow and scroll naturally, each with its
+        copy above it. The 35vh of tail is the projects half of the handover
+        into the gallery — see the note on the gallery's own narrow-screen
+        lead-in for why the gap is split across the two sections.
       */}
-      <div className="max-w-[1800px] mx-auto px-6 md:px-10 pt-24 pb-[35vh] md:py-[28vh]">
-        {/*
-          The rail is capped at the width of the copy itself and everything
-          left over goes to the image column. Stacking the year above the title
-          freed the column it used to sit in, so the cap came down from 24rem
-          to 19rem — the copy keeps its measure and the image takes the rest.
-        */}
-        <div className="grid md:grid-cols-[minmax(0,13rem)_minmax(0,1fr)] lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] md:gap-x-12 lg:gap-x-12">
-          {/*
-            The pinned copy rail. Sticky against the whole column, which spans
-            every image, so the text holds one position for the entire section
-            and only its content changes as projects go by.
-          */}
-          <div className="hidden md:block">
-            <div className="sticky top-[36vh]">
+      <div className="md:hidden max-w-[1800px] mx-auto px-6 pt-24 pb-[35vh]">
+        <div className="flex flex-col gap-24">
+          {visibleProjects.map((project) => (
+            <ProjectFrame key={project.id} project={project} />
+          ))}
+        </div>
+      </div>
+
+      {/*
+        Wide screens: a pinned pager. The wrapper supplies PROJECT_PAGE_VH of
+        scroll per project; the sticky child holds one composed screen — rail
+        left, image right, centred by layout — and scroll only decides which
+        project it is showing. The scroll itself stays native throughout:
+        after a wheel-hijacking attempt froze the trackpad and two
+        snap-after-the-fact attempts read as jumps, the one approach left is
+        the one the Beyond Design gallery already proves out — pin the
+        section and let scroll drive the content, never the other way round.
+      */}
+      <div
+        ref={pinRef}
+        data-projects-pin
+        className="hidden md:block relative"
+        style={{
+          height: `${visibleProjects.length * PROJECT_PAGE_VH + 100}vh`,
+        }}
+      >
+        <div className="sticky top-0 h-screen flex items-center overflow-hidden">
+          <div className="w-full max-w-[1800px] mx-auto px-10">
+            {/*
+              The rail is capped at the width of the copy itself and
+              everything left over goes to the image column.
+            */}
+            <div className="grid md:grid-cols-[minmax(0,13rem)_minmax(0,1fr)] lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] gap-x-12 items-center">
               {/*
                 mode="wait" so the outgoing copy clears the top of its masks
                 before the incoming copy rolls up from the bottom — the two
@@ -1024,19 +828,41 @@ function ProjectGrid() {
                   <ProjectCopy project={activeProject} />
                 </motion.div>
               </AnimatePresence>
-            </div>
-          </div>
 
-          <div className="flex flex-col gap-24 md:gap-[6vh]">
-            {visibleProjects.map((project, i) => (
-              <ProjectFrame
-                key={project.id}
-                project={project}
-                onActivate={(el) => {
-                  frames.current[i] = el;
-                }}
-              />
-            ))}
+              {/*
+                The pager viewport. All slides live in one column translated
+                by whole slide-heights; the transition is the entire feel of
+                a page turn, and it can never rest between two projects —
+                the column is only ever sent to a whole index.
+              */}
+              <div className="relative w-full aspect-[16/9] overflow-hidden rounded-[32px] bg-white/5">
+                <motion.div
+                  className="absolute inset-0"
+                  animate={{ y: `${-activeIndex * 100}%` }}
+                  transition={
+                    prefersReduced
+                      ? { duration: 0 }
+                      : { duration: 0.7, ease: [0.32, 0.72, 0, 1] }
+                  }
+                >
+                  {visibleProjects.map((project, i) => (
+                    <Link
+                      key={project.id}
+                      href={`/project/${project.id}`}
+                      className="absolute inset-x-0 h-full block cursor-none"
+                      style={{ top: `${i * 100}%` }}
+                      data-cursor-label="View"
+                    >
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </Link>
+                  ))}
+                </motion.div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
