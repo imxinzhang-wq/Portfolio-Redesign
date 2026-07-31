@@ -328,8 +328,6 @@ function Navbar() {
             <button
               onClick={() => handleNavClick("contact")}
               className="uppercase"
-              data-cursor-label="Say hello"
-              data-cursor-label-size="sm"
               data-testid="link-contact"
             >
               Contact
