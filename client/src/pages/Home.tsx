@@ -778,7 +778,14 @@ function ProjectGrid() {
       */
       style={{ ["--foreground" as string]: "40 43% 93%" }}
     >
-      <div className="max-w-[1800px] mx-auto px-6 md:px-10 pt-24 pb-40 md:py-[28vh]">
+      {/*
+        The 60vh of tail is the projects half of the handover into the
+        gallery — see the note on the gallery's own narrow-screen lead-in for
+        why the gap is split across the two sections rather than paid here in
+        full. Only the narrow layout needs it: the wide one hands over to a
+        pinned track that opens on an empty screen of its own.
+      */}
+      <div className="max-w-[1800px] mx-auto px-6 md:px-10 pt-24 pb-[60vh] md:py-[28vh]">
         {/*
           The rail is capped at the width of the copy itself and everything
           left over goes to the image column. Stacking the year above the title

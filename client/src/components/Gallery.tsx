@@ -393,43 +393,71 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
         target on mount, and `still` starts true — leaving the ref off here
         meant it resolved against nothing, fell back to tracking the window,
         and reported 0.42 at the top of the track.
+
+        The 60vh of lead-in is half of a handover; the projects section pays
+        the matching 60vh out of its own bottom. Together they are the 120vh
+        that guarantees the last project frame has left the top of the screen
+        by the time this heading appears at the bottom — clearing the 100vh
+        that takes, with room to spare.
+
+        Split rather than paid entirely by one side because the background
+        swap keys off this section's top edge crossing the middle of the
+        screen. All of it above that edge would flip the page to the light
+        colour with dark-section frames still showing; all of it below would
+        flip it a screen too early, for the same reason. Half and half puts
+        the crossing in the middle of the empty stretch, where there is
+        nothing for it to catch.
       */
       <section
         id="beyond"
         ref={trackRef}
         data-bg-color={bgColor}
-        className="relative px-6 py-24"
+        className="relative px-6 pb-24 pt-[60vh]"
       >
         <h2 className="font-display mb-10 text-center text-[13vw] font-medium leading-[0.9] tracking-[-0.04em] text-foreground">
           {WORDMARK}
         </h2>
         {/*
           A horizontal, page-at-a-time carousel rather than the old vertical
-          stack: each photograph is cropped to a fixed 3:4 card, scroll-snapped
-          to the centre of the screen, with the neighbouring cards' edges left
-          peeking on either side so the sequence reads as swipeable.
+          stack: each photograph is cropped to a fixed 3:4 card and
+          scroll-snapped to the centre of the screen.
 
-          -mx-6 cancels the section's own side padding so the row can bleed
-          to the viewport edge — the peeking slivers need that width, which a
-          contained max-w-md wrapper (used for everything else on this
-          branch) would clip.
+          -mx-6 cancels the section's own side padding and px-6 puts it back
+          on the scroller instead, so a card is exactly as wide as the row it
+          scrolls in — which is the same width the project frames get from
+          the identical gutter one section up. That match is the point: the
+          two sections read as one column rather than two, so the cards are
+          full-bleed-to-the-gutter and nothing peeks at the edges.
 
-          The side padding is 14vw (rather than 0) so the first and last
-          cards can still be scrolled to centre: scroll-snap needs room either
-          side of the ends to align them the same way it aligns the middle
-          ones.
+          Keeping the padding on the scroller (rather than dropping it) is
+          also what lets the first and last cards snap to centre: scroll-snap
+          needs room either side of the ends to align them the way it aligns
+          the middle ones. Here that room is exactly the gutter, so a centred
+          card sits flush with the project frames above.
+
+          The gap is that same gutter for the same reason. At anything
+          smaller the next card clears the right gutter before the viewport
+          edge and leaves a few pixels of itself showing — too thin to read
+          as the deliberate peek it used to be, and easy to mistake for a
+          seam. Matched to the gutter it parks exactly on the edge.
         */}
-        <div className="no-scrollbar -mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-[14vw] pb-2">
+        <div className="no-scrollbar -mx-6 flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 pb-2">
           {PHOTOS.map((photo) => (
             <div
               key={photo.number}
-              className="shrink-0 snap-center overflow-hidden rounded-xl"
-              style={{ width: "72vw", aspectRatio: "3 / 4" }}
+              /*
+                w-full, not a vw figure: a flex item's percentage resolves
+                against the scroller's content box, which is already the
+                viewport minus both gutters. Naming the gutter twice — once
+                here and once in the padding — is how the two drift apart.
+              */
+              className="w-full shrink-0 snap-center overflow-hidden rounded-xl"
+              style={{ aspectRatio: "3 / 4" }}
             >
               <img
                 src={photo.src}
                 srcSet={photo.srcSet}
-                sizes="72vw"
+                sizes="calc(100vw - 3rem)"
                 alt=""
                 aria-hidden
                 loading="lazy"
