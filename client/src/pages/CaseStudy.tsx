@@ -5,7 +5,17 @@ import { useEffect, useState } from "react";
 
 import CustomCursor from "@/components/CustomCursor";
 
-import project2Cover from "@assets/Darmi_Cover.jpg";
+/*
+  The same phone-in-hand shot the Darmi card on the home page uses, rather
+  than a separate cover: the case study opens on the image the visitor just
+  clicked, so the transition lands on something they recognise.
+
+  It is a 4:3 photograph in a 2:1 frame, and the crop is left to object-cover
+  on purpose. Centring takes the band the phone already sits in — the trim
+  comes off the trees above and the grass below — so there is nothing for an
+  object-position to improve on here.
+*/
+import project2Cover from "@assets/Darmi_home.jpg";
 import project1Cover from "@assets/Collection_Cover.jpg"; 
 import project3Cover from "@assets/Airbnb_Cover_1774813459702.jpg";
 import collectionCreateGif from "@assets/Collection-create_1774547429730.gif";
