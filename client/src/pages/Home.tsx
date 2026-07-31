@@ -328,6 +328,8 @@ function Navbar() {
             <button
               onClick={() => handleNavClick("contact")}
               className="uppercase"
+              data-cursor-label="Say hello"
+              data-cursor-label-size="sm"
               data-testid="link-contact"
             >
               Contact
@@ -856,7 +858,8 @@ function Footer() {
         <p className="text-base text-foreground mb-4">Say hello</p>
         <a
           href="mailto:about.dala@gmail.com"
-          className="block font-display font-medium tracking-tight leading-[1.05] text-foreground text-[clamp(2rem,7vw,7rem)]"
+          className="block cursor-none font-display font-medium tracking-tight leading-[1.05] text-foreground text-[clamp(2rem,7vw,7rem)]"
+          data-cursor-label="Say hello"
           data-testid="link-email"
         >
           about.dala@gmail.com
