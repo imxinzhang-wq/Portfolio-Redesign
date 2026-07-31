@@ -75,15 +75,32 @@ const MOCK_PROJECTS = [
 ];
 
 /*
-  Section snapping. How near you have to come to rest before the page corrects
-  itself, and how far off the stop is close enough to call it arrived.
-  SNAP_RADIUS_PX is the feel dial: larger catches more scrolls, but the further
-  it can pull you the more the correction reads as a jump rather than a settle.
+  Paged scrolling through the project frames — the feel dials.
+
+  PAGE_MS / pageEase describe the movement itself; they are the whole of how a
+  page feels, since the page never moves any other way while paging is live.
+  PAGE_THRESHOLD_PX is how much wheel a gesture has to carry before it counts
+  as a flick — low enough that any real one clears it instantly, high enough
+  that a stray pixel of trackpad drift does not page the screen.
+  PAGE_QUIET_MS is how long the wheel has to stay silent before the next
+  gesture is believed, which is what stops a trackpad's momentum tail from
+  reading as a second flick.
 */
-const SNAP_RADIUS_PX = 120;
-const SNAP_EPSILON_PX = 2;
-const SCROLL_END_DEBOUNCE_MS = 120;
-const PROGRAMMATIC_SCROLL_MS = 1000;
+const PAGE_MS = 700;
+const PAGE_THRESHOLD_PX = 20;
+const PAGE_QUIET_MS = 120;
+// How far above the first frame paging takes over, so a flick out of the hero
+// arrives at the photograph instead of half a screen short of it.
+const PAGE_ENTER_RATIO = 0.6;
+/*
+  Cubic in-out, eased at *both* ends on purpose. An ease-out leaves at four
+  times the average speed — around 60px in the first frame — and however
+  continuous that is on paper, a movement that starts at full tilt is exactly
+  what reads as being thrown rather than carried. In-out peaks at 1.5× instead,
+  so the page gathers speed, travels, and settles.
+*/
+const pageEase = (t: number) =>
+  t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
 /*
   An element's position in document coordinates.
@@ -112,15 +129,23 @@ function documentTop(el: HTMLElement) {
 const frameCenterScrollTop = (frame: HTMLElement) =>
   documentTop(frame) - (window.innerHeight - frame.offsetHeight) / 2;
 
-/*
-  Any scroll the page starts on the visitor's behalf — nav clicks, the logo.
-  Snapping stands down while one is in flight so an arrival is never
-  second-guessed, and the claim is dropped the moment a hand touches the page.
-*/
-let programmaticScrollUntil = 0;
-function smoothScrollTo(top: number) {
-  programmaticScrollUntil = Date.now() + PROGRAMMATIC_SCROLL_MS;
+// Any scroll the page starts on the visitor's behalf — nav clicks, the logo.
+// A wheel gesture overrides one in flight: the pager writes scroll positions
+// directly, and an instant write cancels a smooth scroll already running.
+const smoothScrollTo = (top: number) =>
   window.scrollTo({ top, behavior: "smooth" });
+
+// The scroll positions a flick moves between: each project frame centred, then
+// the gallery where its wordmark reads centred. In document order.
+function pageStops() {
+  const stops: number[] = [];
+  document
+    .querySelectorAll<HTMLElement>("#work [data-project-frame]")
+    .forEach((frame) => stops.push(frameCenterScrollTop(frame)));
+  const track = document.getElementById("beyond");
+  const beyond = track && getBeyondCenterScrollTop(track);
+  if (beyond != null) stops.push(beyond);
+  return stops;
 }
 
 export default function Home() {
@@ -183,98 +208,125 @@ export default function Home() {
   }, []);
 
   /*
-    Section snapping. Four stops: each project frame centred, and the gallery
-    at the point where its wordmark reads centred.
+    Paged scrolling across the projects. One flick advances exactly one
+    photograph; the gallery's centred wordmark is the last stop, and past it
+    the page is handed straight back to the browser.
 
-    This is deliberately a correction *after* scrolling has stopped, never
-    during one — nothing here listens to wheel or touch, which is what would
-    otherwise fight trackpad momentum. And it only fires when you have already
-    come to rest within SNAP_RADIUS_PX of a stop, so the page never travels far
-    enough for the correction to read as a jump.
+    Two earlier attempts corrected the scroll *after* it had happened — CSS
+    proximity snapping, then a JS correction on `scrollend` — and both read as
+    a jump, because both are a second movement laid on top of the browser's
+    first one. No radius or easing fixes that; the second movement is the
+    defect.
 
-    That last part is why this is JS and not `scroll-snap-type: y proximity`:
-    how near you have to be before proximity fires is the browser's to decide
-    and is not exposed to CSS, so a stop 300px away still drags you 300px. CSS
-    could make that travel animated; it could not make it short.
+    So this intercepts the wheel and the browser never scrolls at all: it
+    cancels the event, then animates the whole distance itself. There is only
+    ever one movement, which is what makes it a glide rather than a correction,
+    and it is why one flick can carry a full frame — the distance is ours to
+    choose rather than whatever momentum happened to deliver.
+
+    Only the wheel is taken. Keyboard, scrollbar, nav clicks and touch scroll
+    the page exactly as they always did.
   */
   useEffect(() => {
     const desktop = window.matchMedia("(min-width: 768px)");
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-    // Measured fresh on every settle rather than cached: both positions depend
-    // on viewport height and on layout that is still arriving (fonts, images),
-    // and a settle is far too rare for the reads to cost anything.
-    const stops = () => {
-      const out: number[] = [];
-      document
-        .querySelectorAll<HTMLElement>("#work [data-project-frame]")
-        .forEach((frame) => out.push(frameCenterScrollTop(frame)));
-      const track = document.getElementById("beyond");
-      const beyond = track && getBeyondCenterScrollTop(track);
-      if (beyond != null) out.push(beyond);
-      return out;
+    let animating = false;
+    let frame = 0;
+    /*
+      The current gesture: how much wheel it has carried, when it was last fed,
+      and whether it has already spent itself on a page. A gesture ends only
+      after PAGE_QUIET_MS of silence — not when the animation finishes — which
+      is what keeps a trackpad's momentum tail, which can outlast the
+      animation by a good margin, from reading as a second flick.
+    */
+    let travel = 0;
+    let lastWheelAt = 0;
+    let spent = false;
+
+    const pageTo = (target: number) => {
+      const from = window.scrollY;
+      const distance = target - from;
+      const started = performance.now();
+      animating = true;
+
+      const step = (now: number) => {
+        const t = Math.min((now - started) / PAGE_MS, 1);
+        // Instant writes, deliberately: a smooth write here would hand the
+        // motion back to the browser, and it would also refuse to be
+        // interrupted by the next frame of this same animation.
+        window.scrollTo(0, from + distance * pageEase(t));
+        if (t < 1) {
+          frame = requestAnimationFrame(step);
+        } else {
+          animating = false;
+        }
+      };
+      frame = requestAnimationFrame(step);
     };
 
-    const settle = () => {
+    const handleWheel = (event: WheelEvent) => {
       if (!desktop.matches || reduced.matches) return;
-      if (Date.now() < programmaticScrollUntil) return;
+
+      const now = performance.now();
+      // A long enough gap means the last gesture is over and this is a new
+      // one; otherwise this event belongs to the gesture already in progress.
+      if (now - lastWheelAt > PAGE_QUIET_MS) {
+        travel = 0;
+        spent = false;
+      }
+      lastWheelAt = now;
+
+      if (animating || spent) {
+        // Swallow the remainder of a flick rather than queueing it up.
+        // Without this a momentum tail pages two or three frames at once —
+        // and it only takes the tail outlasting the animation by one event.
+        event.preventDefault();
+        return;
+      }
+
+      /*
+        Measured per gesture rather than cached: both depend on viewport
+        height and on layout that arrives late (fonts, images), and a gesture
+        is far too rare for the reads to cost anything.
+      */
+      const stops = pageStops();
+      if (stops.length === 0) return;
 
       const y = window.scrollY;
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      let nearest: number | null = null;
-      for (const stop of stops()) {
-        // Clamped, so a stop that would sit past the end of the document does
-        // not read as unreachably far away and quietly disable itself.
-        const target = Math.min(Math.max(stop, 0), max);
-        if (nearest === null || Math.abs(target - y) < Math.abs(nearest - y)) {
-          nearest = target;
-        }
-      }
-      if (nearest === null) return;
-
-      const distance = Math.abs(nearest - y);
-      if (distance <= SNAP_EPSILON_PX || distance > SNAP_RADIUS_PX) return;
+      const down = event.deltaY > 0;
       /*
-        Not smoothScrollTo: this one must not claim the scroll. Our own smooth
-        scroll fires another scroll-end when it lands, and letting that re-entry
-        run is what confirms the stop — it measures the distance again, finds it
-        inside SNAP_EPSILON_PX, and stops. A claim here would instead suppress
-        whatever the visitor did next for a full second.
+        The zone. It opens a little above the first photograph so a flick out
+        of the hero lands on it rather than half a screen short, and it closes
+        at the gallery's stop — below that the gallery's pinned track is
+        animating frame by frame against scroll position and must be scrolled
+        continuously, never paged.
       */
-      window.scrollTo({ top: nearest, behavior: "smooth" });
+      const enter = stops[0] - window.innerHeight * PAGE_ENTER_RATIO;
+      if (y < enter || y > stops[stops.length - 1] + 1) return;
+
+      // Nearest stop strictly ahead in the direction of travel. The 1px of
+      // slack keeps a stop we are already sitting on from counting as ahead.
+      const next = down
+        ? stops.find((s) => s > y + 1)
+        : [...stops].reverse().find((s) => s < y - 1);
+      // Nothing ahead this way — hand the wheel back untouched, which is how
+      // the gallery below and the hero above stay ordinary scrolling.
+      if (next == null) return;
+
+      event.preventDefault();
+      travel += Math.abs(event.deltaY);
+      if (travel < PAGE_THRESHOLD_PX) return;
+      spent = true;
+      pageTo(next);
     };
 
-    /*
-      `scrollend` is the real signal and fires once momentum has fully died —
-      it is what keeps this from firing mid-flick. Safari does not have it yet,
-      so there a debounce on `scroll` says the same thing a beat later.
-    */
-    const hasScrollEnd = "onscrollend" in window;
-    let timer: ReturnType<typeof setTimeout>;
-    const handleScroll = () => {
-      clearTimeout(timer);
-      timer = setTimeout(settle, SCROLL_END_DEBOUNCE_MS);
-    };
-
-    // A hand on the page ends any claim a nav click had on it, so interrupting
-    // a nav scroll leaves you snapping normally rather than inert.
-    const release = () => {
-      programmaticScrollUntil = 0;
-    };
-
-    if (hasScrollEnd) window.addEventListener("scrollend", settle);
-    else window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("wheel", release, { passive: true });
-    window.addEventListener("touchstart", release, { passive: true });
-    window.addEventListener("keydown", release);
-
+    // Non-passive: the whole design rests on being able to cancel the event
+    // before the browser scrolls.
+    window.addEventListener("wheel", handleWheel, { passive: false });
     return () => {
-      clearTimeout(timer);
-      window.removeEventListener("scrollend", settle);
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("wheel", release);
-      window.removeEventListener("touchstart", release);
-      window.removeEventListener("keydown", release);
+      window.removeEventListener("wheel", handleWheel);
+      cancelAnimationFrame(frame);
     };
   }, []);
 
