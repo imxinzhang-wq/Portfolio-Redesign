@@ -394,11 +394,15 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
         meant it resolved against nothing, fell back to tracking the window,
         and reported 0.42 at the top of the track.
 
-        The 60vh of lead-in is half of a handover; the projects section pays
-        the matching 60vh out of its own bottom. Together they are the 120vh
-        that guarantees the last project frame has left the top of the screen
-        by the time this heading appears at the bottom — clearing the 100vh
-        that takes, with room to spare.
+        The 35vh of lead-in is half of a handover; the projects section pays
+        the matching 35vh out of its own bottom.
+
+        Down from 60vh a side. The pair only has to keep the two sections
+        from reading as one continuous stack — at 120vh total they were
+        separated by a screen and a bit of empty background, which read as
+        the page having ended. 70vh still clears the last project frame off
+        the top before the heading is fully up, because the frame is only
+        about 23vh tall on a phone.
 
         Split rather than paid entirely by one side because the background
         swap keys off this section's top edge crossing the middle of the
@@ -412,9 +416,14 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
         id="beyond"
         ref={trackRef}
         data-bg-color={bgColor}
-        className="relative px-6 pb-24 pt-[60vh]"
+        className="relative px-6 pb-24 pt-[35vh]"
       >
-        <h2 className="font-display mb-10 text-center text-[13vw] font-medium leading-[0.9] tracking-[-0.04em] text-foreground">
+        {/*
+          Left-aligned, so the heading starts on the same gutter line the
+          cards below it snap to and the project frames above it use — one
+          start line down the whole narrow layout.
+        */}
+        <h2 className="font-display mb-10 text-left text-[13vw] font-medium leading-[0.9] tracking-[-0.04em] text-foreground">
           {WORDMARK}
         </h2>
         {/*
@@ -467,18 +476,22 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
               className="shrink-0 snap-start overflow-hidden rounded-xl"
               /*
                 100vw less the three fixed things around it: the 24px gutter
-                on its left, then the 24px gap and the 48px of the next card
+                on its left, then the 24px gap and the 32px of the next card
                 left showing on its right. Subtracting them beats picking a
-                vw figure, because it holds that 48px constant at every phone
+                vw figure, because it holds that 32px constant at every phone
                 width — sized proportionally, the peek would thin out exactly
                 on the narrowest screens, where it is least legible already.
+
+                32px rather than the 48px this started at: the peek only has
+                to read as another photograph waiting, and at 48 it was
+                spending width the card itself wanted.
               */
-              style={{ width: "calc(100vw - 6rem)", aspectRatio: "3 / 4" }}
+              style={{ width: "calc(100vw - 5rem)", aspectRatio: "3 / 4" }}
             >
               <img
                 src={photo.src}
                 srcSet={photo.srcSet}
-                sizes="calc(100vw - 6rem)"
+                sizes="calc(100vw - 5rem)"
                 alt=""
                 aria-hidden
                 loading="lazy"
