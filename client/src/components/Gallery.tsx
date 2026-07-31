@@ -419,45 +419,66 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
         </h2>
         {/*
           A horizontal, page-at-a-time carousel rather than the old vertical
-          stack: each photograph is cropped to a fixed 3:4 card and
-          scroll-snapped to the centre of the screen.
+          stack: each photograph is cropped to a fixed 3:4 card, and the row
+          snaps them to the LEFT gutter rather than to the centre of the
+          screen.
 
-          -mx-6 cancels the section's own side padding and px-6 puts it back
-          on the scroller instead, so a card is exactly as wide as the row it
-          scrolls in — which is the same width the project frames get from
-          the identical gutter one section up. That match is the point: the
-          two sections read as one column rather than two, so the cards are
-          full-bleed-to-the-gutter and nothing peeks at the edges.
+          Left, not centre, is what lets a card be narrower than the project
+          frames above without the first one looking broken. Centring
+          promises a symmetric peek — a slice of the neighbouring photograph
+          in the space either side — and the first card cannot keep that
+          promise, because nothing precedes it: it would come to rest with a
+          photograph on its right and an equally wide patch of nothing on its
+          left. Aligning to the left never makes the promise in the first
+          place. Every card, the first included, sits on one start line with
+          the next one showing past the right edge.
 
-          Keeping the padding on the scroller (rather than dropping it) is
-          also what lets the first and last cards snap to centre: scroll-snap
-          needs room either side of the ends to align them the way it aligns
-          the middle ones. Here that room is exactly the gutter, so a centred
-          card sits flush with the project frames above.
+          That start line is the section's own gutter, so the cards still
+          begin exactly where the project frames do. The shared left edge is
+          what carries the two sections as one column now that the widths
+          differ — which is also why -mx-6 and px-6 stay: the row bleeds full
+          width, and the gutter is put back on the scroller itself.
 
-          The gap is that same gutter for the same reason. At anything
-          smaller the next card clears the right gutter before the viewport
-          edge and leaves a few pixels of itself showing — too thin to read
-          as the deliberate peek it used to be, and easy to mistake for a
-          seam. Matched to the gutter it parks exactly on the edge.
+          scroll-pl-6 is what puts the snap line on that gutter. The snapport
+          is the scroller's padding BOX, so snap-start on its own would align
+          every card to the viewport edge, and only the first would sit at
+          the gutter — on its own padding, which scrolls away with it.
+
+          The gap is the gutter again, and here that is what keeps the peek
+          to one side. A card at rest has the previous one ending exactly on
+          the left edge of the screen — gutter minus gap, which is zero — so
+          it is off screen rather than showing a few pixels of itself. Any
+          narrower a gap and it leaves a sliver too thin to read as a
+          photograph and easy to take for a seam, on the very edge where the
+          eye is least able to resolve it.
+
+          Nothing pads the tail, so the last card cannot reach the start line
+          and comes to rest against the right gutter instead. That is where
+          the one-sided peek flips: the previous card now shows its own 48px
+          on the left, which is what the end of the row should look like.
+          Padding the tail enough to align the last card would buy the
+          consistency with a card-and-a-half of empty background — the very
+          hole this layout is arranged around, moved to the other end.
         */}
-        <div className="no-scrollbar -mx-6 flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 pb-2">
+        <div className="no-scrollbar -mx-6 flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-pl-6 px-6 pb-2">
           {PHOTOS.map((photo) => (
             <div
               key={photo.number}
+              className="shrink-0 snap-start overflow-hidden rounded-xl"
               /*
-                w-full, not a vw figure: a flex item's percentage resolves
-                against the scroller's content box, which is already the
-                viewport minus both gutters. Naming the gutter twice — once
-                here and once in the padding — is how the two drift apart.
+                100vw less the three fixed things around it: the 24px gutter
+                on its left, then the 24px gap and the 48px of the next card
+                left showing on its right. Subtracting them beats picking a
+                vw figure, because it holds that 48px constant at every phone
+                width — sized proportionally, the peek would thin out exactly
+                on the narrowest screens, where it is least legible already.
               */
-              className="w-full shrink-0 snap-center overflow-hidden rounded-xl"
-              style={{ aspectRatio: "3 / 4" }}
+              style={{ width: "calc(100vw - 6rem)", aspectRatio: "3 / 4" }}
             >
               <img
                 src={photo.src}
                 srcSet={photo.srcSet}
-                sizes="calc(100vw - 3rem)"
+                sizes="calc(100vw - 6rem)"
                 alt=""
                 aria-hidden
                 loading="lazy"
