@@ -133,8 +133,10 @@
     The one micro-label style: eyebrows, captions, metric labels, nav links,
     list numbers. Replaces a spread of 9/10/11/12/14px paired with four
     different letter-spacings (0.1em / 0.2em / 0.25em / 0.3em).
-    Pair with `font-mono` or leave it in the sans face; set colour and weight
-    at the call site.
+    Always rides on `font-display` (Outfit) — the site loads Outfit and Manrope
+    and nothing else, so the old `font-mono` pairing fell through to whatever
+    monospace the visitor's OS happened to have. Set colour and weight at the
+    call site.
   */
   .eyebrow {
     font-size: 0.6875rem; /* 11px */

@@ -634,7 +634,7 @@ function ProjectCopy({
 }) {
   return (
     <div className="min-w-0">
-      <p className="mb-4 eyebrow font-mono text-foreground/50 tabular-nums">
+      <p className="mb-4 eyebrow font-display text-foreground/50 tabular-nums">
         <MaskedText text={yearOf(project)} inView={inView} />
       </p>
 

@@ -451,7 +451,7 @@ export default function CaseStudy() {
         <main className="relative z-10 flex-1 flex flex-col">
           <nav className="px-6 md:px-12 py-12 max-w-7xl mx-auto w-full">
             <Link href="/">
-              <a className="inline-flex items-center gap-2 eyebrow font-mono cursor-none">
+              <a className="inline-flex items-center gap-2 eyebrow font-display cursor-none">
                 <ArrowLeft className="w-4 h-4" /> Home
               </a>
             </Link>
@@ -480,7 +480,7 @@ export default function CaseStudy() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter password"
-                  className="w-full px-4 py-3 rounded-xl border border-foreground/10 bg-card/60 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-foreground/5 transition-all text-center font-mono"
+                  className="w-full px-4 py-3 rounded-xl border border-foreground/10 bg-card/60 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-foreground/5 transition-all text-center font-display"
                 />
                 {error && <p className="text-destructive text-sm">{error}</p>}
                 <button
@@ -504,7 +504,7 @@ export default function CaseStudy() {
         {/* Navigation */}
         <nav className="px-6 md:px-12 py-12 max-w-7xl mx-auto flex items-center justify-between">
           <Link href="/">
-            <a className="inline-flex items-center gap-2 eyebrow font-mono cursor-none">
+            <a className="inline-flex items-center gap-2 eyebrow font-display cursor-none">
               <ArrowLeft className="w-4 h-4" /> Home
             </a>
           </Link>
@@ -611,7 +611,7 @@ export default function CaseStudy() {
                     />
                   </div>
                   {section.caption && (
-                    <p className="eyebrow font-mono text-muted-foreground">
+                    <p className="eyebrow font-display text-muted-foreground">
                       {section.caption}
                     </p>
                   )}
@@ -630,7 +630,7 @@ export default function CaseStudy() {
                       <div key={i} className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10 items-start">
                         <div className="lg:col-span-5 space-y-4 pt-1">
                           <div>
-                            <p className="eyebrow font-mono text-muted-foreground mb-2">
+                            <p className="eyebrow font-display text-muted-foreground mb-2">
                               {concept.eyebrow}
                             </p>
                             <h3 className="text-2xl md:text-3xl font-display font-medium tracking-tight text-foreground">
@@ -737,7 +737,7 @@ export default function CaseStudy() {
                       />
                     </div>
                     {section.imageCaption && (
-                      <p className="eyebrow font-mono text-muted-foreground mt-4">
+                      <p className="eyebrow font-display text-muted-foreground mt-4">
                         {section.imageCaption}
                       </p>
                     )}
@@ -764,7 +764,7 @@ export default function CaseStudy() {
                         return (
                           <li key={i} className="flex flex-col md:flex-row md:gap-8 gap-4 items-start border-t border-border/10 pt-4">
                             <div className="flex items-start gap-4 md:w-1/3 shrink-0">
-                              <span className="eyebrow font-mono text-muted-foreground/50 mt-2">
+                              <span className="eyebrow font-display text-muted-foreground/50 mt-2">
                                 {String(i + 1).padStart(2, '0')}
                               </span>
                               <h3 className="text-xl md:text-2xl font-display font-medium tracking-tight text-foreground">
@@ -783,7 +783,7 @@ export default function CaseStudy() {
                       // Normal layout without splitting
                       return (
                         <li key={i} className="flex items-start gap-6 border-t border-border/10 pt-4">
-                          <span className="eyebrow font-mono text-muted-foreground/50 mt-2">
+                          <span className="eyebrow font-display text-muted-foreground/50 mt-2">
                             {String(i + 1).padStart(2, '0')}
                           </span>
                           <span className="text-base md:text-lg lg:text-xl font-normal text-foreground/70 leading-[1.7] md:leading-[1.8] max-w-2xl">
@@ -826,7 +826,7 @@ export default function CaseStudy() {
                           viewport={{ once: true }}
                           transition={{ duration: 0.5, delay: 0.4 + (i * 0.1) }}
                         >
-                          <span className="eyebrow font-mono text-foreground mb-4 font-medium block">
+                          <span className="eyebrow font-display text-foreground mb-4 font-medium block">
                             {metric.label}
                           </span>
                           <p className="text-base text-foreground/70 font-normal leading-[1.7]">
@@ -845,7 +845,7 @@ export default function CaseStudy() {
                     "{section.text}"
                   </p>
                   {section.author && (
-                    <p className="eyebrow font-mono text-muted-foreground mt-6 md:mt-8">
+                    <p className="eyebrow font-display text-muted-foreground mt-6 md:mt-8">
                       — {section.author}
                     </p>
                   )}
@@ -883,7 +883,7 @@ export default function CaseStudy() {
               {section.type === "statement" && (
                 <div className="max-w-4xl py-10 md:py-16">
                   {section.heading && (
-                    <p className="eyebrow font-mono text-muted-foreground mb-6 md:mb-8">
+                    <p className="eyebrow font-display text-muted-foreground mb-6 md:mb-8">
                       {section.heading}
                     </p>
                   )}
@@ -896,7 +896,7 @@ export default function CaseStudy() {
               {section.type === "links" && (
                 <div className="w-full pt-8 pb-32 border-t border-border/10 mt-12 mb-16">
                   {section.heading && (
-                    <h2 className="eyebrow font-mono text-muted-foreground mb-6">
+                    <h2 className="eyebrow font-display text-muted-foreground mb-6">
                       {section.heading}
                     </h2>
                   )}
@@ -930,7 +930,7 @@ export default function CaseStudy() {
             {nextProject && (
               <Link href={`/project/${nextProjectId}`}>
                 <a className="group flex flex-col space-y-2 cursor-none">
-                  <span className="eyebrow font-mono text-muted-foreground">
+                  <span className="eyebrow font-display text-muted-foreground">
                     Up Next
                   </span>
                   <span className="text-3xl font-display font-medium">
@@ -941,7 +941,7 @@ export default function CaseStudy() {
             )}
             <button 
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="eyebrow font-mono font-bold flex items-center gap-2"
+              className="eyebrow font-display font-bold flex items-center gap-2"
             >
               Back to Top <ArrowUpRight className="w-4 h-4" />
             </button>
