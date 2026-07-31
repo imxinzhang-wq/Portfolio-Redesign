@@ -8,31 +8,29 @@ import { useEffect, useState } from "react";
 */
 import header1 from "@assets/header1.jpg";
 import header2 from "@assets/header2.JPG";
-import project1 from "@assets/collection.jpg";
-import project2 from "@assets/Darmi_home.jpg";
+import project1 from "@assets/collection-2640x1950.webp";
+import project2 from "@assets/Darmi_home-2640x1971.webp";
 import project3 from "@assets/Airbnb_Cover_1774813459702.jpg";
 
 /*
-  What the loader actually waits for: the two photographs set into the hero
-  headline. They are the only images on the first screen, and at ~280kB each
-  they resolve inside the floor below on anything but a bad connection.
+  What the loader waits for: the two photographs set into the hero headline,
+  and the covers of the first two projects — the images a visitor meets in
+  their first screen and their first scroll. About 2MB together.
 
-  The project covers are deliberately NOT here. Darmi_home.jpg is 2.4MB and
-  collection.jpg is 3.7MB — unlike the gallery's film photographs, which are
-  served as ~150kB webp variants, those two ship at full size. Blocking on
-  the first of them measured ~4.8s on a 10Mbps line, i.e. the ceiling, every
-  time. Compress them and they can move up here.
+  This list is only affordable because the covers are WebP now. As full-size
+  JPEGs (3.6MB and 2.4MB) blocking on even the first of them measured ~4.8s
+  on a 10Mbps line — the ceiling below, every time. See
+  scripts/covers-to-webp.mjs.
 */
-const BLOCKING_ASSETS = [header1, header2];
+const BLOCKING_ASSETS = [header1, header2, project2, project1];
 
 /*
-  Fetched but never waited on, and only once the blocking set is done —
-  starting everything at once just makes the hero pair share the pipe with
-  ~6MB it doesn't need to wait for. Ordered by how soon the visitor scrolls
-  past them, so the first project card is usually warm by the time it
-  appears.
+  Fetched but never waited on, and only once the blocking set is done, so it
+  is not competing for the pipe with anything the loader is holding the door
+  for. The last cover is several screens down; it has until the visitor gets
+  there.
 */
-const WARM_ASSETS = [project2, project1, project3];
+const WARM_ASSETS = [project3];
 
 const WORDMARK = "Xin Zhang";
 

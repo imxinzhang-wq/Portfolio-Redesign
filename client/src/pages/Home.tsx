@@ -10,8 +10,8 @@ import { Fragment, useRef, useEffect, useState } from "react";
 import Gallery, { getBeyondCenterScrollTop } from "@/components/Gallery";
 import CustomCursor from "@/components/CustomCursor";
 
-import project1 from "@assets/collection.jpg";
-import project2 from "@assets/Darmi_home.jpg";
+import project1 from "@assets/collection-2640x1950.webp";
+import project2 from "@assets/Darmi_home-2640x1971.webp";
 import project3 from "@assets/Airbnb_Cover_1774813459702.jpg";
 import project4 from "@assets/tagging_cover_1775594426781.jpeg";
 import header1 from "@assets/header1.jpg";
