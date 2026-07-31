@@ -209,10 +209,16 @@ const ENTRY_FRAC = ENTRY_VH / PIN_VH;
 const SHRINK = [SLOW_START_VH / PIN_VH, SLOW_END_VH / PIN_VH] as const;
 
 /*
-  Where the nav's "Beyond Design" link should land: the scroll position at
-  which the title is centred on screen, full-size, before the crawl starts
-  shrinking it. Landing at the track's start instead — the obvious target —
-  shows nothing at all, since the title only enters after TEXT_LEAD_VH.
+  Where this section rests: the scroll position at which the title is centred
+  on screen, full-size, before the crawl starts shrinking it. Landing at the
+  track's start instead — the obvious target — shows nothing at all, since the
+  title only enters after TEXT_LEAD_VH.
+
+  Split in two because the same position feeds two consumers that need it in
+  different frames of reference: the nav wants an absolute document position to
+  scroll to, and the snap marker below wants an offset from the track's own top
+  to sit at. Deriving both from one function keeps them from drifting apart —
+  if they disagreed, every nav click would end in a snap-back tug.
 
   Runs the Wordmark's own y formula backwards. `offsetHeight` (not a client
   rect) because it ignores the live `scale` transform, so it reads as the
@@ -220,7 +226,7 @@ const SHRINK = [SLOW_START_VH / PIN_VH, SLOW_END_VH / PIN_VH] as const;
   the same height the title actually has at the scale-1 target this solves
   for.
 */
-export function getBeyondCenterScrollTop(trackEl: HTMLElement): number | null {
+export function beyondCenterOffsetPx(trackEl: HTMLElement): number | null {
   const wordmark = trackEl.querySelector<HTMLElement>("[data-wordmark]");
   if (!wordmark) return null;
 
@@ -230,8 +236,13 @@ export function getBeyondCenterScrollTop(trackEl: HTMLElement): number | null {
     (WORDMARK_TOP_VH + TEXT_OFFSET_VH - desiredTopVh) / TEXT_SPEED;
   const realScrollVh = Math.max(0, Math.min(PIN_VH, unEased(targetEased)));
 
-  const trackTop = window.scrollY + trackEl.getBoundingClientRect().top;
-  return trackTop + (realScrollVh * vh) / 100;
+  return (realScrollVh * vh) / 100;
+}
+
+export function getBeyondCenterScrollTop(trackEl: HTMLElement): number | null {
+  const offset = beyondCenterOffsetPx(trackEl);
+  if (offset == null) return null;
+  return window.scrollY + trackEl.getBoundingClientRect().top + offset;
 }
 
 function Wordmark({ progress }: { progress: ReturnType<typeof useScroll>["scrollYProgress"] }) {
@@ -380,6 +391,47 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
   const { scrollYProgress } = useScroll({ target: trackRef });
 
   /*
+    Where the page's snap marker sits inside this track — see the render below.
+    Measured rather than declared, because the position depends on the viewport
+    height AND, through the wordmark's clamp()ed font size, on its width.
+
+    Keyed on `still` because that starts true: the desktop branch, and with it
+    the wordmark this measures, does not exist on the first paint. Re-measured
+    on resize, and by a ResizeObserver on the wordmark itself — a webfont
+    arriving late changes its height with no resize event at all, and a stale
+    number here would put the section's resting place in the wrong spot.
+  */
+  const [snapTop, setSnapTop] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (still) {
+      setSnapTop(null);
+      return;
+    }
+    const track = trackRef.current;
+    if (!track) return;
+
+    let frame = 0;
+    const measure = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => setSnapTop(beyondCenterOffsetPx(track)));
+    };
+    measure();
+
+    const wordmark = track.querySelector<HTMLElement>("[data-wordmark]");
+    const observer = wordmark ? new ResizeObserver(measure) : null;
+    observer?.observe(wordmark!);
+    window.addEventListener("resize", measure);
+    document.fonts?.ready.then(measure);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      observer?.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [still]);
+
+  /*
     The narrow layout drops the pin and the parallax entirely: absolute
     centring and a scroll-driven slide both assume a wide, mouse-driven
     screen, and neither has anything to hold onto on a phone. A static
@@ -517,6 +569,29 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
       className="relative"
       style={{ height: `${TOTAL_VH}vh` }}
     >
+      {/*
+        This section's snap point, as a zero-height marker rather than an
+        alignment on anything real. The section's own top is 139vh before the
+        first photograph settles and before the title has even entered, so it
+        is the one place on the page where the rest position is nowhere near
+        the element's edges — it is wherever the title reads centred.
+
+        A sibling of the sticky stage, never inside it. A sticky element's snap
+        area is its shifted box, so aligning to one gives a snap position that
+        moves as you scroll toward it.
+
+        Nothing renders until the offset is measured, so there is never a frame
+        in which the marker sits at the top of the track and pulls the reader
+        somewhere the section does not actually rest.
+      */}
+      {snapTop != null && (
+        <div
+          aria-hidden
+          data-beyond-snap
+          className="pointer-events-none absolute inset-x-0 h-0 snap-start"
+          style={{ top: snapTop }}
+        />
+      )}
       <div className="sticky top-0 h-screen overflow-hidden">
         <Wordmark progress={scrollYProgress} />
         <Frame progress={scrollYProgress} />

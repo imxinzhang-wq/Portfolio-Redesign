@@ -119,6 +119,38 @@
     background-color: hsl(var(--background));
     overscroll-behavior: none;
   }
+  /*
+    Section snapping for the home page. `proximity`, never `mandatory`: a flick
+    that ends near a rest position lands on it, while deliberate slow scrolling
+    is left where the reader put it. Mandatory would also make the gallery's
+    ~399vh of pinned animation impossible to stop inside.
+
+    On <html> because scroll-snap-type does not propagate from body to the
+    viewport the way overflow does — the root is the only valid target for the
+    document scroller. Gated on the attribute rather than applied outright
+    because the app is hash-routed in a single document: a case study shares
+    this <html> and has no snap points of its own. Home sets and clears the
+    attribute, the same way it owns the background colour override.
+
+    Above 768px only, which is the exact inverse of Gallery's own
+    `(max-width: 767px)` check — below it the gallery is a static horizontal
+    carousel with no wordmark, so the fourth snap point does not exist and a
+    vertical snap container would be nesting around a horizontal one. Keeping
+    the two conditions as exact inverses is what makes that impossible rather
+    than merely unlikely.
+
+    Off under reduced motion: snapping is a scroll correction the reader did
+    not ask for, and it is the same flag Gallery uses to drop the pin entirely.
+
+    Deliberately NOT here: scroll-padding-top. It shrinks the snapport, which
+    would shift every centre-aligned project frame down by half the padding and
+    quietly break the agreement between the snap positions and the nav targets.
+  */
+  @media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+    html[data-snap="on"] {
+      scroll-snap-type: y proximity;
+    }
+  }
   body {
     @apply font-sans antialiased bg-background text-foreground selection:bg-accent selection:text-accent-foreground;
     overscroll-behavior: none;

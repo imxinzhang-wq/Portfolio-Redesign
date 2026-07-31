@@ -121,6 +121,15 @@ export default function Home() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
+
+    /*
+      Arms the section snapping in index.css. It hangs off an attribute rather
+      than applying to <html> outright because the app is hash-routed in one
+      document — a case study shares this <html> and has none of the snap
+      points, so it has no business inheriting a snap container.
+    */
+    document.documentElement.dataset.snap = "on";
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
       /*
@@ -130,6 +139,7 @@ export default function Home() {
         the gallery's blue-grey, most visibly.
       */
       document.documentElement.style.backgroundColor = "";
+      delete document.documentElement.dataset.snap;
     };
   }, []);
 
@@ -474,7 +484,7 @@ function Hero() {
   return (
     <section
       data-bg-color={SECTION_BG.canvas}
-      className="min-h-[115vh] px-6 md:px-12 lg:px-16"
+      className="min-h-[115vh] px-6 md:px-12 lg:px-16 md:snap-start"
     >
       {/*
         Centring happens inside a viewport-tall box, not against the section.
@@ -707,7 +717,13 @@ function ProjectFrame({
             onActivate(el);
           }}
           data-project-frame
-          className="relative w-full aspect-[16/9] overflow-hidden rounded-xl md:rounded-[32px] bg-white/5"
+          /*
+            snap-center, not start: the copy rail picks whichever frame's
+            CENTRE is nearest the viewport centre, and the nav's WORK target
+            centres the frame too. Aligning tops instead would rest a frame
+            where the rail still believes the previous project is active.
+          */
+          className="relative w-full aspect-[16/9] overflow-hidden rounded-xl md:rounded-[32px] bg-white/5 md:snap-center"
         >
           <motion.img
             src={project.image}
@@ -850,7 +866,7 @@ function Footer() {
     <footer
       id="contact"
       data-bg-color={SECTION_BG.dust}
-      className="min-h-screen flex flex-col justify-end px-6 md:px-12 pb-10"
+      className="min-h-screen flex flex-col justify-end px-6 md:px-12 pb-10 md:snap-end"
     >
       <div className="mb-[25vh]">
         <p className="text-base text-foreground mb-4">Say hello</p>
