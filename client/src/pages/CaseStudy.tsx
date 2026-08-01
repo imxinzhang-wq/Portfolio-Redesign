@@ -23,7 +23,7 @@ import collectionCreateGif from "@assets/Collection-create_1774547429730.mp4";
 import collectionGif from "@assets/Collection_1774547429731.mp4";
 import creationJpg from "@assets/creation_1774547429731.jpg";
 import airbnbSol1 from "@assets/s-blob-v1-IMAGE-DuANVKTdceA_1774776952323.mp4";
-import airbnbSol2 from "@assets/s-blob-v1-IMAGE-QKfUHNi0kV8_1774776952324.mp4";
+import airbnbVoteClip from "@assets/Vote.mp4";
 import airbnbBefore from "@assets/Before_1774777767520.png";
 import airbnbSearch from "@assets/Search_1774780857668.png";
 import airbnbPdp from "@assets/PDP_1774780857668.png";
@@ -393,7 +393,7 @@ const PROJECTS_DATA: Record<string, any> = {
       },
       {
         type: "gallery",
-        images: [airbnbSol2, airbnbGroup, airbnbVote]
+        images: [airbnbVoteClip, airbnbGroup, airbnbVote]
       },
       {
         type: "metrics",
