@@ -36,7 +36,6 @@ const MASTERS = new URL("../attached_assets/masters/", import.meta.url).pathname
 */
 const GIFS = [
   "collections-create.gif",
-  "collections-viewer.gif",
   "tagging-direction-1.gif",
   "tagging-direction-2.gif",
   "airbnb-solution.gif",
@@ -51,8 +50,24 @@ const GIFS = [
   the noise moves every frame, which defeats the interframe compression the
   encoder depends on. The Airbnb voting clip arrives at 888x1920 and 40fps
   against the 574x1241 and 20fps of the GIF it replaces.
+
+  These are re-encoded because they come off a recorder at a rate meant for
+  editing, not for the web — the Airbnb clip arrived at 3.3Mbps and leaves at
+  well under a fifth of that.
 */
 const VIDEOS = ["airbnb-vote.mp4"];
+
+/*
+  Video sources that were already exported for the web. The Collections
+  viewer clip arrives as h264 at 748kbps, which is the rate this script would
+  be encoding TO — running it through libx264 again saved 58kB and spent a
+  second generation of lossy compression to do it, so the video stream is
+  copied through untouched and only the WebM sibling is built.
+
+  The test for this list is the source's bitrate, not its container: an mp4
+  is not automatically web-ready, it just often is.
+*/
+const REMUX = ["collections-viewer.mp4"];
 
 /*
   h264 needs even dimensions for yuv420p, and several sources are odd
@@ -63,21 +78,22 @@ const EVEN = "crop=trunc(iw/2)*2:trunc(ih/2)*2";
 
 const mb = (bytes) => `${(bytes / 1048576).toFixed(2)}MB`;
 
-async function encode(input, base) {
+async function encode(input, base, { remux = false } = {}) {
   const mp4 = path.join(ASSETS, `${base}.mp4`);
   const webm = path.join(ASSETS, `${base}.webm`);
 
   await run(ffmpeg, [
     "-y", "-i", input,
-    "-vf", EVEN,
-    "-c:v", "libx264",
-    "-crf", "20",
-    "-preset", "slow",
-    "-pix_fmt", "yuv420p",
+    ...(remux
+      // Lossless: the video stream is copied through frame for frame. Still
+      // worth running rather than copying the file, for the two flags below.
+      ? ["-c:v", "copy"]
+      : ["-vf", EVEN, "-c:v", "libx264", "-crf", "20", "-preset", "slow",
+         "-pix_fmt", "yuv420p"]),
     // Lets playback start before the whole file has arrived.
     "-movflags", "+faststart",
     // These autoplay muted and loop, so an audio track is dead weight — and
-    // the Vote recording carries a silent one straight off the recorder.
+    // the recordings carry a silent one straight off the recorder.
     "-an",
     mp4,
   ]);
@@ -104,4 +120,7 @@ async function encode(input, base) {
 
 for (const file of [...GIFS, ...VIDEOS]) {
   await encode(path.join(MASTERS, file), path.parse(file).name);
+}
+for (const file of REMUX) {
+  await encode(path.join(MASTERS, file), path.parse(file).name, { remux: true });
 }
