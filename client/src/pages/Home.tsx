@@ -10,14 +10,14 @@ import { Fragment, useRef, useEffect, useState } from "react";
 import Gallery, { getBeyondCenterScrollTop } from "@/components/Gallery";
 import CustomCursor from "@/components/CustomCursor";
 
-import project1 from "@assets/collection-2640x1950.webp";
-import project2 from "@assets/Darmi_home-2640x1971.webp";
-import project3 from "@assets/Airbnb_Cover_1774813459702.jpg";
-import project4 from "@assets/tagging_cover_1775594426781.jpeg";
-import header1 from "@assets/header1.jpg";
-import header2 from "@assets/header2.JPG";
-import header3 from "@assets/header3.mp4";
-import header3Webm from "@assets/header3.webm";
+import collectionsCover from "@assets/collections-cover.webp";
+import darmiCover from "@assets/darmi-cover.webp";
+import airbnbCover from "@assets/airbnb-cover.jpg";
+import taggingCover from "@assets/tagging-cover.jpg";
+import heroZurich from "@assets/hero-zurich.jpg";
+import heroSanFrancisco from "@assets/hero-san-francisco.jpg";
+import heroHello from "@assets/hero-hello.mp4";
+import heroHelloWebm from "@assets/hero-hello.webm";
 
 /*
   Section background colours. These drive the scroll-linked background swap and
@@ -45,7 +45,7 @@ const MOCK_PROJECTS = [
     category: "2026 • Personal Project",
     description:
       "An exploration of Vibe Coding and end-to-end AI workflows—now live on the App Store.",
-    image: project2,
+    image: darmiCover,
   },
   {
     id: 1,
@@ -53,7 +53,7 @@ const MOCK_PROJECTS = [
     category: "2024 • YouTube",
     description:
       "Architected Shopping Collections to replace links with a native curation format, driving creator branding and engagement.",
-    image: project1,
+    image: collectionsCover,
   },
   {
     id: 4,
@@ -61,7 +61,7 @@ const MOCK_PROJECTS = [
     category: "2024 • YouTube",
     description:
       "How we drove significant GMV growth by aligning monetization tools with creator muscle memory.",
-    image: project4,
+    image: taggingCover,
     hidden: true,
   },
   {
@@ -70,7 +70,7 @@ const MOCK_PROJECTS = [
     category: "2018 • Airbnb",
     description:
       "Co-led the design and launch of Airbnb's first WeChat Mini-app and shaping its future vision through data-driven sprints",
-    image: project3,
+    image: airbnbCover,
   },
 ];
 
@@ -493,20 +493,20 @@ function Hero() {
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-medium tracking-tight leading-[1.2]">
               I'm Xin
               <InlineHeaderVideo
-                src={header3}
-                webmSrc={header3Webm}
+                src={heroHello}
+                webmSrc={heroHelloWebm}
                 label="Hello"
               />
               , a Product
               Designer at
               <InlineHeaderImage
-                src={header1}
+                src={heroZurich}
                 alt="The Matterhorn, seen from Zermatt"
                 label="Zurich"
               />
               YouTube. Previously a founding designer at
               <InlineHeaderImage
-                src={header2}
+                src={heroSanFrancisco}
                 alt="The Embarcadero, San Francisco"
                 label="San Francisco"
               />

@@ -13,24 +13,25 @@
   4-5x on photographic content at a quality nobody can pick out in a
   side-by-side.
 
-  Output is named `<base>-WxH.webp`, matching the film variants, so the
-  dimensions stay readable from the filename. The JPEG masters stay in the
-  repository; once the imports point at the WebP nothing builds them.
+  Output keeps the master's name with a `.webp` extension. No dimensions in
+  it, unlike the film variants — those encode WxH because srcSet needs the
+  width descriptors to pick between three sizes, and a cover has only one.
 
   Run: node scripts/covers-to-webp.mjs
 */
-import { readdir, stat } from "node:fs/promises";
+import { stat } from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
 
 const ASSETS = new URL("../attached_assets/", import.meta.url).pathname;
+const MASTERS = new URL("../attached_assets/masters/", import.meta.url).pathname;
 
 /*
-  Only the covers that are actually large. Airbnb_Cover and tagging_cover are
-  1456x720 and ~150kB already — re-encoding them saves tens of kilobytes and
-  costs a filename change, so they are left as they are.
+  Only the covers that are actually large. The Airbnb and tagging covers are
+  1456x720 and ~150kB already — re-encoding them saves tens of kilobytes, so
+  they ship as they came.
 */
-const COVERS = ["collection.jpg", "Darmi_home.jpg"];
+const COVERS = ["collections-cover.jpg", "darmi-cover.jpg"];
 
 /*
   Set high on purpose. 82 is where the size curve wants to sit and it looks
@@ -45,11 +46,11 @@ const QUALITY = 92;
 const kb = (bytes) => `${(bytes / 1024).toFixed(0)}kB`;
 
 for (const file of COVERS) {
-  const input = path.join(ASSETS, file);
+  const input = path.join(MASTERS, file);
   const image = sharp(input);
   const { width, height } = await image.metadata();
   const base = path.parse(file).name;
-  const output = path.join(ASSETS, `${base}-${width}x${height}.webp`);
+  const output = path.join(ASSETS, `${base}.webp`);
 
   await image.webp({ quality: QUALITY, effort: 6 }).toFile(output);
 
@@ -59,11 +60,4 @@ for (const file of COVERS) {
     `${file} ${width}x${height}  ${kb(before)} -> ${kb(after)}  ` +
       `(${(before / after).toFixed(1)}x)  ${path.basename(output)}`,
   );
-}
-
-// Leave a reminder of what is now unreferenced but still on disk.
-const remaining = await readdir(ASSETS);
-const masters = COVERS.filter((f) => remaining.includes(f));
-if (masters.length) {
-  console.log(`\nMasters kept in attached_assets/: ${masters.join(", ")}`);
 }

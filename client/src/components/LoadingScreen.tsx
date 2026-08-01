@@ -6,11 +6,11 @@ import { useEffect, useState } from "react";
   job, and splitting it across two files would leave the next person editing
   the hero with no reason to think the loader cared.
 */
-import header1 from "@assets/header1.jpg";
-import header2 from "@assets/header2.JPG";
-import project1 from "@assets/collection-2640x1950.webp";
-import project2 from "@assets/Darmi_home-2640x1971.webp";
-import project3 from "@assets/Airbnb_Cover_1774813459702.jpg";
+import heroZurich from "@assets/hero-zurich.jpg";
+import heroSanFrancisco from "@assets/hero-san-francisco.jpg";
+import collectionsCover from "@assets/collections-cover.webp";
+import darmiCover from "@assets/darmi-cover.webp";
+import airbnbCover from "@assets/airbnb-cover.jpg";
 
 /*
   What the loader waits for: the two photographs set into the hero headline,
@@ -22,7 +22,7 @@ import project3 from "@assets/Airbnb_Cover_1774813459702.jpg";
   on a 10Mbps line — the ceiling below, every time. See
   scripts/covers-to-webp.mjs.
 */
-const BLOCKING_ASSETS = [header1, header2, project2, project1];
+const BLOCKING_ASSETS = [heroZurich, heroSanFrancisco, darmiCover, collectionsCover];
 
 /*
   Fetched but never waited on, and only once the blocking set is done, so it
@@ -30,7 +30,7 @@ const BLOCKING_ASSETS = [header1, header2, project2, project1];
   for. The last cover is several screens down; it has until the visitor gets
   there.
 */
-const WARM_ASSETS = [project3];
+const WARM_ASSETS = [airbnbCover];
 
 const WORDMARK = "Xin Zhang";
 

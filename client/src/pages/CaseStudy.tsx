@@ -16,35 +16,35 @@ import CaseMedia from "@/components/CaseMedia";
   comes off the trees above and the grass below — so there is nothing for an
   object-position to improve on here.
 */
-import project2Cover from "@assets/Darmi_home-2640x1971.webp";
-import project1Cover from "@assets/Collection_Cover.jpg"; 
-import project3Cover from "@assets/Airbnb_Cover_1774813459702.jpg";
-import collectionCreateGif from "@assets/Collection-create_1774547429730.mp4";
-import collectionGif from "@assets/Collection_1774547429731.mp4";
-import creationJpg from "@assets/creation_1774547429731.jpg";
-import airbnbSol1 from "@assets/s-blob-v1-IMAGE-DuANVKTdceA_1774776952323.mp4";
-import airbnbVoteClip from "@assets/Vote.mp4";
-import airbnbBefore from "@assets/Before_1774777767520.png";
-import airbnbSearch from "@assets/Search_1774780857668.png";
-import airbnbPdp from "@assets/PDP_1774780857668.png";
-import airbnbGroup from "@assets/group_1774781372500.png";
-import airbnbVote from "@assets/Vote_1774781565815.png";
-import collectionExploration from "@assets/Exploration_1774795909258.png";
+import darmiCover from "@assets/darmi-cover.webp";
+import collectionsHero from "@assets/collections-hero.jpg"; 
+import airbnbCover from "@assets/airbnb-cover.jpg";
+import collectionsCreate from "@assets/collections-create.mp4";
+import collectionsViewer from "@assets/collections-viewer.mp4";
+import collectionsCreation from "@assets/collections-creation.jpg";
+import airbnbSolution from "@assets/airbnb-solution.mp4";
+import airbnbVoteVideo from "@assets/airbnb-vote.mp4";
+import airbnbBefore from "@assets/airbnb-before.png";
+import airbnbSearch from "@assets/airbnb-search.png";
+import airbnbPdp from "@assets/airbnb-pdp.png";
+import airbnbGroup from "@assets/airbnb-group.png";
+import airbnbVoteStill from "@assets/airbnb-vote.png";
+import collectionsExploration from "@assets/collections-exploration.png";
 
-import darmiProcess1 from "@assets/competiitor_1774794598190.png";
-import darmiProcess2 from "@assets/PRD_1774794598191.jpg";
-import darmiProcess3 from "@assets/Proto_1774794598191.jpg";
-import darmiProcess4 from "@assets/UI-2_1774794598190.png";
-import darmiHome from "@assets/1_1783502380043.png";
-import darmiAdd from "@assets/2_1783502380046.png";
-import darmiInsights from "@assets/3_1783502380047.png";
-import directionImage1 from "@assets/direction-1_1775590476908.mp4";
-import directionImage2 from "@assets/direction-2_1775590476909.mp4";
-import taggingSolution1 from "@assets/s-blob-v1-IMAGE-1zvtK2jYAdI_1775589728784.mp4";
-import taggingSolution2 from "@assets/s-blob-v1-IMAGE-7igf2FntVFI_1775589728784.mp4";
-import problemImage1 from "@assets/problem-1_1775593076054.jpg";
-import problemImage2 from "@assets/problem-2_1775593076055.png";
-import taggingCover from "@assets/tagging_cover_1775594426781.jpeg";
+import darmiCompetitors from "@assets/darmi-competitors.png";
+import darmiPrd from "@assets/darmi-prd.jpg";
+import darmiPrototype from "@assets/darmi-prototype.jpg";
+import darmiUi from "@assets/darmi-ui.png";
+import darmiHome from "@assets/darmi-home.png";
+import darmiAdd from "@assets/darmi-add.png";
+import darmiInsights from "@assets/darmi-insights.png";
+import taggingDirection1 from "@assets/tagging-direction-1.mp4";
+import taggingDirection2 from "@assets/tagging-direction-2.mp4";
+import taggingSolution1 from "@assets/tagging-solution-1.mp4";
+import taggingSolution2 from "@assets/tagging-solution-2.mp4";
+import taggingProblem1 from "@assets/tagging-problem-1.jpg";
+import taggingProblem2 from "@assets/tagging-problem-2.png";
+import taggingCover from "@assets/tagging-cover.jpg";
 
 const PROJECT_ORDER = ["2", "1", "4", "3"];
 
@@ -53,7 +53,7 @@ const PROJECTS_DATA: Record<string, any> = {
     title: "YouTube Shopping Collections",
     category: "2024 • YouTube",
     description: "Led the vision for Shopping Collections, shifting YouTube Shopping from a video-centric tagging feature into a scalable curation ecosystem for viewers and creators.",
-    image: project1Cover,
+    image: collectionsHero,
     tagsTitle: "Project Team",
     tags: ["3 Designers", "2 Researchers", "2 PMs"],
     content: [
@@ -77,7 +77,7 @@ const PROJECTS_DATA: Record<string, any> = {
       },
       {
         type: "image",
-        url: collectionExploration,
+        url: collectionsExploration,
         caption: "Early explorations during our design sprint",
         fullWidth: true
       },
@@ -95,9 +95,9 @@ const PROJECTS_DATA: Record<string, any> = {
         type: "gallery",
         fixedHeight: true,
         images: [
-          creationJpg,
-          collectionCreateGif,
-          collectionGif
+          collectionsCreation,
+          collectionsCreate,
+          collectionsViewer
         ]
       },
       {
@@ -150,7 +150,7 @@ const PROJECTS_DATA: Record<string, any> = {
     title: "Darmi IBS food diary",
     category: "2026 • Personal Project",
     description: "Built and launched an IBS tracking app from 0→1 using an AI-assisted workflow, exploring how far a solo designer can go with modern AI tools.",
-    image: project2Cover,
+    image: darmiCover,
     tagsTitle: "Tools",
     tags: ["Gemini", "ChatGPT", "Lovable", "Replit"],
     content: [
@@ -175,22 +175,22 @@ const PROJECTS_DATA: Record<string, any> = {
           {
             title: "Research & synthesis",
             description: "Used language models to summarize discussions from Reddit and App Store reviews, helping identify common pain points and gaps in existing solutions.",
-            image: darmiProcess1
+            image: darmiCompetitors
           },
           {
             title: "Scoping & structure",
             description: "Generated an initial PRD and information architecture to define scope and core flows. These were refined manually to ensure the product remained focused and buildable.",
-            image: darmiProcess2
+            image: darmiPrd
           },
           {
             title: "Design & iteration",
             description: "Skipped traditional high-fidelity prototyping. Used quick sketches and AI-generated UI as a starting point, then manually adjusted layout, spacing, and visual details.",
-            image: darmiProcess3
+            image: darmiPrototype
           },
           {
             title: "Development",
             description: "Used AI tools for scaffolding and debugging. A large portion of the application was generated and iterated quickly, while more complex issues required manual intervention and fixes.",
-            image: darmiProcess4
+            image: darmiUi
           }
         ]
       },
@@ -245,14 +245,14 @@ const PROJECTS_DATA: Record<string, any> = {
           {
             eyebrow: "Problem 1",
             title: "Forced Search vs. Direct Links",
-            image: problemImage1,
+            image: taggingProblem1,
             body: "While creators naturally use direct product links, our tool forced them to manually search for items they already had links for. 42% of creators cited high perceived effort as the reason they didn't tag.",
             imageClassName: "rounded-[16px]"
           },
           {
             eyebrow: "Problem 2",
             title: "Out of Sight, Out of Mind",
-            image: problemImage2,
+            image: taggingProblem2,
             body: "The tagging tool was buried outside the primary metadata workflow. 48% of creators reported simply forgetting the tool existed because it wasn't visible while they were writing their video descriptions."
           }
         ]
@@ -269,14 +269,14 @@ const PROJECTS_DATA: Record<string, any> = {
           {
             eyebrow: "Direction 1",
             title: "Product Chips",
-            image: directionImage1,
+            image: taggingDirection1,
             upside: "Favored for its modern aesthetic and the ability to verify link trust directly within the editor.",
             constraint: "Research showed potential viewer confusion. More importantly, it was technically unfeasible due to severe engineering constraints within the legacy Studio environment."
           },
           {
             eyebrow: "Direction 2",
             title: "Product Thumbnails",
-            image: directionImage2,
+            image: taggingDirection2,
             upside: "The preferred model for visual confirmation. Surfacing product images and counts provided immediate proof that link parsing was successful.",
             gap: "The initial feedback loop felt delayed, as status updates weren't obvious until the user manually interacted with the toolbar."
           }
@@ -338,7 +338,7 @@ const PROJECTS_DATA: Record<string, any> = {
     title: "Airbnb WeChat Mini-App",
     category: "2018 • Airbnb",
     description: "Launched Airbnb's first WeChat Mini-app, streamlining the booking journey for the Chinese market.",
-    image: project3Cover,
+    image: airbnbCover,
     tagsTitle: "Project Team",
     tags: ["2 Designers", "1 Researcher", "2 PMs"],
     content: [
@@ -376,7 +376,7 @@ const PROJECTS_DATA: Record<string, any> = {
       },
       {
         type: "gallery",
-        images: [airbnbSol1, airbnbSearch, airbnbPdp]
+        images: [airbnbSolution, airbnbSearch, airbnbPdp]
       },
       {
         type: "text",
@@ -393,7 +393,7 @@ const PROJECTS_DATA: Record<string, any> = {
       },
       {
         type: "gallery",
-        images: [airbnbVoteClip, airbnbGroup, airbnbVote]
+        images: [airbnbVoteVideo, airbnbGroup, airbnbVoteStill]
       },
       {
         type: "metrics",

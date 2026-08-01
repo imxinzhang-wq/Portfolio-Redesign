@@ -18,25 +18,30 @@ import path from "node:path";
 import ffmpeg from "ffmpeg-static";
 
 const run = promisify(execFile);
+
+/*
+  Sources in masters/, output alongside everything the site actually ships.
+  The split is what lets a source keep the same name as what it produces —
+  encoding `airbnb-vote.mp4` would otherwise write over `airbnb-vote.mp4` —
+  and nothing imports from masters/, so the originals are never built.
+*/
 const ASSETS = new URL("../attached_assets/", import.meta.url).pathname;
+const MASTERS = new URL("../attached_assets/masters/", import.meta.url).pathname;
 
 /*
   GIF sources. All screen recordings, and GIF is the worst case for those:
-  256 colours, no interframe compression, a palette per frame. Six of these
-  wear a `.jpg` extension — not a typo to fix in place, `file` reports GIF89a
-  for every one, it is just how they came off whatever exported them.
-
-  Their names collide with nothing, so they encode in place: `foo.gif` ->
-  `foo.mp4` + `foo.webm`.
+  256 colours, no interframe compression, a palette per frame. Several of
+  these arrived with a `.jpg` extension even though `file` reports GIF89a for
+  every one; they carry their real extension now that they live in masters/.
 */
 const GIFS = [
-  "Collection-create_1774547429730.gif",
-  "Collection_1774547429731.gif",
-  "direction-1_1775590476908.jpg",
-  "direction-2_1775590476909.jpg",
-  "s-blob-v1-IMAGE-DuANVKTdceA_1774776952323.jpg",
-  "s-blob-v1-IMAGE-1zvtK2jYAdI_1775589728784.jpg",
-  "s-blob-v1-IMAGE-7igf2FntVFI_1775589728784.jpg",
+  "collections-create.gif",
+  "collections-viewer.gif",
+  "tagging-direction-1.gif",
+  "tagging-direction-2.gif",
+  "airbnb-solution.gif",
+  "tagging-solution-1.gif",
+  "tagging-solution-2.gif",
 ];
 
 /*
@@ -44,15 +49,10 @@ const GIFS = [
   one, which is strictly better material. A GIF has already been quantised to
   256 colours and dithered, and that dither is both permanent and expensive:
   the noise moves every frame, which defeats the interframe compression the
-  encoder depends on. Vote.mp4 arrives at 888x1920 and 40fps against the
-  574x1241 and 20fps of the GIF it replaces.
-
-  They live in masters/ for a plain mechanical reason: encoding `Vote.mp4`
-  would otherwise write over `Vote.mp4`. Nothing imports from that directory,
-  so the originals cost nothing at runtime.
+  encoder depends on. The Airbnb voting clip arrives at 888x1920 and 40fps
+  against the 574x1241 and 20fps of the GIF it replaces.
 */
-const MASTERS = path.join(ASSETS, "masters");
-const VIDEOS = ["Vote.mp4"];
+const VIDEOS = ["airbnb-vote.mp4"];
 
 /*
   h264 needs even dimensions for yuv420p, and several sources are odd
@@ -102,9 +102,6 @@ async function encode(input, base) {
   );
 }
 
-for (const file of GIFS) {
-  await encode(path.join(ASSETS, file), path.parse(file).name);
-}
-for (const file of VIDEOS) {
+for (const file of [...GIFS, ...VIDEOS]) {
   await encode(path.join(MASTERS, file), path.parse(file).name);
 }
