@@ -870,7 +870,7 @@ function Footer() {
         year and the byline happened to be the same width, which they are not.
       */}
       <div className="grid grid-cols-3 items-center font-display font-normal text-sm tracking-tighter text-foreground">
-        <span className="tabular-nums">{new Date().getFullYear()}</span>
+        <span className="tabular-nums">&copy;{new Date().getFullYear()}</span>
         <a
           href="https://www.linkedin.com/in/imxinzhang/"
           target="_blank"
@@ -879,7 +879,7 @@ function Footer() {
         >
           LINKEDIN
         </a>
-        <span className="justify-self-end">by XIN ZHANG</span>
+        <span className="justify-self-end">By Xin Zhang</span>
       </div>
     </footer>
   );
