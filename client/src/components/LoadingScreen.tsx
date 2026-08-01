@@ -173,7 +173,7 @@ function prefetchCaseStudies() {
   }
 }
 
-export default function LoadingScreen() {
+export default function LoadingScreen({ onReady }: { onReady?: () => void }) {
   const [done, setDone] = useState(false);
   const reduceMotion = useReducedMotion();
 
@@ -252,7 +252,12 @@ export default function LoadingScreen() {
   const letters = Array.from(WORDMARK);
 
   return (
-    <AnimatePresence>
+    /*
+      onExitComplete, not the moment `done` flips: the reveal takes another
+      1.5s after that, and anything waiting to be seen should not spend it
+      playing under a backdrop that is still opaque.
+    */
+    <AnimatePresence onExitComplete={onReady}>
       {!done && (
         <motion.div
           key="loader"

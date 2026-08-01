@@ -9,6 +9,7 @@ import { Fragment, useRef, useEffect, useState } from "react";
 
 import Gallery, { getBeyondCenterScrollTop } from "@/components/Gallery";
 import CustomCursor from "@/components/CustomCursor";
+import { useSiteReady } from "@/lib/site-ready";
 
 import collectionsCover from "@assets/collections-cover.webp";
 import darmiCover from "@assets/darmi-cover.webp";
@@ -411,7 +412,12 @@ function InlineHeaderImage({
   instead of a static <img> — everything else (fixed em height, 3:4 → 4:3
   width reveal, cursor label swap) is identical.
 
-  Playback: plays through once on its own, then holds on the last frame.
+  Playback: plays through once, then holds on the last frame. That single
+  pass starts when the loading screen has finished leaving, not on mount —
+  the page is built behind the curtain, so `autoPlay` spent the whole clip
+  unwatched and left a visitor looking at its last frame, indistinguishable
+  from a still.
+
   Hovering (or focusing) turns looping on; if it had already finished, it's
   restarted from the top. Leaving turns looping back off WITHOUT cutting the
   clip short — `loop` is only checked when playback reaches the end, so the
@@ -428,6 +434,19 @@ function InlineHeaderVideo({
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [looping, setLooping] = useState(false);
+  const ready = useSiteReady();
+
+  /*
+    The loader has already fetched this clip, so it is playing from cache and
+    starts on the frame the reveal ends on. `play()` returns a promise that
+    rejects if the browser declines — muted and playsInline means it should
+    not, but an unhandled rejection would surface as a console error, so it is
+    swallowed: a clip that will not start is not worth reporting at.
+  */
+  useEffect(() => {
+    if (!ready) return;
+    videoRef.current?.play().catch(() => {});
+  }, [ready]);
 
   const startLooping = () => {
     setLooping(true);
@@ -457,10 +476,12 @@ function InlineHeaderVideo({
       */}
       <video
         ref={videoRef}
-        autoPlay
         loop={looping}
         muted
         playsInline
+        // No autoPlay — see above. preload keeps it buffered and ready to
+        // start on the frame the curtain clears.
+        preload="auto"
         className="absolute inset-0 h-full w-full object-cover object-center"
       >
         <source src={src} type="video/mp4" />
