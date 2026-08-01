@@ -54,7 +54,7 @@ export default function CaseMedia({ src, alt, className }: Props) {
   }, [src]);
 
   if (!src.endsWith(".mp4")) {
-    return <img src={src} alt={alt} className={className} />;
+    return <img src={src} alt={alt} className={className} draggable={false} />;
   }
 
   return (

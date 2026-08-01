@@ -126,6 +126,18 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-display tracking-tight font-medium;
   }
+  /*
+    Images are content, not assets to lift out of the page. Without this a
+    long-press on iOS/Android pops the "Save image / Copy" sheet mid-scroll,
+    and a desktop drag peels a ghost thumbnail off the layout. Text selection
+    is untouched — this only covers media elements.
+  */
+  img, video, picture, svg {
+    -webkit-touch-callout: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
 }
 
 @layer utilities {

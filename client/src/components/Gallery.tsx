@@ -344,6 +344,7 @@ function Frame({ progress }: { progress: ReturnType<typeof useScroll>["scrollYPr
           alt=""
           aria-hidden
           decoding="async"
+          draggable={false}
           className="absolute max-h-[80vh] max-w-[90vw] rounded-[8px]"
           style={{
             height: "80vh",
@@ -502,6 +503,7 @@ export default function Gallery({ bgColor }: { bgColor: string }) {
                 aria-hidden
                 loading="lazy"
                 decoding="async"
+                draggable={false}
                 className="h-full w-full object-cover"
               />
             </div>
