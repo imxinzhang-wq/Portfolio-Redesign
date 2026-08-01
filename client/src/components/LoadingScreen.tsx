@@ -79,10 +79,15 @@ const HOLD_MS = 450;
   only once they are gone does the screen itself go. Nothing overlaps — the
   backdrop waiting on the type is the whole reason this reads as a curtain
   being taken away rather than a screen being switched off.
+
+  The beat of clear air between them matters as much as the order. Without
+  it the backdrop starts the instant the last letter lands on zero, and the
+  eye reads two things ending at once rather than one following the other.
 */
 const LETTER_OUT_MS = 450;
-const BACKDROP_OUT_MS = 500;
-const BACKDROP_EXIT_DELAY = LETTER_OUT_MS / 1000;
+const BACKDROP_GAP_MS = 180;
+const BACKDROP_OUT_MS = 900;
+const BACKDROP_EXIT_DELAY = (LETTER_OUT_MS + BACKDROP_GAP_MS) / 1000;
 
 /*
   The floor: the entrance in full, plus the hold. Derived rather than typed,
@@ -263,10 +268,17 @@ export default function LoadingScreen() {
           className="fixed inset-0 z-[100] flex items-center justify-center bg-background"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          /*
+            An even curve, deliberately not the site's usual ease-out. That
+            curve spends most of its travel immediately, which on a fade means
+            the backdrop dropped to a quarter opacity almost the moment it
+            began — near enough to the letters going that the two read as one
+            event. A fade wants its rate spread across its duration.
+          */
           transition={{
             duration: BACKDROP_OUT_MS / 1000,
             delay: BACKDROP_EXIT_DELAY,
-            ease: [0.23, 1, 0.32, 1],
+            ease: [0.45, 0, 0.55, 1],
           }}
           role="status"
           aria-live="polite"
