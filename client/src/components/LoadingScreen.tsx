@@ -1,66 +1,86 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-/*
-  Imported here rather than passed in from App: this list IS the loader's
-  job, and splitting it across two files would leave the next person editing
-  the hero with no reason to think the loader cared.
-*/
+import { GALLERY_PHOTOS } from "@/components/Gallery";
+
 import heroZurich from "@assets/hero-zurich.jpg";
 import heroSanFrancisco from "@assets/hero-san-francisco.jpg";
+import heroHello from "@assets/hero-hello.mp4";
 import collectionsCover from "@assets/collections-cover.webp";
 import darmiCover from "@assets/darmi-cover.webp";
 import airbnbCover from "@assets/airbnb-cover.jpg";
 
 /*
-  What the loader waits for: the two photographs set into the hero headline,
-  and the covers of the first two projects — the images a visitor meets in
-  their first screen and their first scroll. About 2MB together.
+  Every image the home page will paint, from the headline down to the last
+  gallery frame. The loader holds the page until all of it is decoded, so a
+  visitor never watches a photograph arrive — which is the whole point of a
+  portfolio whose content IS the photographs.
 
-  This list is only affordable because the covers are WebP now. As full-size
-  JPEGs (3.6MB and 2.4MB) blocking on even the first of them measured ~4.8s
-  on a 10Mbps line — the ceiling below, every time. See
-  scripts/covers-to-webp.mjs.
+  Affordable only because of what came before it: the covers are WebP and the
+  gallery ships ~150kB variants, so the entire home page is now lighter than
+  two of the original cover JPEGs were.
 */
-const BLOCKING_ASSETS = [heroZurich, heroSanFrancisco, darmiCover, collectionsCover];
+const HOME_IMAGES = [
+  heroZurich,
+  heroSanFrancisco,
+  darmiCover,
+  collectionsCover,
+  airbnbCover,
+];
 
 /*
-  Fetched but never waited on, and only once the blocking set is done, so it
-  is not competing for the pipe with anything the loader is holding the door
-  for. The last cover is several screens down; it has until the visitor gets
-  there.
+  The clip set into the headline. Not an <img>, so it cannot go through the
+  decoder path below — fetching it is enough, since that puts it in the HTTP
+  cache for the <video> that mounts underneath.
 */
-const WARM_ASSETS = [airbnbCover];
+const HOME_VIDEO = heroHello;
+
+/*
+  Case-study assets, warmed after the curtain lifts rather than before it.
+
+  Ordered by how soon a visitor could reach them: Darmi is the first card,
+  Collections the second, Airbnb the third. Tagging is deliberately absent —
+  its card is `hidden`, so nothing on the site links to it and warming it
+  would be spending a visitor's bandwidth on a page they cannot navigate to.
+
+  Globbed rather than listed because the rename gave every asset a scope
+  prefix; `darmi-*` IS the set of Darmi's assets now, and a new one dropped
+  into the folder joins the prefetch without anyone remembering to add it.
+*/
+const CASE_STUDY_PREFIXES = ["darmi-", "collections-", "airbnb-"];
+
+const ALL_ASSETS = import.meta.glob<string>(
+  "../../../attached_assets/*.{jpg,jpeg,png,webp,mp4,webm}",
+  { eager: true, query: "?url", import: "default" },
+);
 
 const WORDMARK = "Xin Zhang";
 
 /*
-  The floor exists so a warm cache doesn't produce a 100ms flash of a screen
-  nobody can read — it is set just past the point where the last letter has
-  settled, so the animation always completes.
+  The floor exists so a warm cache doesn't produce a flash of a screen nobody
+  can read — it is set just past the point where the last letter has settled,
+  so the entrance always completes.
 
-  The ceiling exists so a slow connection can't hold the site hostage: at 4s
-  we reveal the page regardless and let the remaining images arrive in place.
-  Measured against the production build, the loader lands on its floor from
-  50Mbps down to about 3Mbps — the ceiling is there for the cases below that.
+  The ceiling is the honest limit on how long a logo may sit on screen before
+  it stops reading as loading and starts reading as broken. The page is
+  revealed at that point regardless, with whatever has not arrived still on
+  its way.
 */
 const MIN_MS = 1200;
-const MAX_MS = 4000;
+const MAX_MS = 6000;
 
-/* Per-letter delay, and the delay before the first letter moves. */
+/* Per-letter delay in, per-letter delay out, and the lead before the first. */
 const STAGGER_MS = 55;
+const EXIT_STAGGER_MS = 40;
 const LEAD_MS = 120;
 
-function preload(src: string, priority: "high" | "low" = "high") {
+/* When the backdrop starts fading: once the last letter is on its way out. */
+const BACKDROP_EXIT_DELAY = (WORDMARK.length * EXIT_STAGGER_MS + 180) / 1000;
+
+function preloadImage(src: string) {
   return new Promise<void>((resolve) => {
     const img = new Image();
-    /*
-      The page mounts underneath the loader and immediately requests every
-      image on it — a dozen gallery photographs among them. Marking what the
-      loader is waiting on as `high` keeps it from queueing behind traffic
-      for content that is several screens away.
-    */
-    img.fetchPriority = priority;
+    img.fetchPriority = "high";
     // Resolve on error too. A missing or blocked asset is a reason to show
     // the page, not a reason to sit on the loader until the ceiling.
     img.onload = () => resolve();
@@ -70,6 +90,67 @@ function preload(src: string, priority: "high" | "low" = "high") {
     // complete image assigned in the same tick.
     if (img.complete) resolve();
   });
+}
+
+/*
+  The gallery's photographs are responsive, so the loader has to ask for them
+  the same way the gallery does — same srcSet, same `sizes` — or the browser
+  picks a different variant here than it will there and every photograph is
+  downloaded twice. `sizes` must be assigned before `srcset`: the selection is
+  made when srcset is set, and it reads whatever sizes says at that moment.
+*/
+function preloadResponsive(srcSet: string, sizes: string) {
+  return new Promise<void>((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve();
+    img.onerror = () => resolve();
+    img.sizes = sizes;
+    img.srcset = srcSet;
+    if (img.complete) resolve();
+  });
+}
+
+function preloadVideo(src: string) {
+  return fetch(src)
+    .then((res) => res.arrayBuffer())
+    .then(() => undefined)
+    .catch(() => undefined);
+}
+
+/*
+  Warm the case studies in the background. `rel="prefetch"` rather than a
+  fetch loop on purpose: it is the one request kind the browser is allowed to
+  schedule at its own pace and drop entirely under pressure, which is exactly
+  the standing this traffic should have — it is speculative, and it must never
+  slow down a visitor who is reading the page it is loading behind.
+*/
+function prefetchCaseStudies() {
+  // Only the format this browser will actually play; fetching both would
+  // double the cost of every clip for no gain.
+  const canPlayMp4 = document
+    .createElement("video")
+    .canPlayType("video/mp4; codecs=avc1.42E01E");
+  const wanted = canPlayMp4 ? ".webm" : ".mp4";
+
+  // The covers carry a case-study prefix but the home page has already
+  // loaded them; prefetching those would be three links asking for what is
+  // sitting in the cache.
+  const alreadyLoaded = new Set(HOME_IMAGES);
+
+  const urls = CASE_STUDY_PREFIXES.flatMap((prefix) =>
+    Object.entries(ALL_ASSETS)
+      .filter(([path]) => path.split("/").pop()?.startsWith(prefix))
+      .filter(([path]) => !path.endsWith(wanted))
+      .map(([, url]) => url)
+      .filter((url) => !alreadyLoaded.has(url)),
+  );
+
+  for (const url of urls) {
+    const link = document.createElement("link");
+    link.rel = "prefetch";
+    link.href = url;
+    document.head.appendChild(link);
+  }
 }
 
 export default function LoadingScreen() {
@@ -90,10 +171,9 @@ export default function LoadingScreen() {
       }, remaining);
     };
 
-    const assets = Promise.all(BLOCKING_ASSETS.map((src) => preload(src))).then(
-      () => {
-        WARM_ASSETS.forEach((src) => preload(src, "low"));
-      },
+    const images = HOME_IMAGES.map(preloadImage);
+    const gallery = GALLERY_PHOTOS.map((photo) =>
+      preloadResponsive(photo.srcSet, `calc(80vh * ${photo.ratio.toFixed(4)})`),
     );
 
     /*
@@ -104,7 +184,9 @@ export default function LoadingScreen() {
     */
     const fonts = document.fonts?.ready ?? Promise.resolve();
 
-    Promise.all([assets, fonts]).then(finish);
+    Promise.all([...images, ...gallery, preloadVideo(HOME_VIDEO), fonts]).then(
+      finish,
+    );
 
     // The ceiling. Not cleared by `finish` — `cancelled` and the `done`
     // state both make a late fire a no-op.
@@ -135,6 +217,18 @@ export default function LoadingScreen() {
     };
   }, [done]);
 
+  /*
+    Start warming the case studies once the home page is the visitor's, not
+    at the same moment — the point of holding the curtain was to give the
+    home page an uncontended connection, and prefetching into that would give
+    it back.
+  */
+  useEffect(() => {
+    if (!done) return;
+    const timer = window.setTimeout(prefetchCaseStudies, 1000);
+    return () => window.clearTimeout(timer);
+  }, [done]);
+
   const letters = Array.from(WORDMARK);
 
   return (
@@ -147,11 +241,18 @@ export default function LoadingScreen() {
             about to live in, so the reveal reads as the loader dissolving
             rather than as one screen replacing another. Above the navbar's
             z-50 and the cursor.
+
+            The backdrop waits for the letters before it goes: the wordmark
+            leaves the screen, and only then does the screen itself leave.
           */
           className="fixed inset-0 z-[100] flex items-center justify-center bg-background"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
+          transition={{
+            duration: 0.5,
+            delay: reduceMotion ? 0 : BACKDROP_EXIT_DELAY,
+            ease: [0.23, 1, 0.32, 1],
+          }}
           role="status"
           aria-live="polite"
           data-testid="loading-screen"
@@ -161,10 +262,6 @@ export default function LoadingScreen() {
             weight and tracking, down to the class list. It is the same mark
             arriving early, so the reveal reads as it settling into the
             corner rather than as two different pieces of type.
-
-            Nothing accompanies it. The wait is short enough that a progress
-            indicator would only be drawing attention to a wait nobody had
-            started minding.
 
             aria-label on the row plus aria-hidden on the pieces: split text
             reads out letter by letter otherwise.
@@ -184,6 +281,31 @@ export default function LoadingScreen() {
                   reduceMotion ? { opacity: 0 } : { opacity: 0, y: "0.5em" }
                 }
                 animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+                /*
+                  Out through the top, in the order they came in. They rose
+                  into place from below and keep going, so the mark reads as
+                  passing through the screen rather than reversing out of it,
+                  and the stagger that introduced it is what dismisses it.
+
+                  The transition rides inside each target rather than on a
+                  shared `transition` prop, because the two cadences differ:
+                  the exit is tighter, since a departure as slow as the
+                  arrival would hold the page back from a reveal it has
+                  already earned.
+                */
+                exit={
+                  reduceMotion
+                    ? { opacity: 0, transition: { duration: 0.3 } }
+                    : {
+                        opacity: 0,
+                        y: "-0.55em",
+                        transition: {
+                          duration: 0.45,
+                          delay: (i * EXIT_STAGGER_MS) / 1000,
+                          ease: [0.4, 0, 0.2, 1],
+                        },
+                      }
+                }
                 transition={{
                   duration: 0.5,
                   delay: (LEAD_MS + i * STAGGER_MS) / 1000,

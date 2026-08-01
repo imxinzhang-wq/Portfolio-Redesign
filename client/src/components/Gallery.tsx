@@ -35,7 +35,13 @@ const VARIANTS = import.meta.glob<string>(
 
 type Variant = { width: number; height: number; url: string };
 
-const SOURCES = (() => {
+/*
+  Exported so the loading screen can wait for these before it lifts. It
+  preloads through the same srcSet and `sizes` the <img> below uses, which is
+  the only way to be sure it fetches the variant the browser is going to pick
+  — guessing at one would download a second copy of every photograph.
+*/
+export const GALLERY_PHOTOS = (() => {
   const byNumber: Record<string, Variant[]> = {};
   for (const [path, url] of Object.entries(VARIANTS)) {
     const match = path.match(/film-(\d+)-(\d+)x(\d+)\.webp$/);
@@ -63,7 +69,7 @@ const SOURCES = (() => {
     });
 })();
 
-const PHOTOS = SOURCES;
+const PHOTOS = GALLERY_PHOTOS;
 
 const WORDMARK = "Beyond Design";
 
