@@ -853,7 +853,7 @@ function Footer() {
       className="min-h-screen flex flex-col justify-end px-6 md:px-12 pb-10"
     >
       <div className="mb-[25vh]">
-        <p className="text-base text-foreground mb-4">Say hello</p>
+        <p className="eyebrow font-display text-foreground mb-4">Say hello</p>
         <a
           href="mailto:about.dala@gmail.com"
           className="block cursor-none font-display font-medium tracking-tight leading-[1.05] text-foreground text-[clamp(2rem,7vw,7rem)]"
