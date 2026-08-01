@@ -57,25 +57,40 @@ const ALL_ASSETS = import.meta.glob<string>(
 const WORDMARK = "Xin Zhang";
 
 /*
-  The floor exists so a warm cache doesn't produce a flash of a screen nobody
-  can read — it is set just past the point where the last letter has settled,
-  so the entrance always completes.
-
-  The ceiling is the honest limit on how long a logo may sit on screen before
-  it stops reading as loading and starts reading as broken. The page is
-  revealed at that point regardless, with whatever has not arrived still on
-  its way.
+  The ceiling: the honest limit on how long a logo may sit on screen before it
+  stops reading as loading and starts reading as broken. The page is revealed
+  at that point regardless, with whatever has not arrived still on its way.
 */
-const MIN_MS = 1200;
 const MAX_MS = 6000;
 
-/* Per-letter delay in, per-letter delay out, and the lead before the first. */
+/*
+  The entrance: letters fade up one after another. Per-letter delay, the lead
+  before the first one moves, and how long each takes.
+*/
 const STAGGER_MS = 55;
-const EXIT_STAGGER_MS = 40;
 const LEAD_MS = 120;
+const LETTER_IN_MS = 500;
 
-/* When the backdrop starts fading: once the last letter is on its way out. */
-const BACKDROP_EXIT_DELAY = (WORDMARK.length * EXIT_STAGGER_MS + 180) / 1000;
+/* Once assembled, the wordmark holds long enough to be read as a mark. */
+const HOLD_MS = 450;
+
+/*
+  Leaving is three beats, in order: the wordmark holds, the letters fade, and
+  only once they are gone does the screen itself go. Nothing overlaps — the
+  backdrop waiting on the type is the whole reason this reads as a curtain
+  being taken away rather than a screen being switched off.
+*/
+const LETTER_OUT_MS = 450;
+const BACKDROP_OUT_MS = 500;
+const BACKDROP_EXIT_DELAY = LETTER_OUT_MS / 1000;
+
+/*
+  The floor: the entrance in full, plus the hold. Derived rather than typed,
+  so retuning the stagger cannot silently leave the wordmark being cut off
+  half-assembled by a warm cache.
+*/
+const MIN_MS =
+  LEAD_MS + (WORDMARK.length - 1) * STAGGER_MS + LETTER_IN_MS + HOLD_MS;
 
 function preloadImage(src: string) {
   return new Promise<void>((resolve) => {
@@ -249,8 +264,8 @@ export default function LoadingScreen() {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{
-            duration: 0.5,
-            delay: reduceMotion ? 0 : BACKDROP_EXIT_DELAY,
+            duration: BACKDROP_OUT_MS / 1000,
+            delay: BACKDROP_EXIT_DELAY,
             ease: [0.23, 1, 0.32, 1],
           }}
           role="status"
@@ -262,6 +277,13 @@ export default function LoadingScreen() {
             weight and tracking, down to the class list. It is the same mark
             arriving early, so the reveal reads as it settling into the
             corner rather than as two different pieces of type.
+
+            The motion is the site's, from lib/roll: each letter rolls up
+            through its own one-line mask and leaves through the top of it,
+            never fading. It is the same movement the project titles make,
+            per letter instead of per word — which is what `stagger` is for,
+            since nine letters at the rail's per-word rate would take twice
+            as long to arrive as three words do.
 
             aria-label on the row plus aria-hidden on the pieces: split text
             reads out letter by letter otherwise.
@@ -282,32 +304,20 @@ export default function LoadingScreen() {
                 }
                 animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
                 /*
-                  Out through the top, in the order they came in. They rose
-                  into place from below and keep going, so the mark reads as
-                  passing through the screen rather than reversing out of it,
-                  and the stagger that introduced it is what dismisses it.
-
-                  The transition rides inside each target rather than on a
-                  shared `transition` prop, because the two cadences differ:
-                  the exit is tighter, since a departure as slow as the
-                  arrival would hold the page back from a reveal it has
-                  already earned.
+                  Out together, and only fading — no travel. The letters
+                  arrived one at a time because assembling is what a wait
+                  looks like; leaving is not a second performance, it is
+                  getting out of the way.
                 */
-                exit={
-                  reduceMotion
-                    ? { opacity: 0, transition: { duration: 0.3 } }
-                    : {
-                        opacity: 0,
-                        y: "-0.55em",
-                        transition: {
-                          duration: 0.45,
-                          delay: (i * EXIT_STAGGER_MS) / 1000,
-                          ease: [0.4, 0, 0.2, 1],
-                        },
-                      }
-                }
+                exit={{
+                  opacity: 0,
+                  transition: {
+                    duration: LETTER_OUT_MS / 1000,
+                    ease: [0.4, 0, 1, 1],
+                  },
+                }}
                 transition={{
-                  duration: 0.5,
+                  duration: LETTER_IN_MS / 1000,
                   delay: (LEAD_MS + i * STAGGER_MS) / 1000,
                   ease: [0.23, 1, 0.32, 1],
                 }}
