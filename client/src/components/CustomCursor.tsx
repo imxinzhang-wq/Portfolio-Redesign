@@ -1,5 +1,6 @@
 import { motion, useSpring } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { useFinePointer } from "@/hooks/use-fine-pointer";
 
 /*
   Stands in for the pointer on any page that hides it with `cursor-none`.
@@ -7,8 +8,13 @@ import { useEffect, useRef, useState } from "react";
   data-cursor-label — shared between Home and the case study pages so both
   read the same custom pointer rather than one page falling back to the
   browser's default arrow.
+
+  Renders nothing on touch: there is no pointer to stand in for, and phones
+  do fire a synthetic mousemove on tap, which would otherwise strand the dot
+  wherever the last thumb landed.
 */
 export default function CustomCursor() {
+  const finePointer = useFinePointer();
   const mouseX = useSpring(-100, { stiffness: 200, damping: 28, mass: 0.5 });
   const mouseY = useSpring(-100, { stiffness: 200, damping: 28, mass: 0.5 });
   const dotX = useSpring(-100, { stiffness: 500, damping: 35, mass: 0.2 });
@@ -21,6 +27,8 @@ export default function CustomCursor() {
   const pointer = useRef<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
+    if (!finePointer) return;
+
     /*
       Hit-test whatever is under the pointer right now. Reading the element
       from the coordinates rather than an event's target is what lets scroll
@@ -62,7 +70,9 @@ export default function CustomCursor() {
       window.removeEventListener("scroll", syncToPointer);
       document.documentElement.removeEventListener("mouseleave", leave);
     };
-  }, [mouseX, mouseY, dotX, dotY]);
+  }, [finePointer, mouseX, mouseY, dotX, dotY]);
+
+  if (!finePointer) return null;
 
   return (
     <>

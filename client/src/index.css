@@ -145,6 +145,21 @@
     text-transform: uppercase;
   }
 
+  /*
+    `cursor-none` is only ever safe next to the custom cursor that replaces
+    it, and that one sits out anything without a fine pointer. Same media
+    query as the hook, so the two can't disagree: where the dot doesn't
+    render, the real pointer comes back.
+
+    Doubled class rather than a plain `.cursor-none` — it has to outrank
+    Tailwind's own utility whichever order the layer ends up in.
+  */
+  @media not all and (hover: hover) and (pointer: fine) {
+    .cursor-none.cursor-none {
+      cursor: auto;
+    }
+  }
+
   /* Hides the scrollbar on horizontally-scrolling touch carousels (the mobile
      Beyond Design gallery) without disabling the scroll itself. */
   .no-scrollbar {
