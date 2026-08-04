@@ -311,7 +311,7 @@ function Navbar() {
             beats inheriting it from a parent. tracking-tighter does inherit,
             so it stays here.
           */}
-          <div className="hidden md:flex gap-10 font-display font-normal text-base tracking-tighter text-white">
+          <div className="hidden md:flex gap-10 font-display font-semibold text-base tracking-tighter text-white">
             <button
               onClick={() => handleNavClick("work")}
               className="uppercase"
